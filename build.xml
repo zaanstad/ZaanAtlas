@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="zaanatlas" default="dist" basedir=".">
+
+    <description>
+        ZaanAtlas Build File
+    </description>
+
+    <property name="build" location="build"/>
+    <property name="ringo" location="externals/ringojs-fork"/>
+    <property name="app.proxy.geoserver" value=""/>
+    <property name="app.port" value="8080"/>
+    <condition property="git" value="git.cmd" else="git">
+        <os family="windows"/>
+    </condition>
+
+    <target name="init">
+
+        <echo message="pulling in submodules"/>
+        <exec executable="${git}" failonerror="true">
+            <arg line="submodule init"/>
+        </exec>
+        <exec executable="${git}" failonerror="true">
+            <arg line="submodule sync"/>
+        </exec>
+        <exec executable="${git}" failonerror="true">
+            <arg line="submodule update"/>
+        </exec>
+
+        <echo message="building ringo jars"/>
+        <ant dir="${ringo}" target="jar"/>
+        <copy todir="${ringo}/lib" flatten="true" includeEmptyDirs="false">
+            <fileset dir="lib"/>
+        </copy>
+
+    </target>
+    
+    <target name="buildjs">
+
+        <mkdir dir="${build}/${ant.project.name}/WEB-INF/app/static/script"/>
+        <java jar="${ringo}/run.jar" fork="true" failonerror="true">
+            <sysproperty key="ringo.home" path="${ringo}"/>
+            <arg path="externals/buildkit/lib/buildkit/build.js"/>
+            <arg line="-o ${build}/${ant.project.name}/WEB-INF/app/static/script buildjs.cfg"/>
+        </java>
+
+    </target>
+    
+    <target name="dist" depends="init, postcompile"/>
+    
+    <!-- this target is useful when init has already been run -->
+    <target name="postcompile" depends="test, buildjs, redist"/>
+    
+    <target name="redist">
+
+        <mkdir dir="${build}/${ant.project.name}"/>
+        
+        <copy todir="${build}/${ant.project.name}">
+            <fileset dir="src/main/webapp/">
+            </fileset>
+        </copy>
+        <copy todir="${build}/${ant.project.name}/WEB-INF/lib" flatten="true" includeEmptyDirs="false">
+            <fileset dir="${ringo}/lib"/>
+        </copy>
+        <copy todir="${build}/${ant.project.name}/WEB-INF/app">
+            <fileset dir="app">
+                <exclude name="**/externals/**"/>
+                <exclude name="**/script/**"/>
+            </fileset>
+        </copy>
+        <!-- copy stick -->
+        <copy todir="${build}/${ant.project.name}/WEB-INF/app/stick">
+            <fileset dir="externals/stick">
+                <include name="**/lib/**"/>
+                <include name="package.json"/>
+            </fileset>
+        </copy>
+        <!-- copy Ext resources -->
+        <copy todir="${build}/${ant.project.name}/WEB-INF/app/static/externals/ext">
+            <fileset dir="app/static/externals/ext">
+                <exclude name="**/*debug*.js"/>
+                <exclude name="**/ext-all-notheme.css"/>
+                <exclude name="**/xtheme-blue.css"/>
+            </fileset>
+        </copy>
+        <!-- copy OpenLayers resources -->
+        <copy todir="${build}/${ant.project.name}/WEB-INF/app/static/externals/openlayers/theme">
+            <fileset dir="app/static/externals/openlayers/theme"/>
+        </copy>
+        <!-- copy GeoExt resources -->
+        <copy todir="${build}/${ant.project.name}/WEB-INF/app/static/externals/GeoExt/resources">
+            <fileset dir="app/static/externals/GeoExt/resources">
+                <exclude name="**/geoext-all-debug.css"/>
+                <exclude name="**/gxtheme-slate.css"/>
+                <exclude name="**/slate/**"/>
+            </fileset>
+        </copy>
+        <!-- copy gxp resources -->
+        <copy todir="${build}/${ant.project.name}/WEB-INF/app/static/externals/gxp/src/theme">
+            <fileset dir="app/static/externals/gxp/src/theme"/>
+        </copy>
+        <!-- copy PrintPreview resources -->
+        <copy todir="${build}/${ant.project.name}/WEB-INF/app/static/externals/PrintPreview/resources">
+            <fileset dir="app/static/externals/PrintPreview/resources"/>
+        </copy>
+        <!-- copy Proj4js resources -->
+        <copy todir="${build}/${ant.project.name}/WEB-INF/app/static/externals/proj4js/lib">
+            <fileset dir="app/static/externals/proj4js/lib"/>
+        </copy>
+        <!-- copy Sarissa resources -->
+        <copy todir="${build}/${ant.project.name}/WEB-INF/app/static/externals/sarissa/gr/abiss/js/sarissa">
+            <fileset dir="app/static/externals/sarissa/gr/abiss/js/sarissa"/>
+        </copy>
+    </target>
+
+    <target name="war" depends="dist">
+        <war destfile="${build}/${ant.project.name}.war">
+            <fileset dir="${build}/${ant.project.name}"/>
+        </war>
+    </target>
+
+    <target name="debug">
+        <java jar="${ringo}/run.jar" fork="true">
+            <sysproperty key="app.debug" value="1"/>
+            <sysproperty key="app.proxy.geoserver" value="${app.proxy.geoserver}"/>
+            <sysproperty key="ringo.home" path="${ringo}"/>
+            <sysproperty key="ringo.modulepath" path="externals"/>
+            <arg path="app/main.js"/>
+            <arg line="-p ${app.port}"/>
+        </java>
+    </target>
+
+    <target name="debugall">
+        <java jar="${ringo}/run.jar" fork="true">
+            <sysproperty key="app.debug" value="1"/>
+            <sysproperty key="app.proxy.geoserver" value="${app.proxy.geoserver}"/>
+            <sysproperty key="ringo.home" path="${ringo}"/>
+            <sysproperty key="ringo.modulepath" path="externals"/>
+            <arg value="-d"/>
+            <arg path="app/main.js"/>
+            <arg line="-p ${app.port}"/>
+        </java>
+    </target>
+
+    <target name="test">
+        <java jar="${ringo}/run.jar" fork="true" failonerror="yes">
+            <sysproperty key="ringo.home" path="${ringo}"/>
+            <sysproperty key="ringo.modulepath" path="externals"/>
+            <arg path="tests/all.js"/>
+        </java>
+    </target>
+
+    <target name="clean" description="remove previous build">
+        <delete dir="${build}"/>
+        <ant dir="${ringo}" target="clean"/>
+    </target>
+
+</project>
