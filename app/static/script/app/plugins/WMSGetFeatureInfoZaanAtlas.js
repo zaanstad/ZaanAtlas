@@ -42,7 +42,7 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for feature info action tooltip (i18n).
      */
-    infoActionTip: "Get Feature Info ZaanAtlas versie",
+    infoActionTip: "Informatie opvragen van een locatie",
 
     /** api: config[popupTitle]
      *  ``String``
@@ -88,20 +88,13 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
                 for (var i = 0, len = info.controls.length; i < len; i++){
                     if (pressed) {
                         info.controls[i].activate();
-						
 						for(var p = 1; p < map.layers.length; p++) {
-			
-				
 							if (map.layers[p].name == "Info"){
-						
 								layer_info = true;
-						
 							};
 						};
 						if (!layer_info) {
-					
 							var_this.infolaagtoevoegen();
-							
 							map.events.register('click',map, function (e) {
 								try {
 									if (popup) {
@@ -111,19 +104,13 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 								catch(err){};
 								
 								for(var p = 1; p < map.layers.length; p++) {
-									
-									
 									if (map.layers[p].name == "Info"){
-								
 										layer_info = true;
-								
 									};
 								};
 								
 								if (!layer_info) {
-								
 									var_this.infolaagtoevoegen();
-								
 								};
 								
 								var location = map.getLonLatFromViewPortPx(e.xy);
@@ -145,11 +132,8 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 						}			
                     } else {
                         info.controls[i].deactivate()
-						
                         var_this.infolaagverwijderen();
-                        
 						map.events.remove("click");
-						
 						popup.close();
 					};                   
                 }
@@ -237,13 +221,10 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 										html: text
 									}, baseConfig));
 								};
-								
 																
 								popup.add(config);
 								popup.doLayout();
-								
-							}							
-								
+							}									
                         },
                         scope: this
                     }
@@ -272,11 +253,8 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
         return actions;
     },
 
-    infolaagverwijderen: function() {
-    	
+    infolaagverwijderen: function() {   	
     	for(var p = 1; p < map.layers.length; p++) {
-			
-			
 			if (map.layers[p].name == "Info"){
 	
 				layer_info = false;
@@ -284,8 +262,6 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 				map.layers[p].destroy();
 			};
 		};	
-    	
-    	
     },
     
     infolaagtoevoegen: function(){
@@ -311,13 +287,9 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 		pointRadius: 15
 		});
 
-		symboollayer = new OpenLayers.Layer.Vector("Info", {styleMap: style, displayInLayerSwitcher: false});	
-		
-		map.addLayers([symboollayer]);
-		
-		//map.setLayerIndex(symboollayer, map.layers.length);
-			
-					
+		symboollayer = new OpenLayers.Layer.Vector("Info", {styleMap: style, displayInLayerSwitcher: false});		
+		map.addLayers([symboollayer]);		
+		//map.setLayerIndex(symboollayer, map.layers.length);			
 	},
     
     /** private: method[displayPopup]

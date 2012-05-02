@@ -157,7 +157,8 @@
 	  <xsl:attribute name="id">
 		<xsl:text>btn-add-</xsl:text>
 		<xsl:value-of select="../dc:identifier"/>
-		<xsl:text>btn-url-</xsl:text>
+	 </xsl:attribute>
+	 <xsl:attribute name="title">
 		<xsl:value-of select="."/>
 	  </xsl:attribute>
 	  <xsl:value-of select="../dc:identifier"/>

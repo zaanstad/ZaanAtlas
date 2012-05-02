@@ -91,6 +91,10 @@ div.admin-overlay div.admin-overlay-element {
     background-image: url(img/geosilk/map_delete.png);
 }
 
+.x-btn .icon-addlayers-locked {
+    background-image: url(img/silk/lock.png);
+}
+
 .x-btn-icon .x-btn-logo .x-btn-text{
     height: 16px;
     width: 196px;

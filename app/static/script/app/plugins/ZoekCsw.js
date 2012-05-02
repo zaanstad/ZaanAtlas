@@ -139,17 +139,33 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
         var generateAddButtons = function() {
             var items = Ext.DomQuery.select('div[class=btn_add]');   
             for (var i = 0; i < items.length; i++) {
+            	var add_enabled = false;
                 var add_id = items[i].id.toString();
                 var add_record = items[i].innerHTML.toString();
-                items[i].innerHTML = "";
-                new Ext.Button({
-                    id: add_id,
-                    renderTo: add_id,
-                    text: 'Voeg laag toe',
-                    iconCls:'icon-addlayers',
-                    handler : getRecordvalueById.createDelegate(this, [add_record], ["string"] ),
-                    scope: this
-                });
+                var add_url = items[i].title.toString();
+                var source = this.target.layerSources[layerKey(add_url)];
+                items[i].innerHTML = "";                
+                if (source) {
+					items[i].title = "Voeg gegevens toe aan de ZaanAtlas";
+					new Ext.Button({
+						id: add_id,
+						renderTo: add_id,
+						text: 'Voeg laag toe',
+						iconCls: 'icon-addlayers',
+						handler: getRecordvalueById.createDelegate(this, [add_record], ["string"] ),
+						scope: this
+						});
+                } else {
+					items[i].title = "Deze laag is alleen intern beschikbaar";
+					new Ext.Button({
+						id: add_id,
+						renderTo: add_id,
+						text: 'Niet beschikbaar',
+						iconCls: 'icon-addlayers-locked',
+						disabled: true,
+						scope: this
+						});
+                }
             };
         };
 
@@ -157,12 +173,12 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             var items = Ext.DomQuery.select('div[class=btn_info]');  
             for (var j = 0; j < items.length; j++) { 
                 var recordId = new String();
-                recordId = items[j].id.toString();
+                recordId = items[j].id.toString();                
                 new Ext.Button({
                     id: recordId,
                     renderTo: recordId,
-                    iconCls:'icon-getfeatureinfo',
-                    handler : getRecordById.createDelegate(this, [recordId] ),
+                    iconCls: 'icon-getfeatureinfo',
+                    handler: getRecordById.createDelegate(this, [recordId] ),
                     scope: this
                 });
             };
@@ -282,20 +298,8 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             var url = textValue(getElementsByTag(server[0], gmd, "URL")[0]);
             var protocol = textValue(getElementsByTag(getElementsByTag(server[0], gmd, "protocol")[0], gco, "CharacterString")[0]);
             var layer = textValue(getElementsByTag(getElementsByTag(server[0], gmd, "name")[0], gco, "CharacterString")[0]);
-            
-            if (url.match("geowebcache") != null) {
-            	var key = "tiles";
-            };
-            
-            if (url.match("geo.zaanstad.nl/geoserver") != null) {
-            	var key = "publiek";
-            };
-            
-            if (url.match("map16z/geoserver") != null) {
-            	var key = "intranet";
-            };
-            
-			var source = this.target.layerSources[key];
+                        
+			var source = this.target.layerSources[layerKey(url)];
 			        
 			if (source.lazy) {
 				source.store.load({callback: (function() {
@@ -326,6 +330,23 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             };
             
            layerStore.insert(layerStore.data.items.length - aantal_pointerlagen, [record]); //hierdoor komen lagen altijd onder de "Adres" en "Info" pointerlagen
+        };
+        
+        function layerKey(url) {
+        
+            if (url.toLowerCase().match("geo.zaanstad.nl/geowebcache") != null) {
+            	var key = "tiles";
+            };
+            if (url.toLowerCase().match("map16z/geowebcache") != null) {
+            	var key = "intratiles";
+            };
+            if (url.toLowerCase().match("geo.zaanstad.nl/geoserver") != null) {
+            	var key = "publiek";
+            };
+            if (url.toLowerCase().match("map16z/geoserver") != null) {
+            	var key = "intranet";
+            };
+            return key;
         };
         
         function textValue(obj) {

@@ -23,7 +23,7 @@
         var app = new GeoExplorer.Composer({
             authStatus: {{status}},
             proxy: "../proxy/?url=",
-            printService: "/geoserver/pdf/",
+            printService: "http://map16z/geoserver/pdf/",
             about: {
                 title: "ZaanAtlas, de Zaanse kaartenbak",
                 "abstract": "Een applicatie voor het samenstellen en publiceren van " +
@@ -37,21 +37,25 @@
                 },
                 publiek: {
                     url: "/geoserver/ows",
-                    //url: "http://map11z:8085/geoserver/ows",
+                    //url: "http://geo.zaanstad.nl/geoserver/ows",
                     title: "Internet",   
                     ptype: "gxp_wmssource"
                 },
                 intranet: {
                     url: "http://map16z/geoserver/ows",
                     title: "Intranet",
-                    ptype: "gxp_wmscsource"
+                    ptype: "gxp_wmssource"
+                },
+                intratiles: {
+                	ptype: "gxp_gwcsource_local"
                 },
                 google: {
                     ptype: "gxp_googlesource"
-                },
-                ol: {
-                    ptype: "gxp_olsource"
                 }
+                //},
+                //ol: {
+                //    ptype: "gxp_olsource"
+                //}
             },
            map: {
            		resolutions: [
