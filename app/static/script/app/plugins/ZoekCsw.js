@@ -178,7 +178,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                     id: recordId,
                     renderTo: recordId,
                     iconCls: 'icon-getfeatureinfo',
-                    handler: getRecordById.createDelegate(this, [recordId] ),
+                    handler: embedMeta.createDelegate(this, [recordId] ),
                     scope: this
                 });
             };
@@ -193,6 +193,33 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             xml = xmlhttp.responseXML;
             return xml;
         };
+        
+        function hideDetails() {
+		  document.getElementById("csw-output").style.display = "block";
+		  document.getElementById("csw-details").style.display = "none";
+		  Ext.getCmp('btnTerug').hide();
+        }
+        
+        function embedMeta(id) {
+		  document.getElementById("csw-output").style.display = "none";
+		  document.getElementById("csw-details").innerHTML = ' Metadata opvragen...';
+		  document.getElementById("csw-details").style.display = "block";
+		  
+            var OLrequest = OpenLayers.Request.GET({
+                 url : "http://geo.zaanstad.nl/geonetwork/srv/nl/metadata.show.embedded?uuid=" + id,
+                 async: true,
+                 headers: {
+                     "Content-Type": "application/html"
+                 },
+                 success : function(response) {
+                     document.getElementById("csw-details").innerHTML = response.responseText;
+                 },
+                 failure : function(response) {
+                 	document.getElementById("csw-details").innerHTML= " Fout:\n"+ response.status + "<br>" +response.statusText;
+                 }
+             });
+             Ext.getCmp('btnTerug').show();
+        }
         
         function handleCSWResponse (request, xml) { 
             var stylesheet = "../div/xsl/prettyxml.xsl";
@@ -219,6 +246,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             outputDiv.innerHTML = output; 
             //alert (output);
             outputDiv.style.display = "block";
+            Ext.getCmp('btnTerug').hide();
         };
 
         function getRecords (start) {
@@ -486,7 +514,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 id: 'btnTerug',
                 iconCls:'gxp-icon-zoom-previous',
                 handler: function() {
-                    this.initButtons();
+                    hideDetails();
                 },
                 scope: this,
                 hidden: true
