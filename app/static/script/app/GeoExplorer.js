@@ -425,9 +425,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var mapInfo = new Ext.Panel({
             title: this.mapInfoText,
             html: '<div class="gx-info-panel">' +
-                  '<h2>'+this.titleText+'</h2><p>' + about.title +
-                  '</p><h2>'+this.descriptionText+'</h2><p>' + app.about['abstract'] +
-                  '</p> <h2>'+this.contactText+'</h2><p>' + about.contact +'</p></div>',
+                  '<h2>'+ this.titleText+'</h2><p>' + about.title +
+                  '</p><h2>'+ this.descriptionText+'</h2><p>' + app.about['abstract'] +
+                  '</p> <h2>'+ this.contactText+'</h2><p>' + about.contact +'</p></div>',
             height: 'auto',
             width: 'auto'
         });
