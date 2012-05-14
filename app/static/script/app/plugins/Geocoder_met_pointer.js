@@ -95,8 +95,8 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
 		featureType: "verblijfsobjecten",
 		featurePrefix: "geo",
 		srsName: "EPSG:28992",
-		fieldName: "ADRES",
-		geometryName: "the_geom",
+		fieldName: "adres",
+		geometryName: "geom",
 		emptyText: "Zoek een adres ...",
 		listEmptyText: "- niets gevonden -",
 		customSortInfo: {
