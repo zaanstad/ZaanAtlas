@@ -63,7 +63,7 @@ gxp.plugins.Geocoder = Ext.extend(gxp.plugins.Tool, {
      * ``Integer`` Zoom level to zoom to when an address is selected.
      * Defaults to 16.
      */
-    zoom: 16,
+    zoom: 8,
 
     init: function(target) {
 

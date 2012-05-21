@@ -91,7 +91,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
         
         var options = {
             projection: "EPSG:28992",
-            resolutions: [53.76, 40.32, 26.88, 20.16, 13.44, 10.08, 6.72, 5.04, 3.36, 2.52, 1.68, 1.26, 0.84, 0.63, 0.42, 0.315, 0.21, 0.1575, 0.105, 0.07875, 0.0525],
+            resolutions: [53.76, 26.88, 13.44, 6.72, 3.36, 1.68, 0.84, 0.42, 0.21, 0.105, 0.0525],
 			maxExtent: new OpenLayers.Bounds(12628.0541,308179.0423,287879.2541,610955.3622999999),
             units: "m",
             buffer: 1,

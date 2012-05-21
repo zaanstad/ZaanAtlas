@@ -109,7 +109,7 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
 		}
 	},
 	
-	zoom: 16,
+	zoom: 8,
     
 /** api: method[addActions]
 */
