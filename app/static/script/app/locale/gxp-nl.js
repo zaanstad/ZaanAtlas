@@ -61,7 +61,7 @@ GeoExt.Lang.add("nl", {
     },
 
     "gxp.plugins.Legend.prototype": {
-        menuText: "Toon legenda",
+        menuText: "Legenda",
         tooltip: "Toon legenda"
     },
 

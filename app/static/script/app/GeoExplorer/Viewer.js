@@ -118,7 +118,7 @@ GeoExplorer.Viewer = Ext.extend(GeoExplorer, {
         });
         
         var layerChooser = new Ext.Button({
-            tooltip: 'Layer Switcher',
+            tooltip: 'Kaartlagen',
             iconCls: 'icon-layer-switcher',
             menu: new gxp.menu.LayerMenu({
                 layers: this.mapPanel.layers
