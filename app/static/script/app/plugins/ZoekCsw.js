@@ -117,23 +117,19 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
 		cswhost = this.initialConfig.search.selectedSource;
 		
         function search (searchstring) {
-            //this.cswhost = "/geonetwork/srv/nl/csw"; //"http://" + window.location.host +            
-            //this.cswhost = "http://geo.zaanstad.nl/geonetwork/srv/nl/csw";
+        	this.query = searchstring;
+            var outputDiv = document.getElementById("csw-output");
+            outputDiv.style.display = "block";
+            document.getElementById("csw-details").style.display = "none";
+            outputDiv.innerHTML = "Zoeken naar '" + searchstring + "' in de metadata catalogus...";
             this.use_proxy = true;
             this.defaultschema = "http://www.isotc211.org/2005/gmd";
-            this.schema = "http://www.opengis.net/cat/csw/2.0.2";
+            this.schema = "http://www.opengis.net/cat/csw/2.0.2";            
             this.getrecords_xsl = loadDocument("../div/xsl/getrecords.xsl");
             this.getrecordbyid_xsl = loadDocument("../div/xsl/getrecordbyid.xsl");
             this.defaults_xml = loadDocument("../div/xml/defaults.xml");
             this.defaultschema = this.defaults_xml.selectSingleNode("/defaults/outputschema/text()").nodeValue;
-            var outputDiv = document.getElementById("csw-output");
-            outputDiv.style.display = "block";
-            document.getElementById("csw-details").style.display = "none";
-            this.query = searchstring;
-            outputDiv.innerHTML = "Zoeken naar '" + searchstring + "' in de metadata catalogus...";
             getRecords(1);
-            generateAddButtons();
-            generateInfoButtons();
         };
         
         var generateAddButtons = function() {
@@ -173,10 +169,12 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             var items = Ext.DomQuery.select('div[class=btn_info]');  
             for (var j = 0; j < items.length; j++) { 
                 var recordId = new String();
-                recordId = items[j].id.toString();                
+                recordId = items[j].id.toString();
+                items[j].title = "Vraag de metadata op van deze gegevens";            
                 new Ext.Button({
                     id: recordId,
                     renderTo: recordId,
+                    text: 'Metadata',
                     iconCls: 'icon-getfeatureinfo',
                     handler: embedMeta.createDelegate(this, [recordId] ),
                     scope: this
@@ -244,7 +242,8 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             var output = GetXmlContent(XmlDom);
      
             outputDiv.innerHTML = output; 
-            //alert (output);
+            generateAddButtons();
+            generateInfoButtons();
             outputDiv.style.display = "block";
             Ext.getCmp('btnTerug').hide();
         };
@@ -280,10 +279,11 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             //alert(new XMLSerializer().serializeToString(request_xml));
             var request = GetXmlContent(request_xml);
 
-            csw_response = sendCSWRequest(request);
+			sendCSWRequest(request);
+            //csw_response = sendCSWRequest(request);
             //alert(new XMLSerializer().serializeToString(csw_response));
 
-            return handleCSWResponse("getrecords", csw_response);
+            //return handleCSWResponse("getrecords", csw_response);
             //return handleCSWResponse("getrecords", results_xml);
         };
 
@@ -318,7 +318,23 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             var gmd = "http://www.isotc211.org/2005/gmd";
             var gco = "http://www.isotc211.org/2005/gco";
 
-            csw_response = sendCSWRequest(request);
+            var csw_response;
+            var requestxml = encodeURIComponent(request);
+            var OLrequest = OpenLayers.Request.POST({
+                 url : this.cswhost,
+                 async: false,
+                 data : request,
+                 headers: {
+                     "Content-Type": "application/xml"
+                 },
+                 success : function(response) {
+                     //alert(response.responseText);
+                     csw_response = response.responseXML;
+                 },
+                 failure : function(response) {
+                	 //xml = response.responseXML;
+                 }
+             });
             
             var transfer = getElementsByTag(csw_response, gmd, "MD_DigitalTransferOptions");
             var server = getElementsByTag(transfer[0], gmd,"CI_OnlineResource");
@@ -416,18 +432,14 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 //alert (xmlDoc.xml);
                 return xmlDoc.xml;
             }
-            //alert("Cannot display the contents of the XML document as a string.");
         };
 
         function sendCSWRequest (request) {
         	var xml;
-            //var xml = Sarissa.getDomDocument();
-            //xml.async = false; 
-
             var requestxml = encodeURIComponent(request);
             var OLrequest = OpenLayers.Request.POST({
                  url : this.cswhost,
-                 async: false,
+                 async: true,
                  data : request,
                  headers: {
                      "Content-Type": "application/xml"
@@ -435,9 +447,14 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                  success : function(response) {
                      //alert(response.responseText);
                      xml = response.responseXML;
+                     handleCSWResponse("getrecords", xml);
                  },
                  failure : function(response) {
                 	 //xml = response.responseXML;
+                	 var outputDiv = document.getElementById("csw-output");
+                	 outputDiv.innerHTML = "<h3>Fout tijdens verbinding maken met metadata catalogus.</h3>";
+                	 outputDiv.style.display = "block";
+            		 Ext.getCmp('btnTerug').hide();
                  }
              });
 
@@ -540,7 +557,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             layout: "border",
             maximizable: true,  
             height: 600,
-            width: 550,
+            width: 650,
             modal: true,
             items: items,
             tbar: topToolbar,

@@ -1,10 +1,21 @@
 .cswresults
 {
 	border: 1px solid #CCC;
+	border-radius: 4px;
 	background-color: #FFFFFF;
 	margin-bottom: 10px;
+	position: relative;
+	overflow:hidden;
 }
 
+.cswresults hr
+{
+	border: 1px;
+	height: 1px;
+	margin: 0 0 0 0;
+	color: #CCC;
+	background-color: #CCC;
+}
 .cswresults p
 {
 	color: #444444;
@@ -24,28 +35,42 @@
 
 .btn_info
 {
-	/*+placement:float-right;*/
-	float: right;
-	padding-right: 4px;
+	position: absolute; 
+	top: 4px;
+	right: 4px;
 }
 
 .btn_add
 {
 	/*+placement:float-right;*/
-	float: right;
-	padding-right: 4px;
+	position: absolute; 
+	bottom: 4px;
+	right: 4px;
+}
+
+.align-right { float:right; margin: 4px 0 0 0; }
+.align-left { float:left; margin: 0 4px 0 0; }
+
+.thumbnail
+{
+	padding-left: 4px; 
+	padding-top: 4px; 
+	padding-bottom: 4px; 
+	border: 0;   
+	overflow: hidden;
+	width: 100px;
+	height: 100px;
 }
 
 .cswresults h3
 {
 	font-weight: bold;
 	font-size: 10pt;
-	height: 24px;
-	line-height: 1.8;
-	background-color: #CCCCCC;
+	height: 22px;
 	color: #08298A;
-	margin-top: 0;
+	background: #CCC;
 	padding-left: 4px;
+	padding-top: 8px
 }
  
  .captioneddiv { 
@@ -89,10 +114,6 @@ div.admin-overlay div.admin-overlay-element {
 
 .x-btn .icon-delete {
     background-image: url(img/geosilk/map_delete.png);
-}
-
-.x-btn .icon-addlayers-locked {
-    background-image: url(img/silk/lock.png);
 }
 
 .x-btn-icon .x-btn-logo .x-btn-text{

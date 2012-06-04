@@ -67,10 +67,6 @@
   </h3>
 </xsl:if>
 
-<xsl:if test="number(@numberOfRecordsReturned) = 0 and ($start > 1 or number($next) = 0)">
-  <h3>Niets gevonden</h3>
-</xsl:if>
-
 <!--<h3>Gevonden records: <xsl:value-of select="@numberOfRecordsReturned"/>
 (van <xsl:value-of select="@numberOfRecordsMatched"/>)
 </h3>
@@ -91,7 +87,16 @@
       </xsl:choose>
       <xsl:apply-templates select="./dc:identifier"/>
       </h3>
-      <p>
+      <xsl:variable name="value" select="./dc:URI[@name='thumbnail']" />
+      <xsl:if test="contains($value,'resources.get?')">
+	  <img class="align-left thumbnail" caption="thumbnail">
+	  <xsl:attribute name="src">
+	  	<xsl:text>http://geo.zaanstad.nl/geonetwork/srv/nl/</xsl:text>
+	  	<xsl:value-of select="./dc:URI[@name='thumbnail']"/>
+	  </xsl:attribute>
+	  </img>
+	  </xsl:if>
+	  <p>
       <xsl:apply-templates select="./dct:abstract"/>
       <xsl:apply-templates select="./dc:source"/>
       <strong><xsl:text>Sleutelwoorden: </xsl:text></strong>
@@ -121,7 +126,7 @@
 
 <xsl:template match="dct:abstract">
     <strong><xsl:text>Samenvatting: </xsl:text></strong>
-    <xsl:value-of select="substring(.,1,250)"/>
+    <xsl:value-of select="substring(.,1,200)"/>
     <xsl:text>...</xsl:text>
     <br/>
 </xsl:template>
@@ -130,7 +135,7 @@
   <strong><xsl:text>Bron: </xsl:text></strong>
   <xsl:choose>
     <xsl:when test=".!=''">
-		<xsl:value-of select="substring(.,1,250)"/>
+		<xsl:value-of select="substring(.,1,100)"/>
 		<xsl:text>...</xsl:text>
 		<br/>
     </xsl:when>
@@ -151,8 +156,7 @@
 </xsl:template>  
 
 <xsl:template match="dc:URI">
-  <xsl:choose>
-    <xsl:when test="contains(@protocol, 'http-get-map')">
+    <xsl:if test="contains(@protocol, 'http-get-map')">
 	  <div class="btn_add">
 	  <xsl:attribute name="id">
 		<xsl:text>btn-add-</xsl:text>
@@ -163,8 +167,6 @@
 	  </xsl:attribute>
 	  <xsl:value-of select="../dc:identifier"/>
 	 </div>
-	 <br/>
-    </xsl:when>
-  </xsl:choose>
+    </xsl:if>
 </xsl:template>
 </xsl:stylesheet>
