@@ -121,7 +121,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             var outputDiv = document.getElementById("csw-output");
             outputDiv.style.display = "block";
             document.getElementById("csw-details").style.display = "none";
-            outputDiv.innerHTML = "Zoeken naar '" + searchstring + "' in de metadata catalogus...";
+            outputDiv.innerHTML = "Zoeken naar <i>" + searchstring + "</i> in de metadata catalogus...";
             this.use_proxy = true;
             this.defaultschema = "http://www.isotc211.org/2005/gmd";
             this.schema = "http://www.opengis.net/cat/csw/2.0.2";            
@@ -452,7 +452,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                  failure : function(response) {
                 	 //xml = response.responseXML;
                 	 var outputDiv = document.getElementById("csw-output");
-                	 outputDiv.innerHTML = "<h3>Fout tijdens verbinding maken met metadata catalogus.</h3>";
+                	 outputDiv.innerHTML = "Kan geen verbinding maken met de metadata catalogus.<br>Probeer het s.v.p. op een later moment opnieuw.";
                 	 outputDiv.style.display = "block";
             		 Ext.getCmp('btnTerug').hide();
                  }
