@@ -65,17 +65,23 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     title: "GeoWebCache Layers",
 
-    /** api: config[naipAttribution]
+    /** api: config[attributionZaanstad]
      *  ``String``
      *  Attribution string for NAIP generated layer (i18n).
      */
-    attributionZaanstad: "<a href='http://www.zaanstad.nl/' target='_blank'><img src='../theme/app/img/logo.png' border='0'></a>",
+    attributionZaanstad: "<a href='http://www.zaanstad.nl/' target='_blank'><img src='../theme/app/img/logo_zaanstad.png' border='0'></a>",
 
-    /** api: config[naipAttribution]
+    /** api: config[attributionMapfactory]
      *  ``String``
      *  Attribution string for NAIP generated layer (i18n).
      */
-    attributionMapfactory: "<a href='http://www.mapfactory.nl/' target='_blank'><img src='../theme/app/img/mapfactory.png' border='0'></a>",
+    attributionMapfactory: "<a href='http://www.mapfactory.nl/' target='_blank'><img src='../theme/app/img/logo_mapfactory.png' border='0'></a>",
+
+    /** api: config[attributionKadaster]
+     *  ``String``
+     *  Attribution string for NAIP generated layer (i18n).
+     */
+    attributionKadaster: "<a href='http://www.kadaster.nl/' target='_blank'><img src='../theme/app/img/logo_kadaster.png' border='0'></a>",
 
     /** api: config[url]
      *  ``String``
@@ -116,7 +122,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 this.url,
                 {layers: "Luchtfoto", format: "image/png"},
                 OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionZaanstad,
+                    attribution: this.attributionKadaster,
                     type: "lufo"
                 }, options)
             ),
@@ -125,7 +131,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 this.url,
                 {layers: "Top10nl", format: "image/png"},
                 OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionZaanstad,
+                    attribution: this.attributionKadaster,
                     type: "top10nl"
                 }, options)
             ),
