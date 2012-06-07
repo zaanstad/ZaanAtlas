@@ -162,7 +162,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 checked: true, 
                 iconCls: "gxp-icon-getfeatureinfo",
                 ptype: "gxp_wmsgetfeatureinfo",
-                format: 'grid',
+                format: 'html',
                 toggleGroup: this.toggleGroup
             }, {
                 leaf: true, 
