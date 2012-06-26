@@ -131,19 +131,6 @@ gxp.AdminOverlay = Ext.extend(Ext.Panel, {
             cls: 'admin-overlay-element',
             border: false
         });
-        var wrapper4 = new Ext.Panel({
-            items: [{ 
-            		xtype: 'button', 
-            		handler: function() {
-            			alert("Nog niet geimplementeerd");
-            			//app.save(app.showEmbedWindow);
-            		},
-            		scope: this,
-            		iconCls: 'icon-delete'
-            		}],
-            cls: 'admin-overlay-element',
-            border: false
-        });
         this.add(wrapper1);
         this.add(wrapper2);
         this.add(wrapper3);

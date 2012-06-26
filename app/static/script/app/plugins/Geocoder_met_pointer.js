@@ -169,7 +169,7 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
 */
     showCapabilitiesGrid: function() {        
         this.initCapGrid();
-        Tool_button = this.target.toolbar.items.items[15];
+        Tool_button = this.target.toolbar.items.items[14];
         Tool_button.disable();
     },
 
