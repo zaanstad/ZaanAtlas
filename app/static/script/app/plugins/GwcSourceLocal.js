@@ -69,13 +69,19 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  Attribution string for NAIP generated layer (i18n).
      */
-    attributionZaanstad: "<a href='http://www.zaanstad.nl/' target='_blank'><img src='../theme/app/img/logo.png' border='0'></a>",
+    attributionZaanstad: "<a href='http://www.zaanstad.nl/' target='_blank'><img src='../theme/app/img/logo_zaanstad.png' border='0'></a>",
 
     /** api: config[attributionMapfactory]
      *  ``String``
      *  Attribution string for NAIP generated layer (i18n).
      */
-    attributionMapfactory: "<a href='http://www.mapfactory.nl/' target='_blank'><img src='../theme/app/img/mapfactory.png' border='0'></a>",
+    attributionMapfactory: "<a href='http://www.mapfactory.nl/' target='_blank'><img src='../theme/app/img/logo_mapfactory.png' border='0'></a>",
+
+    /** api: config[attributionCitoplan]
+     *  ``String``
+     *  Attribution string for NAIP generated layer (i18n).
+     */
+    attributionCitoplan: "<a href='http://www.citoplan.nl/' target='_blank'><img src='../theme/app/img/logo_citoplan.png' border='0'></a>",
 
     /** api: config[url]
      *  ``String``
@@ -114,6 +120,15 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionMapfactory,
                     type: "Zaanstad1812"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
+                "Cito-Plan",
+                this.url,
+                {layers: "CITOPLAN", format: "image/png8"},
+                OpenLayers.Util.applyDefaults({
+                    attribution: this.attributionCitoplan,
+                    type: "citoplan"
                 }, options)
             )
         ];

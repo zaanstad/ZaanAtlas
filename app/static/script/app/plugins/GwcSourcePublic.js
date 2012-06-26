@@ -111,37 +111,64 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Open Street Map",
                 this.url,
-                {layers: "OSM", format: "image/png"},
+                {layers: "OSM", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "osm"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
+                "Zaanstad",
+                this.url,
+                {layers: "Zaanstad", format: "image/png8"},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Zaanstad"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
                 "Luchtfoto",
                 this.url,
-                {layers: "Luchtfoto", format: "image/png"},
+                {layers: "Luchtfoto", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionKadaster,
                     type: "lufo"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
+                "Luchtfoto 2008 kleur",
+                this.url,
+                {layers: "Lufo2008-kleur", format: "image/png8"},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo2008-kleur"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
+                "Luchtfoto 2010 kleur",
+                this.url,
+                {layers: "Lufo2010-kleur", format: "image/png8"},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo2010-kleur"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
                 "Topkaart (top10nl)",
                 this.url,
-                {layers: "Top10nl", format: "image/png"},
+                {layers: "Top10nl", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionKadaster,
                     type: "top10nl"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
-                "BAG",
+                "Topkaart (top10nl) ondertoon",
                 this.url,
-                {layers: "BAG", format: "image/png"},
+                {layers: "Top10nl-ondertoon", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionZaanstad,
-                    type: "bag"
+                    attribution: this.attributionKadaster,
+                    type: "top10nl-ondertoon"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
