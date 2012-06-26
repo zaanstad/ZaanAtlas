@@ -59,10 +59,6 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 },
                 outputTarget: "tree"
             }, {
-            //    ptype: "gxp_addlayers",
-            //    actionTarget: "layers.tbar",
-            //    upload: true
-            //}, {
                 ptype: "gxp_zoekcsw",
                 actionTarget: "layers.tbar",
                 search: {selectedSource: "http://geo.zaanstad.nl/geonetwork/srv/nl/csw"}
@@ -80,34 +76,34 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 actionTarget: {target: "layers.contextMenu", index: 0}
             }, {
                 ptype: "gxp_navigation", toggleGroup: this.toggleGroup,
-                actionTarget: {target: "paneltbar", index: 3}
+                actionTarget: {target: "paneltbar", index: 1}
             }, {
                 ptype: "gxp_wmsgetfeatureinfozaanatlas", toggleGroup: this.toggleGroup,
-                actionTarget: {target: "paneltbar", index: 5}
+                actionTarget: {target: "paneltbar", index: 3}
             }, {
                 ptype: "gxp_measure", toggleGroup: this.toggleGroup,
                 controlOptions: {immediate: true},
-                actionTarget: {target: "paneltbar", index: 6}
-            }, {
-                ptype: "gxp_zoom",
                 actionTarget: {target: "paneltbar", index: 4}
             }, {
+                ptype: "gxp_zoom",
+                actionTarget: {target: "paneltbar", index: 2}
+            }, {
                 ptype: "gxp_zoomtoextent",
-                actionTarget: {target: "paneltbar", index: 6}
+                actionTarget: {target: "paneltbar", index: 4}
             }, {
                 ptype: "gxp_streetview", toggleGroup: this.toggleGroup,
-                actionTarget: {target: "paneltbar", index: 10}
+                actionTarget: {target: "paneltbar", index: 8}
             }, {
                 ptype: "gxp_geocodermetpointer" ,
-                actionTarget: {target: "paneltbar", index: 13}
+                actionTarget: {target: "paneltbar", index: 20}
             }, {
                 ptype: "gxp_permalink",
-                actionTarget: {target: "paneltbar", index: 2}
+                actionTarget: {target: "paneltbar", index: 0}
             }, {
                 ptype: "gxp_print",
                 customParams: {outputFilename: "ZaanAtlas-print", includeLegend: true},
                 printService: config.printService,                
-                actionTarget: {target: "paneltbar", index: 3}
+                actionTarget: {target: "paneltbar", index: 1}
             }
         ];
         
@@ -294,7 +290,13 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
         var tools = GeoExplorer.Composer.superclass.createTools.apply(this, arguments);
 
         this.loginButton = new Ext.Button();
-        tools.push(['->', this.loginButton]);
+        //tools.push(['->', this.loginButton]);
+        tools.push([
+        	'->',
+        	{
+        	ptype: "gxp_geocodermetpointer",
+        	actionTarget: {target: "paneltbar"}
+        	}]);
 
         // unauthorized, show login button
         if (this.authorizedRoles.length === 0) {
@@ -307,17 +309,17 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             this.showLogout(user);
         }
 
-        var aboutButton = new Ext.Button({
-            scale: 'logo',
-            iconCls: "icon-logo",
-            handler: this.displayAppInfo,
-            scope: this
-        });
+        //var aboutButton = new Ext.Button({
+        //    scale: 'logo',
+        //    iconCls: "icon-logo",
+        //    handler: this.displayAppInfo,
+        //    scope: this
+        //});
 
+        //tools.unshift("-");
         tools.unshift("-");
         tools.unshift("-");
-        tools.unshift("-");
-        tools.unshift(aboutButton);
+        //tools.unshift(aboutButton);
         return tools;
     },
 

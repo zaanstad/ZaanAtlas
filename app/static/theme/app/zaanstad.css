@@ -134,57 +134,29 @@ div.admin-overlay div.admin-overlay-element {
 }
 .icon-logo-klein {
     background-image: url(img/logo_zaanatlas_klein.png);
-} 
+}
+
+#top {
+	background-image: url(img/fotoheader_homepage.jpg);
+	height: 50px;
+}
  
-/* TODO: Remove this if GetFeatureInfo is changed from text/html */
-
-table.featureInfo, table.featureInfo td, table.featureInfo th {
-    border: 1px solid #ddd;
-    border-collapse: collapse;
-    margin: 0;
-    padding: 0;
-    font-size: 90%;
-    padding: .2em .1em;
-}
-table.featureInfo th {
-    padding: .2em .2em;
-    font-weight: bold;
-    background: #eee;
-}
-table.featureInfo td{
-    background: #fff;
-}
-table.featureInfo tr.odd td{
-    background: #eee;
-}
-table.featureInfo caption{
-    text-align: left;
-    font-size: 100%;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: .2em .2em;
+#headnav {
+background: none repeat scroll 0 0 #00A5C7;
+	position: absolute;
+	margin: 0;
+	right: 0px;
+	top: 0px;
+	padding: 4px;
+	font-size: 11px;
 }
 
-.koptekst{
-			font-family:"Times New Roman"; 
-			font-size: 300%; 
-			font-weight: bold;
-			font-style:italic;
-		}
+#headnav a,#footer a {
+	margin: 0px 4px 0px 12px;
+	color: #FFFFFF;
+	text-decoration: underline;
+}
 
-.attribuutnaam{
-			font-family:"Times New Roman"; 
-			font-size: 100%; 
-			font-weight: bold;
-		}
-
-.attribuutwaarde{
-			font-family:"Times New Roman"; 
-			font-size: 100%; 
-		}
-		
-.tabel {
-
-border: 1px solid #ddd;
-		
+#headnav a:hover,#footer a:hover {
+	color: #FFFFFF;
 }

@@ -273,15 +273,48 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
      * Create the various parts that compose the layout.
      */
     initPortal: function() {
+    
+		var header = new Ext.Container({
+        	height: 50,
+        	html: "<div id='top'>" +
+        	      "<img src='../theme/app/img/logo_zaanatlas_groot.png'>" +
+        		  "<div id='headnav'>" +
+        		  "<a href='#' onclick='app.displayAppInfo(); return false;'>Help</a>" + 
+        		  "<a href='mailto:geo-informatie@zaanstad.nl?subject=ZaanAtlas'>Contact</a>" + 
+        		  "<a href='#' onclick='app.showLoginDialog(); return false;' id='login-link'>Login</a>" + 
+        		  "</div>" +
+        		  "</div>"
+        	});
         
         var westPanel = new Ext.Panel({
-            id: "tree",
+        	id: "tree",
+        	title: "Lagen",
+        	layout: "fit",
+            collapsible: true,
+            header: true
+        });
+        
+        var westPanel2 = new Ext.Panel({
+            collapsible: true,
+            title: "Test",
+            collapsible: true,
+            header: true
+        });
+        
+        var bigPanel = new Ext.Panel({
+        	id: "bigpanel",
             region: "west",
             layout: "fit",
-            width: 205,
+            width: 250,
             split: true,
             collapsible: true,
-            collapseMode: "mini",
+            defaults: {
+                border: false
+            },
+            items: [
+                westPanel
+            ],
+            activeItem: 0,
             header: false
         });
         
@@ -305,6 +338,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         this.mapPanelContainer = new Ext.Panel({
             layout: "card",
             region: "center",
+            tbar: this.toolbar,
             defaults: {
                 border: false
             },
@@ -317,10 +351,10 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         this.portalItems = [{
             region: "center",
             layout: "border",
-            tbar: this.toolbar,
+            tbar: header,
             items: [
                 this.mapPanelContainer,
-                westPanel
+                bigPanel
             ]
         }];
         
