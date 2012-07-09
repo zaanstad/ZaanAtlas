@@ -31,6 +31,12 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gxp_zoekcsw */
     ptype: "gxp_zoekcsw",
+
+    /** api: config[addActionText]
+     *  ``String``
+     *  Text for add menu item (i18n).
+     */
+    addActionText: "Toevoegen",
     
     /** api: config[addActionMenuText]
      *  ``String``
@@ -116,20 +122,23 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
 		target = this.target;
 		cswhost = this.initialConfig.search.selectedSource;
 		
-        function search (searchstring) {
-        	this.query = searchstring;
-            var outputDiv = document.getElementById("csw-output");
-            outputDiv.style.display = "block";
-            document.getElementById("csw-details").style.display = "none";
-            outputDiv.innerHTML = "Zoeken naar <i>" + searchstring + "</i> in de metadata catalogus...";
-            this.use_proxy = true;
-            this.defaultschema = "http://www.isotc211.org/2005/gmd";
-            this.schema = "http://www.opengis.net/cat/csw/2.0.2";            
-            this.getrecords_xsl = loadDocument("../div/xsl/getrecords.xsl");
-            this.getrecordbyid_xsl = loadDocument("../div/xsl/getrecordbyid.xsl");
-            this.defaults_xml = loadDocument("../div/xml/defaults.xml");
-            this.defaultschema = this.defaults_xml.selectSingleNode("/defaults/outputschema/text()").nodeValue;
-            getRecords(1);
+        function search (searchstring, message) {
+        	this.query = searchstring.trim();
+        	var outputDiv = document.getElementById("csw-output");
+        	outputDiv.innerHTML = "";
+        	if (this.query != "") {
+				outputDiv.style.display = "block";
+				document.getElementById("csw-details").style.display = "none";
+				outputDiv.innerHTML = message;
+				this.use_proxy = true;
+				this.defaultschema = "http://www.isotc211.org/2005/gmd";
+				this.schema = "http://www.opengis.net/cat/csw/2.0.2";            
+				this.getrecords_xsl = loadDocument("../div/xsl/getrecords.xsl");
+				this.getrecordbyid_xsl = loadDocument("../div/xsl/getrecordbyid.xsl");
+				this.defaults_xml = loadDocument("../div/xml/defaults.xml");
+				this.defaultschema = this.defaults_xml.selectSingleNode("/defaults/outputschema/text()").nodeValue;
+				getRecords(1);
+            }
         };
         
         var generateAddButtons = function() {
@@ -195,6 +204,9 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
         function hideDetails() {
 		  document.getElementById("csw-output").style.display = "block";
 		  document.getElementById("csw-details").style.display = "none";
+		  Ext.getCmp('txtSearch').show();
+		  Ext.getCmp('btnSearch').show();
+		  Ext.getCmp('btnList').show();
 		  Ext.getCmp('btnTerug').hide();
         }
         
@@ -216,7 +228,10 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                  	document.getElementById("csw-details").innerHTML= " Fout:\n"+ response.status + "<br>" +response.statusText;
                  }
              });
-             Ext.getCmp('btnTerug').show();
+            Ext.getCmp('txtSearch').hide();
+		  	Ext.getCmp('btnSearch').hide();
+		  	Ext.getCmp('btnList').hide();
+            Ext.getCmp('btnTerug').show();
         }
         
         function handleCSWResponse (request, xml) { 
@@ -260,12 +275,12 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
      
             var operator = "contains";
             var sortby = "Title";
-            var query = this.query.trim();
+            var query = this.query;
             //var array = this.query.split(" ");
             if (operator == "contains" & query != "") {
                 query = "%" + query + "%";
             }
-                 
+            
             setXpathValue(this.defaults_xml, "/defaults/outputschema", this.schema + '');
             setXpathValue(this.defaults_xml, "/defaults/propertyname", queryable + '');
             setXpathValue(this.defaults_xml, "/defaults/literal", query + '');
@@ -435,8 +450,6 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
         };
 
         function sendCSWRequest (request) {
-        	var xml;
-            var requestxml = encodeURIComponent(request);
             var OLrequest = OpenLayers.Request.POST({
                  url : this.cswhost,
                  async: true,
@@ -457,8 +470,6 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             		 Ext.getCmp('btnTerug').hide();
                  }
              });
-
-             return xml;
         };
 
         function setXpathValue (_a,_b,_c) {
@@ -477,7 +488,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             }
         };
 
-        var items = {
+        var htmlcontainer = {
             xtype: "container",
             region: "center",
             style: {
@@ -489,16 +500,9 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
         };
         
         var topToolbar = new Ext.Toolbar({  
-            defaults:{  
-                //iconAlign: 'top'
-            },  
             items: [  
             {
-                xtype: 'spacer',
-                width: 10
-            },
-            {
-                id: 'searchval',
+                id: 'txtSearch',
                 xtype: 'textfield',
                 emptyText: 'Vul een zoekterm in',
                 selectOnFocus: true,
@@ -507,26 +511,36 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                     scope: this,  
                     specialkey: function(f,e){  
                         if(e.getKey()==e.ENTER){  
-                            search(Ext.getDom('searchval').value);  
+                		var searchval = Ext.getDom('txtSearch').value;
+                    	search(searchval, "Zoeken naar <i>" + searchval + "</i> in de metadata catalogus..."); 
                         }
                     }
                 }
-            },
-            {
-                xtype: 'spacer',
-                width: 10
-            },
-            {
+            }, {
+            	id: 'btnSearch',
                 xtype: 'button',
                 iconCls:'gxp-icon-find',
                 text: 'Zoeken',
                 handler: function() {
-                    search(Ext.getDom('searchval').value);
+                	var searchval = Ext.getDom('txtSearch').value;
+                    search(searchval, "Zoeken naar <i>" + searchval + "</i> in de metadata catalogus...");
                 },
                 scope: this
-            },
-            '->',  
-            {
+            }, {
+                xtype: 'tbseparator',
+                width: 10
+            }, {
+            	id: 'btnList',
+                xtype: 'button',
+                icon:'../theme/app/img/silk/application_view_list.png',
+                text: 'Alfabetische lijst',
+                handler: function() {
+                    search("%", "Alfabetische lijst opvragen...");
+                },
+                scope: this
+            }, {
+            	xtype: 'tbfill'
+            }, {
                 text:'Terug',
                 id: 'btnTerug',
                 iconCls:'gxp-icon-zoom-previous',
@@ -559,7 +573,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             height: 600,
             width: 650,
             modal: true,
-            items: items,
+            items: htmlcontainer,
             tbar: topToolbar,
             bbar: bbarItems
         }, this.initialConfig.outputConfig)); 
