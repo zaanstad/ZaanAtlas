@@ -19,6 +19,16 @@ Ext.namespace("GeoExplorer");
 GeoExplorer.Viewer = Ext.extend(GeoExplorer, {
     
     applyConfig: function(config) {
+            this.mapItems = [
+            {
+                xtype: "gx_zoomslider",
+                vertical: true,
+                height: 100,
+                plugins: new GeoExt.ZoomSliderTip({
+                    template: this.zoomSliderText
+                })
+            }
+        ];
         var allTools = config.viewerTools || this.viewerTools;
         var tools = [];
         var toolConfig;

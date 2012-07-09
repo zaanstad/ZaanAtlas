@@ -124,19 +124,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     toggleGroup: "toolGroup",
 
     constructor: function(config) {
-        this.mapItems = [
-            {
-                xtype: "gxp_adminoverlay"
-            }, {
-                xtype: "gx_zoomslider",
-                vertical: true,
-                height: 100,
-                plugins: new GeoExt.ZoomSliderTip({
-                    template: this.zoomSliderText
-                })
-            }
-        ];
-
         // both the Composer and the Viewer need to know about the viewerTools
         // First row in each object is needed to correctly render a tool in the treeview
         // of the embed map dialog. TODO: make this more flexible so this is not needed.

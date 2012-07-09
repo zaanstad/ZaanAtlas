@@ -39,6 +39,19 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
     // End i18n.
 
     constructor: function(config) {
+        this.mapItems = [
+            {
+                xtype: "gxp_adminoverlay"
+            }, {
+                xtype: "gx_zoomslider",
+                vertical: true,
+                height: 100,
+                plugins: new GeoExt.ZoomSliderTip({
+                    template: this.zoomSliderText
+                })
+            }
+        ];    
+
         if (config.authStatus === 401) {
             // user has not authenticated or is not authorized
             this.authorizedRoles = [];
@@ -67,9 +80,6 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 actionTarget: ["layers.tbar", "layers.contextMenu"]
             }, {
                 ptype: "gxp_layerproperties",
-                actionTarget: ["layers.tbar", "layers.contextMenu"]
-            }, {
-                ptype: "gxp_styler",
                 actionTarget: ["layers.tbar", "layers.contextMenu"]
             }, {
                 ptype: "gxp_zoomtolayerextent",
