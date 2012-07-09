@@ -102,30 +102,29 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
         this.baseUrl =  window.location.host;
         this.baseUrl = "";
 	
-        function trim(s)
-        {
-            return rtrim(ltrim(s));
-        };
-
-        function ltrim(s)
-        {
-            var l=0;
-            while(l < s.length && s[l] == ' ')
-            {
-                l++;
-            }
-            return s.substring(l, s.length);
-        };
-
-        function rtrim(s)
-        {
-            var r=s.length -1;
-            while(r > 0 && s[r] == ' ')
-            {
-                r-=1;
-            }
-            return s.substring(0, r+1);
-        };		
+		function email(url) {
+			var emailtxt = "%0AEr is een link aangemaakt naar een kaartbeeld uit de ZaanAtlas.%0A";
+			var api_key = "R_b3889752450cd7113ec5a5c06eca8b07";
+			var api_login = "teamgeo";
+			var api_url = "api.bitly.com";
+            var request = "longUrl="+encodeURIComponent(url)+"&login="+api_login+"&apiKey="+api_key+"&callback=?";
+            var OLrequest = OpenLayers.Request.POST({
+                 url : "http://"+api_url+"/v3/shorten?",
+                 async: true,
+                 data : request,
+                 headers: {
+                     "Content-Type": "text/javascript"
+                 },
+                 success : function(response) {
+                     //alert(response.responseText);
+                     var json = eval("(" + response.responseText.slice(2, -2) + ")");
+                     window.location = "mailto:?SUBJECT=ZaanAtlas%20link&BODY="+emailtxt+"%0AVerkorte link:%20"+json.data.url+"%0A%0ADe volgende kaartlagen zijn actief:%0A"+lyrs;
+                 },
+                 failure : function(response) {
+                 	alert(response.responseText);
+                 }
+             });
+            };
         
         function getElementsByTag(doc, url, tag) {
             var urlArray = url.split( "/" );
@@ -204,6 +203,10 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 		query2 = query2.substring (0, query2.length-1);
 		query2 = query2 + "]}}";
 		window.location.hash = query2;
+		var lyrs = "";
+		for (var i = 0, len = map1.layers.length; i < len; i++){
+			lyrs = map1.layers[i].name + "%0A" + lyrs;
+		}
 		//var str_provider = permalinkProvider.getLink();
 		//x = str_provider.indexOf("?");
 		//if (x != -1) {	
@@ -211,7 +214,7 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 		//};
 		//URL = str_provider + query2;
 	
-        var items = [{
+        var centre = [{
             xtype: 'container',
             layout: 'anchor',
             style: {
@@ -221,16 +224,26 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 			{
             xtype: "container",
             region: "center",
-            html: 	"<b>Hoe bewaar ik mijn kaartbeeld?</b>" +
-            		"<img src=../theme/app/img/bladwijzer.png />" +
-            		"Met behulp van een bladwijzer is het mogelijk om een kaartbeeld " + 
+            html: 	"<b>Bladwijzer</b><br>" +
+            		//"<img src=../theme/app/img/bladwijzer.png />" +
+            		"<p>Met behulp van een bladwijzer is het mogelijk om een kaartbeeld " + 
 					"te bewaren om deze de volgende keer eenvoudig en snel terug te kunnen vinden. " + 
-					"Gebruik hiervoor de bladwijzer/bookmark functie van de web-webbrowser.<br><br>" +
-					"<img src=../theme/app/img/silk/star.png />" +
-            		"<b>sla nu dit kaartbeeld op als bladwijzer in je webbrowser</b>" +
-            		"<img src=../theme/app/img/silk/star.png />",
+					"Gebruik hiervoor de bladwijzer of bookmark functie van de webbrowser terwijl dit venster zichtbaar is.<br><br>" +
+					"<img src=../theme/app/img/silk/application_go.png />" +
+            		" Sla nu dit kaartbeeld op als bladwijzer</p><br><br>" + 
+            		"<b>Email</b><br>" +
+            		"<p>Het is ook mogelijk om een verkorte link te versturen voor dit kaartbeeld naar een emailadres.<br><br></p>",
             scope: this
-        	}
+        	}, {
+                xtype: 'button',
+                icon:'../theme/app/img/silk/email_go.png',
+                text: 'Email de link voor deze kaart',
+                handler: function() {
+                    email(window.location);
+                    //email("http://geo.zaanstad.nl/zaanatlas/composer/"+window.location.hash);
+                },
+                scope: this
+            }
         ]
         }];
         
@@ -252,7 +265,7 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             width: 390,
             modal: true,
             resizable: false, 
-            items: items,
+            items: centre,
             bbar: bbarItems
         });
         
