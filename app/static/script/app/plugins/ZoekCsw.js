@@ -108,17 +108,17 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
      * Shows the window with a capabilities grid.
      */
     showCapabilitiesGrid: function() {
-        if(!this.capGrid) {
-            this.initCapGrid();
+        if(!this.catalogDialog) {
+            this.initCatalogDialog();
         }
-        this.capGrid.show();
+        this.catalogDialog.show();
     },
     
     /**
      * private: method[initCapGrid]
      * Constructs a window with a capabilities grid.
      */
-    initCapGrid: function() {
+    initCatalogDialog: function() {
 		target = this.target;
 		cswhost = this.initialConfig.search.selectedSource;
 		
@@ -148,7 +148,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 var add_id = items[i].id.toString();
                 var add_record = items[i].innerHTML.toString();
                 var add_url = items[i].title.toString();
-                var source = this.target.layerSources[layerKey(add_url)];
+                var source = this.target.layerSources[layerKey(add_url).key];
                 items[i].innerHTML = "";                
                 if (source) {
 					items[i].title = "Voeg gegevens toe aan de ZaanAtlas";
@@ -351,61 +351,77 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                  }
              });
             
+            var info = getElementsByTag(csw_response, gmd, "MD_DataIdentification");
+            var citation = getElementsByTag(info[0], gmd,"CI_Citation");
+            var title = textValue(getElementsByTag(getElementsByTag(citation[0], gmd, "title")[0], gco, "CharacterString")[0]);
+            
             var transfer = getElementsByTag(csw_response, gmd, "MD_DigitalTransferOptions");
             var server = getElementsByTag(transfer[0], gmd,"CI_OnlineResource");
 
             var url = textValue(getElementsByTag(server[0], gmd, "URL")[0]);
             var protocol = textValue(getElementsByTag(getElementsByTag(server[0], gmd, "protocol")[0], gco, "CharacterString")[0]);
             var layer = textValue(getElementsByTag(getElementsByTag(server[0], gmd, "name")[0], gco, "CharacterString")[0]);
-                        
-			var source = this.target.layerSources[layerKey(url)];
+        	
+        	var layertype = layerKey(url);
+        	var layersource = layertype.key;
+        	var layerbg = layertype.tile;      
+			var source = this.target.layerSources[layersource];
 			        
 			if (source.lazy) {
 				source.store.load({callback: (function() {
-					insertLayer(layer, source);
+					insertLayer(layer, title, source, layerbg);
 				}).createDelegate(this)});
 			} else {
-				insertLayer(layer, source);
+				insertLayer(layer, title, source, layerbg);
 			}
         };
         
-        function insertLayer(name, source) {
+        function insertLayer(name, title, source, background) {
         	var layerStore = this.target.mapPanel.layers;
         	var record = source.createLayerRecord({
                 name: name,
+                title: title,
                 source: source.id
                 });
-                
-            //layerStore.add([record]);            
-            // orden de layerStore zodanig dat de pointerlagen "Adres" en "Info" bovenaan komen te staan             
+            
             var aantal_pointerlagen = 0;
-            for (var i = 0, len = this.app.mapPanel.map.layers.length; i < len; i++){
-            	if (this.app.mapPanel.map.layers[i].name == "Adres") {
+            
+            if (background == false) {
+            // orden de layerStore zodanig dat de pointerlagen "Adres" en "Info" bovenaan komen te staan             
+            for (var i = 0, len = layerStore.map.layers.length; i < len; i++){
+            	if (layerStore.map.layers[i].name == "Adres") {
             		aantal_pointerlagen = aantal_pointerlagen + 1;	
             	};
-            	if (this.app.mapPanel.map.layers[i].name == "Info") {
+            	if (layerStore.map.layers[i].name == "Info") {
             		aantal_pointerlagen = aantal_pointerlagen + 1;             		
             	};  	
             };
+            } else {
+            	aantal_pointerlagen = layerStore.map.layers.length;
+            }
             
-           layerStore.insert(layerStore.data.items.length - aantal_pointerlagen, [record]); //hierdoor komen lagen altijd onder de "Adres" en "Info" pointerlagen
+           layerStore.insert(layerStore.map.layers.length - aantal_pointerlagen, [record]); //hierdoor komen lagen altijd onder de "Adres" en "Info" pointerlagen
         };
         
         function layerKey(url) {
         
             if (url.toLowerCase().match("geo.zaanstad.nl/geowebcache") != null) {
             	var key = "tiles";
+            	var obj = {key : "tiles", tile: true};
             };
             if (url.toLowerCase().match("map16z/geowebcache") != null) {
             	var key = "intratiles";
+            	var obj = {key : "intratiles", tile: true};
             };
             if (url.toLowerCase().match("geo.zaanstad.nl/geoserver") != null) {
             	var key = "publiek";
+            	var obj = {key : "publiek", tile: false};
             };
             if (url.toLowerCase().match("map16z/geoserver") != null) {
             	var key = "intranet";
+            	var obj = {key : "intranet", tile: false};
             };
-            return key;
+            return obj;
         };
         
         function textValue(obj) {
@@ -558,14 +574,14 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
         new Ext.Button({
             text: this.doneText,
             handler: function() {
-                this.capGrid.hide();
+                this.catalogDialog.hide();
             },
             scope: this
         })
         ];
 
         //TODO use addOutput here instead of just applying outputConfig
-        this.capGrid = new Ext.Window(Ext.apply({
+        this.catalogDialog = new Ext.Window(Ext.apply({
             title: this.addActionMenuText,
             closeAction: "hide",
             layout: "border",
