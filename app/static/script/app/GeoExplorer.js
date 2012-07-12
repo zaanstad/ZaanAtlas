@@ -191,6 +191,19 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     }, 
 
     loadConfig: function(config) {
+    // fix scroll behaviour
+	config.map.controls = [
+			new OpenLayers.Control.Navigation(
+				{
+				mouseWheelOptions:{cumulative:false}, 
+				zoomWheelOptions: {interval: 1000}, 
+				dragPanOptions: {enableKinetic: true}
+				}),
+			new OpenLayers.Control.PanPanel(),
+			new OpenLayers.Control.ZoomPanel(),
+			//new OpenLayers.Control.KeyboardDefaults(),
+			new OpenLayers.Control.Attribution()
+			];
         
         var mapUrl = window.location.hash.substr(1);
         var match = mapUrl.match(/^maps\/(\d+)$/);
@@ -203,6 +216,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                     var addConfig = Ext.util.JSON.decode(request.responseText);
                     // Don't use persisted tool configurations from old maps
                     delete addConfig.tools;
+                    addConfig.map.controls = config.map.controls;
                     this.applyConfig(Ext.applyIf(addConfig, config));
                 },
                 failure: function(request) {
@@ -233,8 +247,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 		} else if (bookm) {
 			var urlConf = unescape(mapUrl.split('=')[1]);
 			var queryConfig = Ext.util.JSON.decode(urlConf);
-			Ext.apply(config, queryConfig);
-			this.applyConfig(config);
+			queryConfig.map.controls = config.map.controls;
+			this.applyConfig(Ext.apply(config, queryConfig));
+			window.location.hash = "";
         } else {
             var query = Ext.urlDecode(document.location.search.substr(1));
             if (query && query.q) {
@@ -432,6 +447,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var state = GeoExplorer.superclass.getState.apply(this, arguments);
         // Don't persist tools
         delete state.tools;
+        delete state.map.controls;
         return state;
     }
 });
