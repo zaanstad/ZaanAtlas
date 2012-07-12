@@ -97,7 +97,7 @@ gxp.AdminOverlay = Ext.extend(Ext.Panel, {
             		xtype: 'button', 
             		tooltip: 'Bewaar of bewerk dit thema',
             		handler: function() {
-            			app.save(app.showUrl);
+            			app.save(app.showEmbedWindow);
             		},
             		scope: this,
             		iconCls: 'icon-save'
@@ -106,19 +106,6 @@ gxp.AdminOverlay = Ext.extend(Ext.Panel, {
             border: false
         });
         var wrapper2 = new Ext.Panel({
-            items: [{ 
-            		xtype: 'button', 
-            		tooltip: 'Exporteer naar embedded viewer',
-            		handler: function() {
-            			app.save(app.showEmbedWindow);
-            		},
-            		scope: this,
-            		iconCls: 'icon-export'
-            		}],
-            cls: 'admin-overlay-element',
-            border: false
-        });
-        var wrapper3 = new Ext.Panel({
             items: [{ 
             		xtype: 'button', 
             		tooltip: "Open de lijst met opgeslagen thema's",
@@ -133,7 +120,6 @@ gxp.AdminOverlay = Ext.extend(Ext.Panel, {
         });
         this.add(wrapper1);
         this.add(wrapper2);
-        this.add(wrapper3);
         this.doLayout();
     	this.hide();
     },

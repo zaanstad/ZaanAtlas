@@ -359,50 +359,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         ];
         return tools;
     },
-    
-    /** private: method[showUrl]
-     */
-    showUrl: function() {
-        var win = new Ext.Window({
-            title: this.bookmarkText,
-            layout: 'form',
-            labelAlign: 'top',
-            modal: true,
-            bodyStyle: "padding: 5px",
-            width: 300,
-			listeners: {
-				beforeclose: function(){
-					app.about.title = Ext.getDom('titleText').value;
-					app.about['abstract'] = Ext.getDom('descriptionText').value;
-					app.save();
-			   }
-			},
-            items: [{
-                xtype: 'textfield',
-                fieldLabel: this.titleText,
-                id: 'titleText',
-                anchor: "100%",
-                selectOnFocus: true,
-                allowBlank: false,
-                value: app.about.title
-            }, {
-                xtype: 'textarea',
-                fieldLabel: this.descriptionText,
-                id: 'descriptionText',
-                anchor: "100%",
-                selectOnFocus: true,
-                value: app.about['abstract']
-            }, {
-                xtype: 'textfield',
-                fieldLabel: this.permakinkText,
-                readOnly: true,
-                anchor: "100%",
-                selectOnFocus: true,
-                value: window.location.href
-            }]
-        });
-        win.show();
-    },
 
     /** api: method[getBookmark]
      *  :return: ``String``

@@ -405,7 +405,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                children: this.viewerTools
            }, 
            rootVisible: false,
-           id: 'geobuilder-0'
+           id: 'geobuilder-1'
        });
 
        var previousNext = function(incr){
@@ -414,15 +414,46 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
            var next = parseInt(i, 10) + incr;
            l.setActiveItem(next);
            Ext.getCmp('wizard-prev').setDisabled(next==0);
-           Ext.getCmp('wizard-next').setDisabled(next==1);
+           Ext.getCmp('wizard-next').setDisabled(next==2);
            if (incr == 1) {
-               this.save();
+           		this.about.title = Ext.getDom('titleText').value;
+				this.about['abstract'] = Ext.getDom('descriptionText').value;
+               	this.save();
            }
        };
 
        var embedMap = new gxp.EmbedMapDialog({
-           id: 'geobuilder-1',
+           id: 'geobuilder-2',
            url: "../viewer/#maps/" + this.id
+       });
+       
+       var textPanel = new Ext.Panel({
+       	layout: 'form',
+       	bodyStyle: "padding: 5px",
+		items: [{
+				xtype: 'textfield',
+				fieldLabel: this.titleText,
+				id: 'titleText',
+				anchor: "100%",
+				selectOnFocus: true,
+				allowBlank: false,
+				value: app.about.title
+			}, {
+				xtype: 'textarea',
+				fieldLabel: this.descriptionText,
+				id: 'descriptionText',
+				anchor: "100%",
+				selectOnFocus: true,
+				value: app.about['abstract']
+			}, {
+				xtype: 'textfield',
+				fieldLabel: this.permakinkText,
+				readOnly: true,
+				anchor: "100%",
+				selectOnFocus: true,
+				value: window.location.href
+			}],
+		id: 'geobuilder-0'
        });
 
        var wizard = {
@@ -435,7 +466,9 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                id: 'preview',
                text: this.previewText,
                handler: function() {
-                   this.save(this.openPreview.createDelegate(this, [embedMap]));
+					this.about.title = Ext.getDom('titleText').value;
+					this.about['abstract'] = Ext.getDom('descriptionText').value;
+                   	this.save(this.openPreview.createDelegate(this, [embedMap]));
                },
                scope: this
            }, '->', {
@@ -450,7 +483,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                handler: previousNext.createDelegate(this, [1]),
                scope: this
            }],
-           items: [toolsArea, embedMap]
+           items: [textPanel, toolsArea, embedMap]
        };
 
        new Ext.Window({
