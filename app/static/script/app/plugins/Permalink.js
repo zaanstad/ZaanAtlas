@@ -117,7 +117,9 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                  success : function(response) {
                      //alert(response.responseText);
                      var json = eval("(" + response.responseText.slice(2, -2) + ")");
-                     window.location = "mailto:?SUBJECT=ZaanAtlas%20link&BODY="+emailtxt+"%0AVerkorte link:%20"+json.data.url+"%0A%0ADe volgende kaartlagen zijn actief:%0A"+lyrs;
+                     window.location = "mailto:?SUBJECT=ZaanAtlas%20link&BODY="+emailtxt+"%0AVerkorte link:%20"+json.data.url
+                     				   +"%0A%0ADe volgende kaartlagen zijn actief:%0A"+lyrs
+                     				   +"%0AOndergronden:%0A"+bglyrs;
                  },
                  failure : function(response) {
                  	alert(response.responseText);
@@ -126,9 +128,10 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             };
             
 		var lyrs = "";
+		var bglyrs= "";
 		var configObj = {};
 		configObj.map = target.getState().map;
-		delete configObj.map.maxExtent;
+		//delete configObj.map.maxExtent;
 		
 		// remove unnecessary information
 		for (var i = 0, len = configObj.map.layers.length; i < len; i++){
@@ -136,8 +139,13 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 			delete configObj.map.layers[i].selected;
 			delete configObj.map.layers[i].format;
 			delete configObj.map.layers[i].fixed;
+			
 			// generate list of layernames
-			lyrs = configObj.map.layers[i].name + "%0A" + lyrs;
+			if (configObj.map.layers[i].group == "background") {
+				bglyrs = configObj.map.layers[i].title + "%0A" + bglyrs;
+			} else {
+				lyrs = configObj.map.layers[i].title + "%0A" + lyrs;
+			}
 		}
 		var configStr = Ext.util.JSON.encode(configObj);
 		
@@ -153,13 +161,13 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 			{
             xtype: "container",
             region: "center",
-            html: 	"<b>Bladwijzer</b><br>" +
+            html: 	"<b>Bladwijzer of Favorieten</b><br>" +
             		//"<img src=../theme/app/img/bladwijzer.png />" +
             		"<p>Met behulp van een bladwijzer is het mogelijk om een kaartbeeld " + 
 					"te bewaren om deze de volgende keer eenvoudig en snel terug te kunnen vinden. " + 
 					"Gebruik hiervoor de bladwijzer of bookmark functie van de webbrowser terwijl dit venster zichtbaar is.<br><br>" +
-					"<img src=../theme/app/img/silk/application_go.png />" +
-            		" Sla nu dit kaartbeeld op als bladwijzer</p><br><br>" + 
+					//"<img src=../theme/app/img/silk/application_go.png />" +
+            		//" Sla nu dit kaartbeeld op als bladwijzer</p><br><br>" + 
             		"<b>Email</b><br>" +
             		"<p>Het is ook mogelijk om een verkorte link te versturen voor dit kaartbeeld naar een emailadres.<br><br></p>",
             scope: this

@@ -48,7 +48,7 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Title for info popup (i18n).
      */
-    popupTitle: "Feature Info",
+    popupTitle: "Info van locatie",
     
     /** api: config[format]
      *  ``String`` Either "html" or "grid". If set to "grid", GML will be
@@ -166,34 +166,40 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
                         vendorParams[param] = layer.params[param];
                     }
                 }
+                var infoFormat = x.get("infoFormat");
+                if (infoFormat === undefined) {
+                    // TODO: check if chosen format exists in infoFormats array
+                    // TODO: this will not work for WMS 1.3 (text/xml instead for GML)
+                    infoFormat = this.format == "html" ? "text/html" : "application/vnd.ogc.gml";
+                }
                 var control = new OpenLayers.Control.WMSGetFeatureInfo(Ext.applyIf({
                     url: layer.url,
                     queryVisible: true,
                     layers: [layer],
-                    infoFormat: this.format == "html" ? "text/html" : "application/vnd.ogc.gml",
+                    infoFormat: infoFormat,
                     vendorParams: vendorParams,
                     eventListeners: {
                         getfeatureinfo: function(evt) {
-                            var title = x.get("title") || x.get("name");
-                            
+                            var title = x.get("title") || x.get("name");                     
 							if (aantal_popups == 1) {
-							
-								if (this.format == "html") {
+								if (infoFormat == "text/html") {
 									var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
 									if (match && !match[1].match(/^\s*$/)) {
 										this.displayPopup(evt, title, match[1]);
 									}
+								} else if (infoFormat == "text/plain") {
+                                	this.displayPopup(evt, title, '<pre>' + evt.text + '</pre>');
 								} else {
 									this.displayPopup(evt, title);
 								}
 							} else {
-							
-							
-								if (this.format == "html") {
+								if (infoFormat == "text/html") {
 									var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
 									if (match && !match[1].match(/^\s*$/)) {
 										var text = match[1];
 									}
+								} else if (infoFormat == "text/plain") {
+                                	var text = '<pre>' + evt.text + '</pre>';
 								} else {
 									var text = null;
 								};
@@ -210,18 +216,24 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 									var feature;
 									for (var i=0,ii=features.length; i<ii; ++i) {
 										feature = features[i];
-										config.push(Ext.applyIf({
+										config.push(Ext.apply({
 											xtype: "propertygrid",
+											listeners: {
+												'beforeedit': function (e) { 
+													return false; 
+												} 
+											},
 											title: feature.fid ? feature.fid : title,
 											source: feature.attributes
-										}, baseConfig));
+										}, this.itemConfig));
 									}
 								} else if (text) {
-									config.push(Ext.applyIf({
+									config.push(Ext.apply({
+										title: title,
 										html: text
 									}, baseConfig));
-								};
-																
+								}
+		
 								popup.add(config);
 								popup.doLayout();
 							}									
@@ -280,8 +292,7 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 		graphicYOffset: -32,
 		
 		// Set the z-indexes of both graphics to make sure the background
-		// graphics stay in the background (shadows on top of markers looks
-		// odd; let's not do that).
+		// graphics stay in the background (shadows on top of markers looks odd; let's not do that).
 		graphicZIndex: 10,
 		backgroundGraphicZIndex: 11,
 		pointRadius: 15
@@ -300,40 +311,22 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
      * :arg text: ``String`` Body text.
      */
     displayPopup: function(evt, title, text) {
-        //var popup;
-        //var popupKey = evt.xy.x + "." + evt.xy.y;
 
-        //if (!(popupKey in this.popupCache)) {
-            //popup = this.addOutput({
-			popup = new Ext.Window({		
-				//xtype: "gx_popup",
-				//anchored: false,
-				//unpinnable: false,
+		popup = new Ext.Window({		
                 title: this.popupTitle,
                 layout: "accordion",
-                //location: evt.xy,
-                //map: this.target.mapPanel,
                 width: 400,
                 height: 600,
 				x: kaartposition[0] + kaartsize.width - 400,
 				y: kaartposition[1],
                 listeners: {
                     close: (function(key) {
-                      //  return function(panel){
-                      //      delete this.popupCache[key];
-                      //  };
-                    //})(popupKey),
 					aantal_popups = 1;
-					//var_this.infolaagverwijderen();
 					symboollayer.removeAllFeatures();
 					}),
                     scope: this
                 }
             });
-            //this.popupCache[popupKey] = popup;
-        //} else {
-        //    popup = this.popupCache[popupKey];
-        //}
 
         var baseConfig = {
             title: title,
@@ -347,14 +340,20 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
             var feature;
             for (var i=0,ii=features.length; i<ii; ++i) {
                 feature = features[i];
-                config.push(Ext.applyIf({
+                config.push(Ext.apply({
                     xtype: "propertygrid",
+                    listeners: {
+                        'beforeedit': function (e) { 
+                            return false; 
+                        } 
+                    },
                     title: feature.fid ? feature.fid : title,
                     source: feature.attributes
-                }, baseConfig));
+                }, this.itemConfig));
             }
         } else if (text) {
-            config.push(Ext.applyIf({
+            config.push(Ext.apply({
+                title: title,
                 html: text
             }, baseConfig));
         }
