@@ -136,6 +136,15 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
+                "Luchtfoto 2007 kleur",
+                this.url,
+                {layers: "Lufo2007-kleur", format: "image/png8"},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo2007-kleur"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
                 "Luchtfoto 2008 kleur",
                 this.url,
                 {layers: "Lufo2008-kleur", format: "image/png8"},
@@ -167,7 +176,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 this.url,
                 {layers: "Top10nl-ondertoon", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionKadaster,
+                    attribution: this.attributionZaanstad,
                     type: "top10nl-ondertoon"
                 }, options)
             ),
@@ -187,9 +196,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             fields: [
                 {name: "source", type: "string"},
                 {name: "name", type: "string", mapping: "type"},
-                {name: "abstract", type: "string", mapping: "attribution"},
+                //{name: "abstract", type: "string", mapping: "attribution"},
                 {name: "group", type: "string", defaultValue: "background"},
                 {name: "fixed", type: "boolean", defaultValue: false},
+                {name: "properties", type: "string", defaultValue: "gxp_wmslayerpanel"},
                 {name: "selected", type: "boolean"}
             ]
         });
@@ -233,6 +243,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             record.set("selected", config.selected || false);
             record.set("source", config.source);
             record.set("name", config.name);
+            record.set("properties", "gxp_wmslayerpanel");
             if ("group" in config) {
                 record.set("group", config.group);
             }
