@@ -184,7 +184,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                     id: recordId,
                     renderTo: recordId,
                     text: 'Metadata',
-                    iconCls: 'icon-getfeatureinfo',
+                    iconCls: 'gxp-icon-metadata',
                     handler: embedMeta.createDelegate(this, [recordId] ),
                     scope: this
                 });
@@ -362,27 +362,27 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             var protocol = textValue(getElementsByTag(getElementsByTag(server[0], gmd, "protocol")[0], gco, "CharacterString")[0]);
             var layer = textValue(getElementsByTag(getElementsByTag(server[0], gmd, "name")[0], gco, "CharacterString")[0]);
         	
-        	var layertype = layerKey(url);
-        	var layersource = layertype.key;
-        	var layerbg = layertype.tile;      
-			var source = this.target.layerSources[layersource];
+        	var layertype = layerKey(url);    
+			var source = this.target.layerSources[layertype.key];
 			        
 			if (source.lazy) {
 				source.store.load({callback: (function() {
-					insertLayer(layer, title, source, layerbg);
+					insertLayer(layer, title, source, layertype.singletile, layertype.background);
 				}).createDelegate(this)});
 			} else {
-				insertLayer(layer, title, source, layerbg);
+				insertLayer(layer, title, source, layertype.singletile, layertype.background);
 			}
         };
         
-        function insertLayer(name, title, source, background) {
+        function insertLayer(name, title, source, singletile, background) {
         	var layerStore = this.target.mapPanel.layers;
         	var record = source.createLayerRecord({
                 name: name,
                 title: title,
                 source: source.id
                 });
+                
+            record.data.layer.singleTile = singletile;
             
             var aantal_pointerlagen = 0;
             
@@ -404,23 +404,30 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
         };
         
         function layerKey(url) {
+        	
+        	var obj = {key : "publiek", background : false, singletile : false};
         
             if (url.toLowerCase().match("geo.zaanstad.nl/geowebcache") != null) {
-            	var key = "tiles";
-            	var obj = {key : "tiles", tile: true};
+            	obj.key = "tiles";
+            	obj.background = true;
             };
             if (url.toLowerCase().match("map16z/geowebcache") != null) {
-            	var key = "intratiles";
-            	var obj = {key : "intratiles", tile: true};
+            	obj.key = "intratiles";
+            	obj.background = true;
             };
             if (url.toLowerCase().match("geo.zaanstad.nl/geoserver") != null) {
-            	var key = "publiek";
-            	var obj = {key : "publiek", tile: false};
+            	obj.key = "publiek";
+            	obj.background = false;
             };
             if (url.toLowerCase().match("map16z/geoserver") != null) {
-            	var key = "intranet";
-            	var obj = {key : "intranet", tile: false};
+            	obj.key = "intranet";
+            	obj.background = false;
             };
+            
+            if (url.toLowerCase().match("singletile=true") != null) {
+            	obj.singletile = true;
+            };
+            
             return obj;
         };
         
@@ -588,7 +595,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             maximizable: true,  
             height: 600,
             width: 650,
-            modal: true,
+            //modal: true,
             items: htmlcontainer,
             tbar: topToolbar,
             bbar: bbarItems
