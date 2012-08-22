@@ -279,7 +279,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 		var header = new Ext.Container({
         	height: 50,
         	html: "<div id='top'>" +
-        	      "<img src='../theme/app/img/logo_zaanatlas_groot.png'>" +
+        	      "<a href='javascript:history.go(0)'><img src='../theme/app/img/logo_zaanatlas_groot.png'></a>" +
         		  "<div id='headnav'>" +
         		  "<a href='#' onclick='app.displayAppInfo(); return false;'>Help</a>" + 
         		  "<a href='mailto:geo-informatie@zaanstad.nl?subject=ZaanAtlas'>Contact</a>" + 
