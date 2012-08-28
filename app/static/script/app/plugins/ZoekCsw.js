@@ -216,7 +216,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
 		  document.getElementById("csw-details").style.display = "block";
 		  
             var OLrequest = OpenLayers.Request.GET({
-                 url : "http://geo.zaanstad.nl/geonetwork/srv/nl/metadata.show.embedded?uuid=" + id,
+                 url : "http://geo.zaanstad.nl/geonetwork/srv/nl/metadata.show.embedded?uuid=" + id + "&currTab=simple",
                  async: true,
                  headers: {
                      "Content-Type": "application/html"

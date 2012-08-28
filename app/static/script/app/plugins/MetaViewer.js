@@ -166,7 +166,7 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
 	createMetaConfig: function(oid) {
 		
 		var OLrequest = OpenLayers.Request.GET({
-			url : this.catalog + "/srv/nl/metadata.show.embedded?uuid=" + oid,
+			url : this.catalog + "/srv/nl/metadata.show.embedded?uuid=" + oid + "&currTab=simple",
 			async: true,
 			headers: {
 			 "Content-Type": "application/html"
