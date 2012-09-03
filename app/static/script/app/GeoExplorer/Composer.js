@@ -72,9 +72,16 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 },
                 outputTarget: "tree"
             }, {
-                ptype: "gxp_zoekcsw",
+                ptype: "app_zoekcsw",
                 actionTarget: "layers.tbar",
                 search: {selectedSource: "http://geo.zaanstad.nl/geonetwork/srv/nl/csw"}
+            }, {
+                ptype: "gxp_addlayers",
+                showButtonText: true,
+                addActionText: 'Externe laag',
+                upload: true,
+                border: false,	
+                actionTarget: "adminbuttons"
             }, {
                 ptype: "gxp_removelayer",
                 actionTarget: ["layers.tbar", "layers.contextMenu"]
@@ -492,6 +499,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
        new Ext.Window({
             layout: 'fit',
             width: 500, height: 300,
+            modal: true,
             title: this.exportMapText,
             items: [wizard]
        }).show();

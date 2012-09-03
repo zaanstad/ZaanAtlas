@@ -30,7 +30,7 @@ Ext.namespace("gxp.plugins");
 gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gxp_zoekcsw */
-    ptype: "gxp_zoekcsw",
+    ptype: "app_zoekcsw",
 
     /** api: config[addActionText]
      *  ``String``
