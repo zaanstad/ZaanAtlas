@@ -92,34 +92,35 @@ gxp.AdminOverlay = Ext.extend(Ext.Panel, {
      */
     bind: function(map) {
         this.map = map;
-        var wrapper1 = new Ext.Panel({
-            items: [{ 
-            		xtype: 'button', 
-            		tooltip: 'Bewaar of bewerk dit thema',
-            		handler: function() {
-            			app.save(app.showEmbedWindow);
-            		},
-            		scope: this,
-            		iconCls: 'icon-save'
-            		}],
-            cls: 'admin-overlay-element',
-            border: false
+        var wrapper1 = new Ext.ButtonGroup({
+        	id: 'adminbuttons',
+        	title: 'Beheer',
+        	border: false,
+        	layout: 'form',
+            items: [{
+						xtype: 'button', 
+						text: 'Bewaar',
+						width: 88,
+						tooltip: 'Bewaar of bewerk dit thema',
+						handler: function() {
+								app.save(app.showEmbedWindow);
+							},
+						scope: this,
+						iconCls: 'icon-save'
+            		}, { 
+						xtype: 'button', 
+						text: "Thema's",
+						width: 88,
+						tooltip: "Open de lijst met opgeslagen thema's",
+						handler: function() {
+								this.loadmaps();
+							},
+						scope: this,
+						icon: "../theme/app/img/silk/folder_picture.png"
+            		}]
         });
-        var wrapper2 = new Ext.Panel({
-            items: [{ 
-            		xtype: 'button', 
-            		tooltip: "Open de lijst met opgeslagen thema's",
-            		handler: function() {
-            			this.loadmaps();
-            		},
-            		scope: this,
-            		icon: "../theme/app/img/silk/folder_picture.png"
-            		}],
-            cls: 'admin-overlay-element',
-            border: false
-        });
+
         this.add(wrapper1);
-        this.add(wrapper2);
         this.doLayout();
     	this.hide();
     },
@@ -176,10 +177,11 @@ gxp.AdminOverlay = Ext.extend(Ext.Panel, {
 			columns: [
 				expander,
 				{header: "Nr", width: 40, dataIndex: 'id', sortable: true},
-				{header: "Titel", width: 320, dataIndex: 'title', sortable: true}
+				{header: "Titel", width: 300, dataIndex: 'title', sortable: true}
 			],
-			width:350,
-			height:400,
+			//width:376,
+			height: 357,
+			//autoScroll: true,
             listeners: {
                 rowdblclick: openMap,
                 scope: this
@@ -206,8 +208,8 @@ gxp.AdminOverlay = Ext.extend(Ext.Panel, {
 		this.capGrid = new Ext.Window({
             title: "Opgeslagen kaarten",
             closeAction: "close",
-            height: 410,
-            width: 390,
+            //height: 400,
+            //width: 390,
             modal: true,            
             resizable: false, 
             items: this.grid,
