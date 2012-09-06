@@ -209,7 +209,7 @@ gxp.AdminOverlay = Ext.extend(Ext.Panel, {
             title: "Opgeslagen kaarten",
             closeAction: "close",
             //height: 400,
-            //width: 390,
+            width: 390,
             modal: true,            
             resizable: false, 
             items: this.grid,
