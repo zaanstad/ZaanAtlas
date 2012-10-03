@@ -4,10 +4,6 @@
 
 Ext.USE_NATIVE_JSON = true;
 
-// Suite 2.4.5 release cycle hotfixes
-// https://github.com/openlayers/openlayers/commit/284ec6a9573f8657d1a3979ead774044e721d7c7
-OpenLayers.Layer.Bing.prototype.maxResolution = Number.POSITIVE_INFINITY;
-
 // Fixes problem with OpenLayers.Projection.defaults and RD EPSG
 OpenLayers.Projection.defaults = {
 	"EPSG:28992": {
@@ -61,7 +57,7 @@ Ext.override(Ext.dd.DragTracker, {
     Ext.preg("gx_wmssource", gxp.plugins.WMSSource);
     Ext.preg("gx_olsource", gxp.plugins.OLSource);
     Ext.preg("gx_googlesource", gxp.plugins.GoogleSource);
-    Ext.preg("gx_bingsource", gxp.plugins.BingSource);
+    //Ext.preg("gx_bingsource", gxp.plugins.BingSource);
     Ext.preg("gx_osmsource", gxp.plugins.OSMSource);
     // use layermanager instead of layertree
     Ext.preg("gxp_layertree", gxp.plugins.LayerManager);
