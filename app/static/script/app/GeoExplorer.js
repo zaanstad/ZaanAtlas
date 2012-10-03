@@ -135,9 +135,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             }, {
                 leaf: true, 
                 text: gxp.plugins.Navigation.prototype.tooltip, 
-                checked: true, 
+                checked: false, 
                 iconCls: "gxp-icon-pan",
-                ptype: "gxp_navigation", 
+                ptype: "gxp_navigation",
                 toggleGroup: this.toggleGroup
             }, {
                 leaf: true, 
@@ -146,6 +146,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 iconCls: "gxp-icon-getfeatureinfo",
                 ptype: "gxp_wmsgetfeatureinfo",
                 format: 'html',
+                defaultAction: 0,
                 toggleGroup: this.toggleGroup
             }, {
                 leaf: true, 
