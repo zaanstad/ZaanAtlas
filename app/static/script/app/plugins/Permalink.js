@@ -126,6 +126,32 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
                  }
              });
             };
+        
+		function popupLink(url) {
+			var api_key = "R_b3889752450cd7113ec5a5c06eca8b07";
+			var api_login = "teamgeo";
+			var api_url = "api.bitly.com";
+            var request = "longUrl="+encodeURIComponent(url)+"&login="+api_login+"&apiKey="+api_key+"&callback=?";
+            var OLrequest = OpenLayers.Request.POST({
+                 url : "http://"+api_url+"/v3/shorten?",
+                 async: true,
+                 data : request,
+                 headers: {
+                     "Content-Type": "text/javascript"
+                 },
+                 success : function(response) {
+                     var json = eval("(" + response.responseText.slice(2, -2) + ")");
+                     Ext.Msg.show({
+						title: "Verkorte link",
+						msg: json.data.url,
+						icon: Ext.MessageBox.INFO
+					});
+                 },
+                 failure : function(response) {
+                 	alert(response.responseText);
+                 }
+             });
+            };
             
 		var lyrs = "";
 		var bglyrs= "";
@@ -159,25 +185,36 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             },
             items: [
 			{
-            xtype: "container",
-            region: "center",
-            html: 	"<b>Bladwijzer of Favorieten</b><br>" +
-            		//"<img src=../theme/app/img/bladwijzer.png />" +
-            		"<p>Met behulp van een bladwijzer is het mogelijk om een kaartbeeld " + 
-					"te bewaren om deze de volgende keer eenvoudig en snel terug te kunnen vinden. " + 
-					"Gebruik hiervoor de bladwijzer of bookmark functie van de webbrowser terwijl dit venster zichtbaar is.<br><br>" +
-					//"<img src=../theme/app/img/silk/application_go.png />" +
-            		//" Sla nu dit kaartbeeld op als bladwijzer</p><br><br>" + 
-            		"<b>Email</b><br>" +
-            		"<p>Het is ook mogelijk om een verkorte link te versturen voor dit kaartbeeld naar een emailadres.<br><br></p>",
-            scope: this
+				xtype: "container",
+				region: "center",
+				html: 	"<b>Bladwijzer of Favorieten</b><br>" +
+						"<p>Met behulp van een bladwijzer is het mogelijk om een kaartbeeld " + 
+						"te bewaren om deze de volgende keer eenvoudig en snel terug te kunnen vinden. " + 
+						"Gebruik hiervoor de bladwijzer of bookmark functie van de webbrowser terwijl dit venster zichtbaar is.<br><br><br>" +
+						"<b>Email</b><br>" +
+						"<p>Het is mogelijk om een verkorte link te versturen voor dit kaartbeeld naar een emailadres.<br><br></p>",
+				scope: this
         	}, {
                 xtype: 'button',
                 icon:'../theme/app/img/silk/email_go.png',
                 text: 'Email de link voor deze kaart',
                 handler: function() {
                     email(window.location);
-                    //email("http://geo.zaanstad.nl/zaanatlas/composer/"+window.location.hash);
+                },
+                scope: this
+            }, {
+				xtype: "container",
+				region: "center",
+				html: 	"<br><br><b>Verkorte link</b><br>" +
+						"<p>Lange links zijn onhandig om door te sturen of te plaatsen op sociale netwerken. Maak daarom een " +
+						"verkorte link aan via bit.ly, de korte link verwijst naar dit kaarbeeld.<br><br></p>",
+				scope: this
+        	}, {
+                xtype: 'button',
+                icon:'../theme/app/img/silk/link.png',
+                text: 'Verkorte link aanmaken',
+                handler: function() {
+                    popupLink(window.location);
                 },
                 scope: this
             }
