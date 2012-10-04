@@ -386,7 +386,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             
             var aantal_pointerlagen = 0;
             
-            if (background == false) {
+            if (record.data.group != "background") {
             // orden de layerStore zodanig dat de pointerlagen "Adres" en "Info" bovenaan komen te staan             
             for (var i = 0, len = layerStore.map.layers.length; i < len; i++){
             	if (layerStore.map.layers[i].name == "Adres") {

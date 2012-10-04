@@ -93,6 +93,12 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
      *  ``Boolean``
      */
     ready: false,
+
+    /** api: config[isIEBeforeIE9]
+     *  ``Bool``
+     *  Checks weather the browser is before IE9.
+     */
+	isIEBeforeIE9: Ext.isIE6 || Ext.isIE7 || Ext.isIE8,
 	
     /** api: method[createStore]
      *
@@ -119,7 +125,8 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
                 {layers: "Zaanstad1812", format: "image/png"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionMapfactory,
-                    type: "Zaanstad1812"
+                    type: "Zaanstad1812",
+                    grp: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
@@ -128,7 +135,8 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
                 {layers: "CITOPLAN", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionCitoplan,
-                    type: "citoplan"
+                    type: "citoplan",
+                    grp: "background"
                 }, options)
             )
         ];
@@ -138,16 +146,14 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
             fields: [
                 {name: "source", type: "string"},
                 {name: "name", type: "string", mapping: "type"},
-                //{name: "abstract", type: "string", mapping: "attribution"},
-                {name: "group", type: "string", defaultValue: "background"},
+                {name: "group", type: "string", mapping: "grp"},
                 {name: "fixed", type: "boolean", defaultValue: false},
                 {name: "properties", type: "string", defaultValue: "gxp_wmslayerpanel"},
+                {name: "queryable", type: "boolean", mapping: "queryable"},
                 {name: "selected", type: "boolean"}
             ]
         });
-        this.store.each(function(l) {
-            l.set("group", "background");
-        });
+
 		// ping server of lazy source with capability request, to see if it is available
 		var paramString = OpenLayers.Util.getParameterString({SERVICE: "WMS", REQUEST: "getcapabilities", VERSION: "1.1.1"});
 		url = OpenLayers.Util.urlAppend(this.url, paramString);

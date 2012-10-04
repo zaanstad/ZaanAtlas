@@ -89,6 +89,17 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
      */
 	url: "http://geo.zaanstad.nl/geowebcache/service/wms",
 
+    /** private: property[ready]
+     *  ``Boolean``
+     */
+    ready: false,
+
+    /** api: config[isIEBeforeIE9]
+     *  ``Bool``
+     *  Checks weather the browser is before IE9.
+     */
+	isIEBeforeIE9: Ext.isIE6 || Ext.isIE7 || Ext.isIE8,
+
     /** api: method[createStore]
      *
      *  Creates a store of layer records.  Fires "ready" when store is loaded.
@@ -109,12 +120,23 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
         
         var layers = [
             new OpenLayers.Layer.WMS(
+                "Bestemmingsplannen",
+                this.url,
+                {layers: "Bestemmingsplannen", format: "image/png"},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "bestemmingsplannen",
+                    queryable: true
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
                 "Open Street Map",
                 this.url,
                 {layers: "OSM", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "osm"
+                    type: "osm",
+                    grp: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
@@ -123,7 +145,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 {layers: "Zaanstad", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Zaanstad"
+                    type: "Zaanstad",
+                    grp: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
@@ -132,34 +155,48 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 {layers: "Luchtfoto", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionKadaster,
-                    type: "lufo"
+                    type: "lufo",
+                    grp: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2007 kleur",
                 this.url,
-                {layers: "Lufo2007-kleur", format: "image/png8"},
+                {layers: "Lufo2007-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2007-kleur"
+                    type: "Lufo2007-kleur",
+                    grp: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2008 kleur",
                 this.url,
-                {layers: "Lufo2008-kleur", format: "image/png8"},
+                {layers: "Lufo2008-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2008-kleur"
+                    type: "Lufo2008-kleur",
+                    grp: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2010 kleur",
                 this.url,
-                {layers: "Lufo2010-kleur", format: "image/png8"},
+                {layers: "Lufo2010-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2010-kleur"
+                    type: "Lufo2010-kleur",
+                    grp: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
+                "Luchtfoto 2011 kleur",
+                this.url,
+                {layers: "Lufo2011-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo2011-kleur",
+                    grp: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
@@ -168,7 +205,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 {layers: "Top10nl", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionKadaster,
-                    type: "top10nl"
+                    type: "top10nl",
+                    grp: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
@@ -177,7 +215,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 {layers: "Top10nl-ondertoon", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "top10nl-ondertoon"
+                    type: "top10nl-ondertoon",
+                    grp: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
@@ -186,7 +225,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 {layers: "GBKZ", format: "image/png"},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionZaanstad,
-                    type: "gbkz"
+                    type: "gbkz",
+                    grp: "background"
                 }, options)
             )
         ];
@@ -196,17 +236,32 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             fields: [
                 {name: "source", type: "string"},
                 {name: "name", type: "string", mapping: "type"},
-                //{name: "abstract", type: "string", mapping: "attribution"},
-                {name: "group", type: "string", defaultValue: "background"},
+                {name: "group", type: "string", mapping: "grp"},
                 {name: "fixed", type: "boolean", defaultValue: false},
                 {name: "properties", type: "string", defaultValue: "gxp_wmslayerpanel"},
+                {name: "queryable", type: "boolean", mapping: "queryable"},
                 {name: "selected", type: "boolean"}
             ]
         });
-        this.store.each(function(l) {
-            l.set("group", "background");
-        });
-		this.fireEvent("ready", this);
+        
+		// ping server of lazy source with capability request, to see if it is available
+		var paramString = OpenLayers.Util.getParameterString({SERVICE: "WMS", REQUEST: "getcapabilities", VERSION: "1.1.1"});
+		url = OpenLayers.Util.urlAppend(this.url, paramString);
+		var OLrequest = OpenLayers.Request.GET({
+			 url : url,
+			 async: true,
+			 scope: this,
+			 success : function(response) {
+			 	this.ready = true;
+			 	this.fireEvent("ready", this);
+			 },
+			 failure : function(response) {
+			 	this.fireEvent("failure", this,
+                            "Layer source not available.",
+                            "Unable to contact WMS service."
+                        );
+			 }
+		 });
     },
     
     /** api: method[createLayerRecord]
