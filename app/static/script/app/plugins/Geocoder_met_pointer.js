@@ -92,7 +92,7 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
     outputConfig: {
 		url: "/geoserver/wfs",
 		//url: "http://geo.zaanstad.nl/geoserver/wfs",
-		featureType: "verblijfsobject",
+		featureType: "vw_adres",
 		featurePrefix: "geo",
 		srsName: "EPSG:28992",
 		fieldName: "adres",
@@ -127,7 +127,7 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
             text: this.menuText,
             iconCls: "gxp-icon-find",
             cls: 'adres-button',
-            handler : this.showCapabilitiesGrid,
+            handler: this.showCapabilitiesGrid,
             scope: this
         }]);
         
@@ -169,7 +169,8 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
 */
     showCapabilitiesGrid: function() {        
         this.initCapGrid();
-        Tool_button = this.target.toolbar.items.items[14];
+        Tool_button = this.actions[0].items[0];
+        //Tool_button = this.target.toolbar.items.items[14];
         Tool_button.disable();
     },
 
@@ -180,41 +181,6 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
     initCapGrid: function() {
         //this.baseUrl =  window.location.host;
         this.baseUrl = "";
-	
-        function trim(s)
-        {
-            return rtrim(ltrim(s));
-        };
-
-        function ltrim(s)
-        {
-            var l=0;
-            while(l < s.length && s[l] == ' ')
-            {
-                l++;
-            };
-            return s.substring(l, s.length);
-        };
-
-        function rtrim(s)
-        {
-            var r=s.length -1;
-            while(r > 0 && s[r] == ' ')
-            {
-                r-=1;
-            };
-            return s.substring(0, r+1);
-        };		
-        
-        function getElementsByTag(doc, url, tag) {
-            var urlArray = url.split( "/" );
-            var ns = urlArray[urlArray.length-1];
-            var value = doc.getElementsByTagName(ns + ":" +  tag);
-            if(!value || value == null || value.length == 0){
-                value = doc.getElementsByTagNameNS(url,  tag);
-            };
-            return value;
-        };
 	
         var style =new OpenLayers.StyleMap({
 			// Set the external graphic and background graphic images.

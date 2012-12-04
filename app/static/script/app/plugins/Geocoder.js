@@ -30,7 +30,7 @@ gxp.plugins.Geocoder = Ext.extend(gxp.plugins.Tool, {
     
 	outputConfig: {
 		url: "/geoserver/wfs",
-		featureType: "verblijfsobject",
+		featureType: "vw_adres",
 		featurePrefix: "geo",
 		srsName: "EPSG:28992",
 		fieldName: "adres",
