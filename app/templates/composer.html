@@ -18,6 +18,7 @@
 		var detectionElement = document.createElement('img');
 		detectionElement.src = detectionImage;
 		var reachablePrintService= "";
+		var intranet = false;
 		var reachableSources= {
                 tiles: {
                 	ptype: "gxp_gwcsource"
@@ -25,7 +26,7 @@
                 publiek: {
                     url: "/geoserver/ows",
                     //url: "http://geo.zaanstad.nl/geoserver/ows",
-                    title: "Internet",   
+                    title: "Internet",                     
                     ptype: "gxp_wmssource"
                 },
                 google: {
@@ -45,6 +46,7 @@
 			detectionCounter = detectionCounter + 1;
 			if (detectionElement.complete) {
 				if (detectionElement.width > 0 && detectionElement.height > 0) {
+					intranet= true;
 					reachablePrintService= "http://map16z/geoserver/pdf/";
 					reachableSources= {
 							tiles: {
@@ -56,6 +58,9 @@
 								title: "Internet",   
 								ptype: "gxp_wmssource"
 							},
+				            ol: {
+				                ptype: "gxp_olsource"
+				            },
 							intranet: {
 								url: "http://map16z/geoserver/ows",
 								title: "Intranet",
@@ -86,6 +91,7 @@
 		function loadMap() {		
 			app = new GeoExplorer.Composer({
 				authStatus: {{status}},
+				intraEnabled: intranet,
 				proxy: "../proxy/?url=",
 				printService: reachablePrintService,
 				about: {
@@ -119,16 +125,26 @@
 						],
 					layers: [{
 						source: "tiles",
-						name: "gbkz"
+						name: "gbkz",
+						visibility: false
 					}, {
 						source: "tiles",
-						name: "lufo"
+						name: "lufo",
+						visibility: false
 					}, {
 						source: "tiles",
-						name: "top10nl"
+						name: "Top10atlas",
+						visibility: false
 					}, {
 						source: "tiles",
-						name: "Zaanstad"
+						name: "Zaanstad",
+						visibility: true
+					}, {
+		                source: "ol",
+		                type: "OpenLayers.Layer",
+		                args: ["Blank"],
+		                visibility: false,
+		                group: "background"
 					}],
 					center: [112958, 498065],
 					zoom: 2
