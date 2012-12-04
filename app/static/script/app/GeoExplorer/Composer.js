@@ -65,6 +65,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
         config.tools = [
             {
                 ptype: "gxp_layermanager",
+                baseNodeText: "Onderleggers",
                 outputConfig: {
                     id: "layers",
                     autoScroll: true,
@@ -507,5 +508,4 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             items: [wizard]
        }).show();
     }
-
 });
