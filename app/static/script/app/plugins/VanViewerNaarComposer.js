@@ -67,7 +67,7 @@ gxp.plugins.VanViewerNaarComposer = Ext.extend(gxp.plugins.Tool, {
 		
         var actions = gxp.plugins.VanViewerNaarComposer.superclass.addActions.call(this, [{
             tooltip: this.infoActionTip,
-            icon: "../theme/app/img/expand.png",
+            iconCls: "icon-expand",
             text: this.popupTitle,
             enableToggle: false,
             handler : this.openComposer,

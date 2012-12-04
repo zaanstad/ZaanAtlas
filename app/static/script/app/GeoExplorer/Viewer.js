@@ -123,7 +123,7 @@ GeoExplorer.Viewer = Ext.extend(GeoExplorer, {
 
 		var aboutButton = new Ext.Button({
             scale: 'logoklein',
-            iconCls: "icon-logo-klein",
+            iconCls: 'icon-logo-klein',
             handleMouseEvents: false
         });
         
