@@ -200,10 +200,10 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
                 record.set("title", config.title);
             }
 
-            // set visibility from config
-            if ("visibility" in config) {
-                layer.visibility = config.visibility;
-            }
+            layer.addOptions({
+                visibility: ("visibility" in config) ? config.visibility : true,
+                opacity: ("opacity" in config) ? config.opacity : 1
+            });
             
             record.set("selected", config.selected || false);
             record.set("source", config.source);

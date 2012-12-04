@@ -126,7 +126,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "bestemmingsplannen",
-                    queryable: true
+                    queryable: true,
+                    transitionEffect: null
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
@@ -146,6 +147,16 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Zaanstad",
+                    grp: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
+                "Top10atlas",
+                this.url,
+                {layers: "Top10atlas", format: "image/png"},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Top10atlas",
                     grp: "background"
                 }, options)
             ),
@@ -200,22 +211,12 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
-                "Topkaart (top10nl)",
+                "Topkaart raster 2010",
                 this.url,
-                {layers: "Top10nl", format: "image/png8"},
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionKadaster,
-                    type: "top10nl",
-                    grp: "background"
-                }, options)
-            ),
-            new OpenLayers.Layer.WMS(
-                "Topkaart (top10nl) ondertoon",
-                this.url,
-                {layers: "Top10nl-ondertoon", format: "image/png8"},
+                {layers: "Top25raster-2010", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "top10nl-ondertoon",
+                    type: "top25raster-2010",
                     grp: "background"
                 }, options)
             ),
@@ -290,10 +291,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 record.set("title", config.title);
             }
 
-            // set visibility from config
-            if ("visibility" in config) {
-                layer.visibility = config.visibility;
-            }
+            layer.addOptions({
+                visibility: ("visibility" in config) ? config.visibility : true,
+                opacity: ("opacity" in config) ? config.opacity : 1
+            });
             
             record.set("selected", config.selected || false);
             record.set("source", config.source);

@@ -24,7 +24,7 @@ Ext.namespace("gxp.plugins");
 gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
     
 /** api: ptype = gxp_permalink */
-    ptype: "gxp_permalink",
+    ptype: "app_permalink",
     
 /** api: config[addActionMenuText]
 * ``String``
@@ -159,14 +159,21 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 		configObj.map = target.getState().map;
 		//delete configObj.map.maxExtent;
 		
-		// remove unnecessary information
 		for (var i = 0, len = configObj.map.layers.length; i < len; i++){
+		
+		// remove unnecessary information
 			delete configObj.map.layers[i].capability;
 			delete configObj.map.layers[i].selected;
 			delete configObj.map.layers[i].format;
 			delete configObj.map.layers[i].fixed;
+			if (configObj.map.layers[i].group == "") {
+				delete configObj.map.layers[i].group;
+			}
+			if (configObj.map.layers[i].tiled == true) {
+				delete configObj.map.layers[i].tiled;
+			}
 			
-			// generate list of layernames
+		// generate list of layernames
 			if (configObj.map.layers[i].group == "background") {
 				bglyrs = configObj.map.layers[i].title + "%0A" + bglyrs;
 			} else {
@@ -196,7 +203,7 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 				scope: this
         	}, {
                 xtype: 'button',
-                icon:'../theme/app/img/silk/email_go.png',
+                iconCls:'icon-email-go',
                 text: 'Email de link voor deze kaart',
                 handler: function() {
                     email(window.location);
@@ -207,11 +214,11 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 				region: "center",
 				html: 	"<br><br><b>Verkorte link</b><br>" +
 						"<p>Lange links zijn onhandig om door te sturen of te plaatsen op sociale netwerken. Maak daarom een " +
-						"verkorte link aan via bit.ly, de korte link verwijst naar dit kaarbeeld.<br><br></p>",
+						"verkorte link aan via onderstaande knop (bit.ly), de korte link verwijst naar dit kaarbeeld.<br><br></p>",
 				scope: this
         	}, {
                 xtype: 'button',
-                icon:'../theme/app/img/silk/link.png',
+                iconCls:'icon-link',
                 text: 'Verkorte link aanmaken',
                 handler: function() {
                     popupLink(window.location);
