@@ -111,13 +111,16 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 ptype: "gxp_zoomtoextent",
                 actionTarget: {target: "paneltbar", index: 4}
             }, {
-                ptype: "gxp_streetview", toggleGroup: this.toggleGroup,
+                ptype: "app_streetview", toggleGroup: this.toggleGroup,
                 actionTarget: {target: "paneltbar", index: 8}
+            }, {
+                ptype: "app_cyclorama", toggleGroup: this.toggleGroup,
+                actionTarget: {target: "paneltbar", index: 9}
             }, {
                 ptype: "gxp_geocodermetpointer" ,
                 actionTarget: {target: "paneltbar", index: 20}
             }, {
-                ptype: "gxp_permalink",
+                ptype: "app_permalink",
                 actionTarget: {target: "paneltbar", index: 0}
             }, {
                 ptype: "gxp_print",

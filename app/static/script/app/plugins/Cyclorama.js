@@ -8,7 +8,7 @@
 
 /** api: (define)
  *  module = gxp.plugins
- *  class = Streetview
+ *  class = Cyclorama
  */
 
 /** api: (extends)
@@ -17,18 +17,18 @@
 Ext.namespace("gxp.plugins");
 
 /** api: constructor
- *  .. class:: Streetview(config)
+ *  .. class:: Cyclorama(config)
  *
  *    This plugins provides an action which, when active, will issue a
  *    GetFeatureInfo request to the WMS of all layers on the map. The output
  *    will be displayed in a popup.
  */   
-gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
+gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gxp_streetview */
-    ptype: "app_streetview",
+    /** api: ptype = app_cyclorama */
+    ptype: "app_cyclorama",
 
-    /** private: property[popupCache]
+    /** private: property[popupCache2]
      *  ``Object``
      */
     popupCache: null,
@@ -37,52 +37,51 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for feature info action tooltip (i18n).
      */
-    infoActionTip: "Toon Streetview",
+    infoActionTip: "Toon Cyclorama",
 
     /** api: config[popupTitle]
      *  ``String``
      *  Title for info popup (i18n).
      */
-    popupTitle: "Streetview",
+    popupTitle: "Cyclorama",
      
     /** api: method[addActions]
      */
     addActions: function() {
         this.popupCache = {};
-		streetview_plugin = this;
+		cyclo_plugin = this;
 		
-        var actions = gxp.plugins.Streetview.superclass.addActions.call(this, [{
+        var actions = gxp.plugins.Cyclorama.superclass.addActions.call(this, [{
             tooltip: this.infoActionTip,
-            icon: "../theme/app/img/logo_streetview.png",
+            iconCls: "icon-cyclorama",
             text: this.popupTitle,
             toggleGroup: this.toggleGroup,
             enableToggle: true,
             allowDepress: true,
-            visible: false, //!app.intraEnabled,
             toggleHandler: function(button, pressed) {
-                for (var i = 0, len = streetview.controls.length; i < len; i++){
+                for (var i = 0, len = cyclo.controls.length; i < len; i++){
                     if (pressed) {
-                        streetview.controls[i].activate();
+                        cyclo.controls[i].activate();
                     } else {
-                        streetview.controls[i].deactivate();
-                        streetview_plugin.popup.close();
+                        cyclo.controls[i].deactivate();
+                        cyclo_plugin.popup.close();
                     }
                 }
              }
         }]);
         
-        var streetviewButton = this.actions[0].items[0];
-        streetviewButton.setVisible(!app.intraEnabled);
-        var streetview = {controls: []};
-		var updateStreetView = function() {
+        var cycloButton = this.actions[0].items[0];
+        cycloButton.setVisible(app.intraEnabled);
+        var cyclo = {controls: []};
+		var updateCyclo = function() {
 		var control;
-		for (var i = 0, len = streetview.controls.length; i < len; i++){
-			control = streetview.controls[i];
+		for (var i = 0, len = cyclo.controls.length; i < len; i++){
+			control = cyclo.controls[i];
 			control.deactivate();  // TODO: remove when http://trac.openlayers.org/ticket/2130 is closed
 			control.destroy();
 		}
 
-            streetview.controls = [];
+            cyclo.controls = [];
 			var Clicker = OpenLayers.Class(OpenLayers.Control, {                
 				defaults: {
 					pixelTolerance: 1,
@@ -100,7 +99,7 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
 				}, 
 
 				trigger: function(event) {
-						streetview_plugin.openPopup(this.map.getLonLatFromViewPortPx(event.xy));	
+						cyclo_plugin.openPopup(this.map.getLonLatFromViewPortPx(event.xy));	
 				}
 
 			});
@@ -108,15 +107,15 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
 			//dragcontrol.draw();
 			var clickcontrol = new Clicker()
 			this.target.mapPanel.map.addControl(clickcontrol);
-			streetview.controls.push(clickcontrol);
-			if(streetviewButton.pressed) {
+			cyclo.controls.push(clickcontrol);
+			if(cycloButton.pressed) {
 				clickcontrol.activate()
 			};
 		}
 		
-        this.target.mapPanel.layers.on("update", updateStreetView, this);
-        this.target.mapPanel.layers.on("add", updateStreetView, this);
-        this.target.mapPanel.layers.on("remove", updateStreetView, this);
+        this.target.mapPanel.layers.on("update", updateCyclo, this);
+        this.target.mapPanel.layers.on("add", updateCyclo, this);
+        this.target.mapPanel.layers.on("remove", updateCyclo, this);
         
         return actions;
     },
@@ -129,21 +128,32 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
 		if (this.popup && this.popup.anc) {
 			this.popup.close();
 		};
-			
-		this.popup = new GeoExt.Popup({
-			title: "Street View",
-			location: location,
-			zoom: 2,
-			width: 400,
-			height: 500,
-			collapsible: true,
-			map: this.target.mapPanel.map,
-			items: [{  
-						xtype: 'gxp_googlestreetviewpanel'
-					}]	
-		});	
+		
+		//var position = new google.maps.LatLng(location.lat, location.lon);
+		var cyclo_url = "https://globespotter.cyclomedia.com/nl/?Showmap=false&posx="+ location.lon + "&posy=" + location.lat;
+	
+        this.popup = new GeoExt.Popup({
+        				   border:false,
+						   map: this.target.mapPanel.map,
+                           layout: 'fit',
+                           width:1024,
+						   height:700,
+						   location: location,
+						   maximizable: true,
+						   collapsible: true,
+						   anchored: true,
+						   frame: true,
+						   html: "<iframe src='" + cyclo_url + "' width='100%'  height='100%' seamless allowTransparency='true'/>",
+						   listeners: {
+								close: function() {
+								// closing a popup destroys it, but our reference is truthy
+								this.popup = null;
+								}
+								}
+
+						   });
 		this.popup.show();	
 	} 
 });
 
-Ext.preg(gxp.plugins.Streetview.prototype.ptype, gxp.plugins.Streetview);
+Ext.preg(gxp.plugins.Cyclorama.prototype.ptype, gxp.plugins.Cyclorama);
