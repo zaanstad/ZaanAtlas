@@ -73,9 +73,7 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         this.popupCache = {};
-        
-        var_this = this;
-        
+        info_plugin = this;
 		map = this.target.mapPanel.map;
 		
         var actions = gxp.plugins.WMSGetFeatureInfoZaanAtlas.superclass.addActions.call(this, [{
@@ -94,7 +92,7 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 							};
 						};
 						if (!layer_info) {
-							var_this.infolaagtoevoegen();
+							info_plugin.infolaagtoevoegen();
 							map.events.register('click',map, function (e) {
 								try {
 									if (popup) {
@@ -110,7 +108,7 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 								};
 								
 								if (!layer_info) {
-									var_this.infolaagtoevoegen();
+									info_plugin.infolaagtoevoegen();
 								};
 								
 								var location = map.getLonLatFromViewPortPx(e.xy);
@@ -131,10 +129,10 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 						
 						}			
                     } else {
+                    	popup.close();
                         info.controls[i].deactivate()
-                        var_this.infolaagverwijderen();
+                        info_plugin.infolaagverwijderen();
 						map.events.remove("click");
-						popup.close();
 					};                   
                 }
              }
@@ -245,7 +243,6 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
                 info.controls.push(control);
                 if(infoButton.pressed) {
                     control.activate();
-                
 				}
             }, this);
 			
@@ -285,8 +282,8 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 		
 		// Makes sure the background graphic is placed correctly relative
 		// to the external graphic.
-		backgroundXOffset:  0,
-		backgroundYOffset: -22,
+		backgroundXOffset:  -2,
+		backgroundYOffset: -26,
 		
 		graphicXOffset: -10,
 		graphicYOffset: -32,
