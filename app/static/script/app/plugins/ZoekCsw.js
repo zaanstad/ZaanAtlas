@@ -121,6 +121,20 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
     initCatalogDialog: function() {
 		target = this.target;
 		cswhost = this.initialConfig.search.selectedSource;
+
+        function init () {
+            this.use_proxy = true;
+            this.defaultschema = "http://www.isotc211.org/2005/gmd";
+            this.schema = "http://www.opengis.net/cat/csw/2.0.2";
+            this.stylesheet = xslt = loadDocument("../div/xsl/csw-results.xsl");
+            this.getrecords_xsl = loadDocument("../div/xsl/getrecords.xsl");
+            this.modified_xml = loadDocument("../div/xml/modified.xml");
+            this.defaults_xml = loadDocument("../div/xml/defaults.xml");         
+            this.getrecordbyid_xsl = loadDocument("../div/xsl/getrecordbyid.xsl");
+            this.defaults_xml = loadDocument("../div/xml/defaults.xml");
+            this.init = true;
+            getRecords(1);
+        };
 		
         function search (searchstring, message) {
         	this.query = searchstring.trim();
@@ -130,13 +144,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
 				outputDiv.style.display = "block";
 				document.getElementById("csw-details").style.display = "none";
 				outputDiv.innerHTML = message;
-				this.use_proxy = true;
-				this.defaultschema = "http://www.isotc211.org/2005/gmd";
-				this.schema = "http://www.opengis.net/cat/csw/2.0.2";            
-				this.getrecords_xsl = loadDocument("../div/xsl/getrecords.xsl");
-				this.getrecordbyid_xsl = loadDocument("../div/xsl/getrecordbyid.xsl");
-				this.defaults_xml = loadDocument("../div/xml/defaults.xml");
-				this.defaultschema = this.defaults_xml.selectSingleNode("/defaults/outputschema/text()").nodeValue;
+                this.init = false;
 				getRecords(1);
             }
         };
@@ -190,6 +198,35 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 });
             };
         };
+
+        var generateNavigateButton = function() {
+            var item = Ext.DomQuery.select('div[class=btn_nextrecords]');
+            var btn = Ext.getCmp('btn_nextrecords');
+            var recordId = new String();
+            if (item.length > 0) {
+                recordId = item[0].id.toString();
+                btn.enable();
+                btn.value = recordId; 
+            }
+            else {
+                btn.disable();
+            }
+            item = Ext.DomQuery.select('div[class=btn_previousrecords]');
+            btn = Ext.getCmp('btn_previousrecords');
+            if (item.length > 0) {
+                recordId = item[0].id.toString();
+                btn.enable();
+                btn.value = recordId;
+            }
+            else {
+                btn.disable();
+            }
+            item = Ext.DomQuery.select('div[class=tb_listtext]');
+            tb = Ext.getCmp('tb_listtext');
+            if (item.length > 0) {
+                tb.setText(item[0].id.toString());
+            }
+        };
         
         function loadDocument(uri) {
             var xml = Sarissa.getDomDocument();
@@ -207,7 +244,12 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
 		  Ext.getCmp('txtSearch').show();
 		  Ext.getCmp('btnSearch').show();
 		  Ext.getCmp('btnList').show();
-		  Ext.getCmp('btnTerug').hide();
+          Ext.getCmp('tb_itemstekst').show();
+          Ext.getCmp('tb_listtext').show();
+          Ext.getCmp('btn_previousrecords').show();
+          Ext.getCmp('btn_nextrecords').show();
+          Ext.getCmp('tb_metatext').hide();
+          Ext.getCmp('btnTerug').hide();
         }
         
         function embedMeta(id) {
@@ -231,27 +273,22 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             Ext.getCmp('txtSearch').hide();
 		  	Ext.getCmp('btnSearch').hide();
 		  	Ext.getCmp('btnList').hide();
+            Ext.getCmp('tb_itemstekst').hide();
+            Ext.getCmp('tb_listtext').hide();
+            Ext.getCmp('btn_previousrecords').hide();
+            Ext.getCmp('btn_nextrecords').hide();
+            Ext.getCmp('tb_metatext').show();
             Ext.getCmp('btnTerug').show();
         }
         
         function handleCSWResponse (request, xml) { 
             var stylesheet = "../div/xsl/prettyxml.xsl";
             var displaymode = "html";
-            if (request == "getrecords" & 
-                displaymode != "xml") {
-                stylesheet = "../div/xsl/csw-results.xsl";
-                var outputDiv = document.getElementById("csw-output");
-                document.getElementById("csw-details").style.display = "none";
-            } else if (request == "getrecordbyid" & 
-                displaymode != "xml") {
-                stylesheet = "../div/xsl/csw-metadata.xsl";
-                var outputDiv = document.getElementById("csw-details");
-                document.getElementById("csw-output").style.display = "none";
-            }
-      
-            xslt = loadDocument(stylesheet);
+            var outputDiv = document.getElementById("csw-output");
+            document.getElementById("csw-details").style.display = "none";
+
             var processor = new XSLTProcessor();
-            processor.importStylesheet(xslt);
+            processor.importStylesheet(this.stylesheet);
 
             var XmlDom = processor.transformToDocument(xml)
             var output = GetXmlContent(XmlDom);
@@ -259,6 +296,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             outputDiv.innerHTML = output; 
             generateAddButtons();
             generateInfoButtons();
+            generateNavigateButton();
             outputDiv.style.display = "block";
             Ext.getCmp('btnTerug').hide();
         };
@@ -267,59 +305,61 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             if (typeof start == "undefined") {
                 start = 1;
             }
-            var queryable = "anytext";
-     
-            /*because geonetwork doen not follow the specs*/
-            if(this.cswhost.indexOf('geonetwork') !=-1 & queryable == "anytext")
-                queryable = "any";
-     
-            var operator = "contains";
-            var sortby = "Title";
-            var query = this.query;
-            //var array = this.query.split(" ");
-            if (operator == "contains" & query != "") {
-                query = "%" + query + "%";
+            if (this.init) {
+                var processor = new XSLTProcessor();
+                processor.importStylesheet(this.getrecords_xsl);
+                setXpathValue(this.modified_xml, "/defaults/startposition", start + '');
+                var request_xml = processor.transformToDocument(this.modified_xml);
+                var request = GetXmlContent(request_xml);
+                sendCSWRequest(request);
             }
-            
-            setXpathValue(this.defaults_xml, "/defaults/outputschema", this.schema + '');
-            setXpathValue(this.defaults_xml, "/defaults/propertyname", queryable + '');
-            setXpathValue(this.defaults_xml, "/defaults/literal", query + '');
-            setXpathValue(this.defaults_xml, "/defaults/startposition", start + '');
-            setXpathValue(this.defaults_xml, "/defaults/sortby", sortby + '');
+            else {
+                var queryable = "anytext";
+         
+                /*because geonetwork doen not follow the specs*/
+                if(this.cswhost.indexOf('geonetwork') !=-1 & queryable == "anytext")
+                    queryable = "any";
+         
+                var operator = "contains";
+                var sortby = "Title";
+                var query = this.query;
+                var tb = Ext.getCmp('tb_itemstekst');
+                //var array = this.query.split(" ");
+                if (operator == "contains" & query != "") {
+                    query = "%" + query + "%";
+                }
 
-            var processor = new XSLTProcessor();
-            processor.importStylesheet(this.getrecords_xsl);
+                if (this.query == "%") {
+                    setXpathValue(this.defaults_xml, "/defaults/sortby", sortby + '');
+                    setXpathValue(this.defaults_xml, "/defaults/sortorder", 'ASC' + '');                    
+                    tb.setText('Alfabetische lijst');
+                }
+                else {
+                    tb.setText('Zoekresultaten');
+                }
+                
+                setXpathValue(this.defaults_xml, "/defaults/outputschema", this.schema + '');
+                setXpathValue(this.defaults_xml, "/defaults/propertyname", queryable + '');
+                setXpathValue(this.defaults_xml, "/defaults/literal", query + '');
+                setXpathValue(this.defaults_xml, "/defaults/startposition", start + '');
 
-            var request_xml = processor.transformToDocument(this.defaults_xml);
-            //alert(new XMLSerializer().serializeToString(request_xml));
-            var request = GetXmlContent(request_xml);
+                var processor = new XSLTProcessor();
+                processor.importStylesheet(this.getrecords_xsl);
 
-			sendCSWRequest(request);
-            //csw_response = sendCSWRequest(request);
-            //alert(new XMLSerializer().serializeToString(csw_response));
+                var request_xml = processor.transformToDocument(this.defaults_xml);
+                //alert(new XMLSerializer().serializeToString(request_xml));
+                var request = GetXmlContent(request_xml);
 
-            //return handleCSWResponse("getrecords", csw_response);
-            //return handleCSWResponse("getrecords", results_xml);
-        };
+    			sendCSWRequest(request);
+                //csw_response = sendCSWRequest(request);
+                //alert(new XMLSerializer().serializeToString(csw_response));
 
-        function getRecordById (id) {
-            setXpathValue(this.defaults_xml, "/defaults/outputschema", this.defaultschema + '');
-            setXpathValue(this.defaults_xml, "/defaults/id", id + '');
-
-            var processor = new XSLTProcessor();
-            processor.importStylesheet(this.getrecordbyid_xsl);
-
-            var request_xml = processor.transformToDocument(this.defaults_xml);
-            //var request = new XMLSerializer().serializeToString(request_xml);
-            var request = GetXmlContent(request_xml);
-
-            csw_response = sendCSWRequest(request);
-            //alert(new XMLSerializer().serializeToString(csw_response));
-              
-            return handleCSWResponse("getrecordbyid", csw_response);
+                //return handleCSWResponse("getrecords", csw_response);
+                //return handleCSWResponse("getrecords", results_xml);
+            }
         };
         
-        var getRecordvalueById = function(id,record) {
+        function getRecordvalueById (id,record) {
             // gmd:linkage/gmd:URL en gmd:name/gco:CharacterString en gmd:protocol
             setXpathValue(this.defaults_xml, "/defaults/outputschema", this.defaultschema + '');
             setXpathValue(this.defaults_xml, "/defaults/id", id + '');
@@ -376,13 +416,13 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
         
         function insertLayer(name, title, source, singletile, background) {
         	var layerStore = this.target.mapPanel.layers;
+        	var map = this.target.mapPanel.map;
         	var record = source.createLayerRecord({
                 name: name,
                 title: title,
+                tiled: !singletile,
                 source: source.id
                 });
-                
-            record.data.layer.singleTile = singletile;
             
             var aantal_pointerlagen = 0;
             
@@ -521,71 +561,131 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             html: "<div id='csw-output'></div><div id='csw-details'></div>",
             scope: this
         };
-        
-        var topToolbar = new Ext.Toolbar({  
+
+        var topToolbar= new Ext.Panel({  
             items: [  
             {
-                id: 'txtSearch',
-                xtype: 'textfield',
-                emptyText: 'Vul een zoekterm in',
-                selectOnFocus: true,
-                width: 350,
-                listeners:{  
-                    scope: this,  
-                    specialkey: function(f,e){  
-                        if(e.getKey()==e.ENTER){  
-                		var searchval = Ext.getDom('txtSearch').value;
-                    	search(searchval, "Zoeken naar <i>" + searchval + "</i> in de metadata catalogus..."); 
+                xtype: 'toolbar',
+                dock: 'top',
+                items: [  
+                {
+                    id: 'txtSearch',
+                    xtype: 'textfield',
+                    emptyText: 'Vul een zoekterm in',
+                    selectOnFocus: true,
+                    width: 350,
+                    listeners:{  
+                        scope: this,  
+                        specialkey: function(f,e){  
+                            if(e.getKey()==e.ENTER){  
+                            var searchval = Ext.getDom('txtSearch').value;
+                            search(searchval, "Zoeken naar <i>" + searchval + "</i> in de metadata catalogus..."); 
+                            }
                         }
                     }
+                }, {
+                    id: 'btnSearch',
+                    xtype: 'button',
+                    iconCls:'gxp-icon-find',
+                    text: 'Zoeken',
+                    handler: function() {
+                        var searchval = Ext.getDom('txtSearch').value;
+                        search(searchval, "Zoeken naar <i>" + searchval + "</i> in de metadata catalogus...");
+                    },
+                    scope: this
+                }, {
+                    xtype: 'tbseparator',
+                    width: 10
+                }, {
+                    id: 'btnList',
+                    xtype: 'button',
+                    iconCls:'icon-view-list',
+                    text: 'Alfabetische lijst',
+                    handler: function(f,e) {
+                        if(e.shiftKey){
+                            init();
+                        }
+                        else {
+                            search("%", "Alfabetische lijst opvragen...");
+                        }
+                    },
+                    scope: this
+                }, {
+                    xtype: 'tbfill'
+                }, {
+                    text:'Terug',
+                    id: 'btnTerug',
+                    iconCls:'gxp-icon-zoom-previous',
+                    handler: function() {
+                        hideDetails();
+                    },
+                    scope: this,
+                    hidden: true
                 }
-            }, {
-            	id: 'btnSearch',
-                xtype: 'button',
-                iconCls:'gxp-icon-find',
-                text: 'Zoeken',
-                handler: function() {
-                	var searchval = Ext.getDom('txtSearch').value;
-                    search(searchval, "Zoeken naar <i>" + searchval + "</i> in de metadata catalogus...");
-                },
-                scope: this
-            }, {
-                xtype: 'tbseparator',
-                width: 10
-            }, {
-            	id: 'btnList',
-                xtype: 'button',
-                icon:'../theme/app/img/silk/application_view_list.png',
-                text: 'Alfabetische lijst',
-                handler: function() {
-                    search("%", "Alfabetische lijst opvragen...");
-                },
-                scope: this
-            }, {
-            	xtype: 'tbfill'
-            }, {
-                text:'Terug',
-                id: 'btnTerug',
-                iconCls:'gxp-icon-zoom-previous',
-                handler: function() {
-                    hideDetails();
-                },
-                scope: this,
-                hidden: true
+                ]
+            },
+            {
+                id: 'tb_listitems',
+                xtype: 'toolbar',
+                style: 'background: #00A5C7;',
+                dock: 'top',
+                items: [
+                    {
+                        id: 'tb_itemstekst',
+                        xtype: 'tbtext',
+                        text:'Recentelijk aangepaste kaartlagen',
+                        style: 'font-weight:bold; color:white;'
+                    }, {
+                        id: 'tb_metatext',
+                        xtype: 'tbtext',
+                        text:'Metadata',
+                        style: 'font-weight:bold; color:white;',
+                        hidden: true
+                    }, {
+                        xtype: 'tbfill'
+                    }, {
+                        id: 'tb_listtext',
+                        xtype: 'tbtext',
+                        text: '',
+                        style: 'color:#CCC;'
+                    }
+                ]
             }
             ]
-        });  
-        
-        var bbarItems = [
-        "->",
-        new Ext.Button({
-            text: this.doneText,
-            handler: function() {
-                this.catalogDialog.hide();
-            },
-            scope: this
-        })
-        ];
+        });
+
+        var bbarItems = new Ext.Toolbar({  
+            items: [  
+            {
+                id: "btn_previousrecords",
+                xtype: 'button',
+                text: '<< vorige',
+                handler: function() {
+                    var nextval = Ext.getCmp('btn_previousrecords').value;
+                    getRecords( nextval );
+                },
+                disabled: true
+            }, {
+                id: "btn_nextrecords",
+                xtype: 'button',
+                text: 'volgende >>',
+                handler: function() {
+                    var nextval = Ext.getCmp('btn_nextrecords').value;
+                    getRecords( nextval );
+                },
+                disabled: true
+            }, {
+                xtype: 'tbfill'
+            }, {
+                text: this.doneText,
+                xtype: 'button',
+                handler: function() {
+                    this.catalogDialog.hide();
+                },
+                scope: this
+            }
+            ]
+        }); 
 
         //TODO use addOutput here instead of just applying outputConfig
         this.catalogDialog = new Ext.Window(Ext.apply({
@@ -599,7 +699,9 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             items: htmlcontainer,
             tbar: topToolbar,
             bbar: bbarItems
-        }, this.initialConfig.outputConfig)); 
+        }, this.initialConfig.outputConfig));
+
+        init();
     }
 });
 

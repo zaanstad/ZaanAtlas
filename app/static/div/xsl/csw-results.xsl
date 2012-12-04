@@ -4,11 +4,6 @@
  xmlns:dct="http://purl.org/dc/terms/">
 <!--xsl:output method="html" encoding="ISO-8859-1"/-->
 
-<xsl:variable name="pageUrl">
-  <xsl:text>javascript:(this.getRecords</xsl:text>
-  <xsl:text>('</xsl:text>
-</xsl:variable>
-
 <xsl:template match="/results/*[local-name()='GetRecordsResponse']">
   <xsl:apply-templates select="./*[local-name()='SearchResults']"/>
 </xsl:template>
@@ -16,67 +11,17 @@
 <xsl:template match="*[local-name()='SearchResults']">
 
 <xsl:variable name="start">
-    <xsl:value-of select="../../request/@start"/>
+    <xsl:value-of select="number(@nextRecord) - 30"/>
 </xsl:variable>
 
-<!-- because GeoNetwork does not return nextRecord we have to do some calculation -->
-<xsl:variable name="next">
-  <xsl:choose>
-    <xsl:when test="@nextRecord">
-      <xsl:value-of select="@nextRecord"/>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:choose>
-        <xsl:when test="number(@numberOfRecordsMatched) >= (number($start) + number(@numberOfRecordsReturned))">
-          <xsl:value-of select="number($start) + number(@numberOfRecordsReturned)"/>
-        </xsl:when>
-    	<xsl:otherwise>
-    	  <xsl:value-of select="0"/>
-    	</xsl:otherwise>
-      </xsl:choose>
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:variable>
 
 <div>
-<!--xsl:if test="number(@numberOfRecordsMatched) > number(@numberOfRecordsReturned)"-->
-<!-- because ESRI GPT returns always numberOfRecordsMatched = 0 -->
-<xsl:if test="number(@numberOfRecordsReturned) > 0 and ($start > 1 or number($next) > 0)">
-  <h3 style="float:right;top: -2.5em;">
-    <xsl:if test="$start > 1">
-      <a>
-        <xsl:attribute name="href">
-	    <xsl:value-of select="$pageUrl"/>
-    	  <xsl:value-of select="number($start)-number(../../request/@maxrecords)"/>
-          <xsl:text>'))</xsl:text> 
-	    </xsl:attribute>
-        <xsl:text>&lt;&lt; previous</xsl:text>
-      </a>
-    </xsl:if>
-    <xsl:text>  || </xsl:text> 
-    <xsl:if test="number($next) > 0">
-      <a>
-        <xsl:attribute name="href">
-     	  <xsl:value-of select="$pageUrl"/>
-	  <xsl:value-of select="$next"/>
-          <xsl:text>'))</xsl:text> 
-	</xsl:attribute>
-        <xsl:text>next &gt;&gt;</xsl:text>
-      </a>
-    </xsl:if>
-  </h3>
-</xsl:if>
-
-<!--<h3>Gevonden records: <xsl:value-of select="@numberOfRecordsReturned"/>
-(van <xsl:value-of select="@numberOfRecordsMatched"/>)
-</h3>
--->    
     <xsl:attribute name="start">
     	<xsl:value-of select="$start"/>
     </xsl:attribute>
     <xsl:for-each select="./*[local-name()='SummaryRecord']|./*[local-name()='BriefRecord']|./*[local-name()='Record']">
     <div class="cswresults">
-      <h3>
+      <div class="meta_title">
       <xsl:choose>
         <xsl:when test="./dc:title">
     	  <xsl:apply-templates select="./dc:title"/>
@@ -86,7 +31,7 @@
         </xsl:otherwise>
       </xsl:choose>
       <xsl:apply-templates select="./dc:identifier"/>
-      </h3>
+      </div>
       <xsl:variable name="value" select="./dc:URI[@name='thumbnail']" />
       <xsl:if test="contains($value,'resources.get?')">
 	  <img class="align-left thumbnail" caption="thumbnail">
@@ -110,6 +55,30 @@
 	  </p>
 	  </div>
   </xsl:for-each> 
+
+  <!-- because ESRI GPT returns always numberOfRecordsMatched = 0 -->
+  <xsl:if test="number(@numberOfRecordsReturned) > 0 and ($start > 1 or number(@nextRecord) > 0)">
+      <xsl:if test="$start > 1">
+        <div class="btn_previousrecords">
+        <xsl:attribute name="id">
+          <xsl:value-of select="number($start)-number(@numberOfRecordsReturned)"/>
+          </xsl:attribute>
+          <xsl:text> </xsl:text>
+        </div>
+      </xsl:if>
+      <xsl:if test="number(@numberOfRecordsMatched) > number(@nextRecord)">
+        <div class="btn_nextrecords">
+          <xsl:attribute name="id">
+          <xsl:value-of select="@nextRecord"/>
+          </xsl:attribute>
+          <xsl:text> </xsl:text>
+        </div>
+      </xsl:if>
+  </xsl:if>
+  <div class="tb_listtext">
+      <xsl:attribute name="id">Getoonde kaartlagen: <xsl:value-of select="@numberOfRecordsReturned"/> (van <xsl:value-of select="@numberOfRecordsMatched"/>)</xsl:attribute>
+      <xsl:text> </xsl:text>
+    </div>
   </div>
 </xsl:template>
 

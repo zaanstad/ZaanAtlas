@@ -1,6 +1,6 @@
 <defaults>
 <version>2.0.2</version>
-<maxrecords>200</maxrecords>
+<maxrecords>30</maxrecords>
 <startposition>1</startposition>
 <outputformat>application/xml</outputformat>
 <!--outputschema>http://www.opengis.net/cat/csw/2.0.2</outputschema-->
@@ -9,6 +9,6 @@
 <propertyname>AnyText</propertyname>
 <literal></literal>
 <sortby></sortby>
-<sortorder>ASC</sortorder>
+<sortorder></sortorder>
 <id></id>
 </defaults>
