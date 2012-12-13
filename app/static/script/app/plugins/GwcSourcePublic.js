@@ -264,6 +264,15 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
 			 }
 		 });
     },
+
+    /** api: method[getSchema]
+     *  Gets the schema for a layer of this source, if the layer is a feature
+     *  layer. The WMS does not support DescribeLayer and the layer is not
+     *   associated with a WFS feature type.
+     */
+    getSchema: function(rec, callback, scope) {
+        return false;
+    },
     
     /** api: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.
