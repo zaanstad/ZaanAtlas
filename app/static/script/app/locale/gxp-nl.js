@@ -55,8 +55,13 @@ GeoExt.Lang.add("nl", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Kaartlagen",
         rootNodeText: "Kaartlagen",
         overlayNodeText: "Kaartlagen",
+        baseNodeText: "Onderleggers"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
         baseNodeText: "Onderleggers"
     },
 
@@ -271,9 +276,39 @@ GeoExt.Lang.add("nl", {
         transparentText: "Transparant",
         cacheText: "Cache",
         cacheFieldText: "Gebruik de versie vanuit de cache",
-        stylesText: "Stijlen",
+        stylesText: "Beschikbare Stijlen",
         infoFormatText: "Info formaat",
-        infoFormatEmptyText: "Selecteer een formaat"
+        infoFormatEmptyText: "Selecteer een formaat",
+        queryText: "Beperken met filters",
+        scaleText: "Beperken met schaal",
+        minScaleText: "Min schaal",
+        maxScaleText: "Max schaal",
+        switchToFilterBuilderText: "Terug naar filter samensteller",
+        cqlPrefixText: "of ",
+        cqlText: "gebruik CQL filter"
+    },
+
+    "gxp.WMSLayerPanelZaanAtlas.prototype": {
+        aboutText: "Informatie",
+        titleText: "Titel",
+        nameText: "Naam",
+        descriptionText: "Omschrijving",
+        displayText: "Toon",
+        opacityText: "Opaciteit",
+        formatText: "Formaat",
+        transparentText: "Transparant",
+        cacheText: "Cache",
+        cacheFieldText: "Gebruik de versie vanuit de cache",
+        stylesText: "Beschikbare Stijlen",
+        infoFormatText: "Info formaat",
+        infoFormatEmptyText: "Selecteer een formaat",
+        queryText: "Beperken met filters",
+        scaleText: "Beperken met schaal",
+        minScaleText: "Min schaal",
+        maxScaleText: "Max schaal",
+        switchToFilterBuilderText: "Terug naar filter voorwaarden",
+        cqlPrefixText: "of ",
+        cqlText: "gebruik CQL filter"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -319,16 +354,19 @@ GeoExt.Lang.add("nl", {
         fileLabel: "Data",
         fieldEmptyText: "Kies data archief...",
         uploadText: "Upload",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Bezig met uploaden van de data...",
         invalidFileExtensionText: "Bestandsextensie is een van: ",
         optionsText: "Opties",
         workspaceLabel: "Werkruimte",
         workspaceEmptyText: "Standaard werkruimte",
         dataStoreLabel: "Archief",
-        dataStoreEmptyText: "Standaard archief"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Standaard archief"
     },
 
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Add New Server...",
         cancelText: "Cancel",
         addServerText: "Add Server",
