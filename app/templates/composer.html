@@ -29,6 +29,9 @@
                     title: "Internet",                     
                     ptype: "gxp_wmssource"
                 },
+	            ol: {
+	                ptype: "gxp_olsource"
+	            },
                 google: {
                     ptype: "gxp_googlesource"
                 }
@@ -119,11 +122,20 @@
 					],
 					projection: "EPSG:28992",
 					units: "m",
-					maxExtent: [
-						106575, 492212, 
-						119335, 503920
-						],
+					center: [112958, 498065],
+					zoom: 2,
+					wrapDateLine: false,
+					restrictedExtent: [106000, 491250, 120000, 505000],
+					maxExtent: [106000, 491250, 120000, 505000],
 					layers: [{
+	                    source: "ol",
+	                    group: "background",
+	                    fixed: true,
+	                    type: "OpenLayers.Layer",
+	                    args: [
+	                        "Blank", {visibility: false}
+	                    ]
+					}, {
 						source: "tiles",
 						name: "gbkz",
 						visibility: false
@@ -139,15 +151,7 @@
 						source: "tiles",
 						name: "Zaanstad",
 						visibility: true
-					}, {
-		                source: "ol",
-		                type: "OpenLayers.Layer",
-		                args: ["Blank"],
-		                visibility: false,
-		                group: "background"
-					}],
-					center: [112958, 498065],
-					zoom: 2
+					}]
 			   }
 			});
         }

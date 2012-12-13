@@ -62,6 +62,11 @@
 				],		
           		projection: "EPSG:28992",
                 units: "m",
+                center: [112958, 498065],
+                zoom: 2,
+                wrapDateLine: false,
+                restrictedExtent: [106000, 491250, 120000, 505000],
+                maxExtent: [106000, 491250, 120000, 505000],
 				maxExtent: [
 					102009, 480557, 
 					129270, 506221
@@ -69,9 +74,7 @@
                 layers: [{
                     source: "tiles",
                     name: "Zaanstad"
-                }],
-				center: [112958, 498065],
-                zoom: 2
+                }]
             }
         });
     </script>
