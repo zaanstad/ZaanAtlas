@@ -138,13 +138,14 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 checked: false, 
                 iconCls: "gxp-icon-pan",
                 ptype: "gxp_navigation",
-                toggleGroup: this.toggleGroup
+                toggleGroup: "navigation"
             }, {
                 leaf: true, 
                 text: gxp.plugins.WMSGetFeatureInfo.prototype.infoActionTip, 
                 checked: true, 
                 iconCls: "gxp-icon-getfeatureinfo",
                 ptype: "gxp_wmsgetfeatureinfo",
+                layerParams: ["CQL_FILTER"],
                 format: 'html',
                 defaultAction: 0,
                 toggleGroup: this.toggleGroup
@@ -188,7 +189,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     }, 
 
     loadConfig: function(config) {
-    // fix scroll behaviour
+    /* fix scroll behaviour
 	config.map.controls = [
 			new OpenLayers.Control.Navigation(
 				{
@@ -201,6 +202,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 			//new OpenLayers.Control.KeyboardDefaults(),
 			new OpenLayers.Control.Attribution()
 			];
+        */
         
         var mapUrl = window.location.hash.substr(1);
         var match = mapUrl.match(/^maps\/(\d+)$/);
@@ -242,7 +244,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 scope: this
             });
 		} else if (bookm) {
-			var urlConf = unescape(mapUrl.split('=')[1]);
+			var urlConf = unescape(mapUrl.split('q=')[1]);
 			var queryConfig = Ext.util.JSON.decode(urlConf);
 			queryConfig.map.controls = config.map.controls;
             Ext.apply(config, queryConfig);
@@ -250,10 +252,41 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 			window.location.hash = "";
         } else {
             var query = Ext.urlDecode(document.location.search.substr(1));
-            if (query && query.q) {
-                var queryConfig = Ext.util.JSON.decode(query.q);
-                Ext.apply(config, queryConfig);
+            if (query) {
+                if (query.q) {
+                    var queryConfig = Ext.util.JSON.decode(query.q);
+                    Ext.apply(config, queryConfig);
+                }
+                /**
+                 * Special handling for links from local GeoServer.
+                 *
+                 * The layers query string value indicates layers to add as 
+                 * overlays from the local source.
+                 *
+                 * The bbox query string value indicates the initial extent in
+                 * the current map projection.
+                 */
+                 if (query.layers) {
+                     var layers = query.layers.split(/\s*,\s*/);
+                     for (var i=0,ii=layers.length; i<ii; ++i) {
+                         config.map.layers.push({
+                             source: "local",
+                             name: layers[i],
+                             visibility: true,
+                             bbox: query.lazy && query.bbox ? query.bbox.split(",") : undefined
+                         });
+                     }
+                 }
+                 if (query.bbox) {
+                     delete config.map.zoom;
+                     delete config.map.center;
+                     config.map.extent = query.bbox.split(/\s*,\s*/);
+                 }
+                 if (query.lazy && config.sources.local) {
+                     config.sources.local.requiredProperties = [];
+                 }
             }
+            
             this.applyConfig(config);
         }
         
@@ -445,7 +478,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var state = GeoExplorer.superclass.getState.apply(this, arguments);
         // Don't persist tools
         delete state.tools;
-        delete state.map.controls;
+        //delete state.map.controls;
         return state;
     }
 });
