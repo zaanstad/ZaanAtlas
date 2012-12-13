@@ -40,6 +40,35 @@ In addition, if you want to make a remote GeoServer available at the `/geoserver
 
     you@prompt:~/geoexplorer$ ant -Dapp.proxy.geoserver=http://example.com/geoserver/ debug
 
+## Updating submodule repositories
+
+Sometimes you are going to want to track a more recent revision of a submodule. How do you do that? Well, just the same as we do with another git repository (because this is a fully fledged git repository!):
+
+    you@prompt:books$ cd vendor/plugins/rspec/
+    you@prompt:rspec$ git remote update
+    Updating origin
+    you@prompt:rspec$ git merge origin/master
+    Already up-to-date.
+
+ That will pull the latest version of the module from github and update your local repository. Once you’ve done that, change back into the root of your project and do a git stat:
+
+    you@prompt:rspec$ cd ../../..
+    you@prompt:books$ git stat
+    # On branch master
+    # Changed but not updated:
+    #   (use "git add <file>..." to update what will be committed)
+    #
+    #   modified:   vendor/plugins/rspec
+    #
+    no changes added to commit (use "git add" and/or "git commit -a")
+
+You’ll see that the main git module knows that the submodule is now pointing to a different commit. We can stage that, commit it and push it upstream to share the fact that we’re following a new version:
+
+    you@prompt:books$ git commit -a -m "Follow the newest revision of RSpec."
+    Created commit 9374e2d: Follow the newest revision of RSpec.
+     1 files changed, 1 insertions(+), 1 deletions(-)
+    you@prompt:books$ git push
+    [ ... ]
 
 ## Preparing the application for deployment
 
