@@ -87,6 +87,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 actionTarget: ["layers.tbar", "layers.contextMenu"]
             }, {
                 ptype: "gxp_layerproperties",
+                outputConfig: {defaults: {height: 400}, width: 400},
                 actionTarget: ["layers.tbar", "layers.contextMenu"]
         	}, {
                 ptype: "gxp_metaviewer",
