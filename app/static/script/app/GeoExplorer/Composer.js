@@ -96,27 +96,30 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 ptype: "gxp_zoomtolayerextent",
                 actionTarget: {target: "layers.contextMenu", index: 0}
             }, {
-                ptype: "gxp_navigation", toggleGroup: this.toggleGroup,
+                ptype: "gxp_navigation", toggleGroup: "navigation",
                 actionTarget: {target: "paneltbar", index: 1}
             }, {
                 ptype: "gxp_wmsgetfeatureinfozaanatlas", toggleGroup: this.toggleGroup,
+                layerParams: ["CQL_FILTER"],
                 actionTarget: {target: "paneltbar", index: 3}
             }, {
                 ptype: "gxp_measure", toggleGroup: this.toggleGroup,
                 controlOptions: {immediate: true},
                 actionTarget: {target: "paneltbar", index: 4}
             }, {
-                ptype: "gxp_zoom",
+                ptype: "gxp_zoom", toggleGroup: "navigation",
+                showZoomBoxAction: true,
+                controlOptions: {zoomOnClick: false},
                 actionTarget: {target: "paneltbar", index: 2}
             }, {
                 ptype: "gxp_zoomtoextent",
-                actionTarget: {target: "paneltbar", index: 4}
+                actionTarget: {target: "paneltbar", index: 5}
             }, {
                 ptype: "app_streetview", toggleGroup: this.toggleGroup,
-                actionTarget: {target: "paneltbar", index: 8}
+                actionTarget: {target: "paneltbar", index: 9}
             }, {
                 ptype: "app_cyclorama", toggleGroup: this.toggleGroup,
-                actionTarget: {target: "paneltbar", index: 9}
+                actionTarget: {target: "paneltbar", index: 10}
             }, {
                 ptype: "gxp_geocodermetpointer" ,
                 actionTarget: {target: "paneltbar", index: 20}
