@@ -134,11 +134,30 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
         GeoExplorer.Composer.superclass.constructor.apply(this, arguments);
     },
 
-    /** api: method[destroy]
-     */
-    destroy: function() {
-        this.loginButton = null;
-        GeoExplorer.Composer.superclass.destroy.apply(this, arguments);
+    loadConfig: function(config) {
+        GeoExplorer.Composer.superclass.loadConfig.apply(this, arguments);
+        
+        var query = Ext.urlDecode(document.location.search.substr(1));
+        if (query && query.styler) {
+            for (var i=config.map.layers.length-1; i>=0; --i) {
+                delete config.map.layers[i].selected;
+            }
+            config.map.layers.push({
+                source: "local",
+                name: query.styler,
+                selected: true,
+                bbox: query.lazy && query.bbox ? query.bbox.split(",") : undefined
+            });
+            this.on('layerselectionchange', function(rec) {
+                var styler = this.tools.styler,
+                    layer = rec.getLayer(),
+                    extent = layer.maxExtent;
+                if (extent && !query.bbox) {
+                    this.mapPanel.map.zoomToExtent(extent);
+                }
+                this.doAuthorized(styler.roles, styler.addOutput, styler);
+            }, this, {single: true});            
+        }
     },
 
     /** private: method[setCookieValue]
