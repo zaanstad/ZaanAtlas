@@ -128,6 +128,7 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
             };
         
 		function popupLink(url) {
+            //alert(encodeURIComponent(url));
 			var api_key = "R_b3889752450cd7113ec5a5c06eca8b07";
 			var api_login = "teamgeo";
 			var api_url = "api.bitly.com";
@@ -166,12 +167,23 @@ gxp.plugins.Permalink = Ext.extend(gxp.plugins.Tool, {
 			delete configObj.map.layers[i].selected;
 			delete configObj.map.layers[i].format;
 			delete configObj.map.layers[i].fixed;
+            delete configObj.map.layers[i].minscale;
+            delete configObj.map.layers[i].maxscale;
+            if (configObj.map.layers[i].styles == "") {
+                delete configObj.map.layers[i].group;
+            }
+            if (configObj.map.layers[i].cql_filter == "") {
+                delete configObj.map.layers[i].cql_filter;
+            }
 			if (configObj.map.layers[i].group == "") {
 				delete configObj.map.layers[i].group;
 			}
 			if (configObj.map.layers[i].tiled == true) {
 				delete configObj.map.layers[i].tiled;
 			}
+            if (configObj.map.layers[i].cached == false) {
+                delete configObj.map.layers[i].cached;
+            }
 			
 		// generate list of layernames
 			if (configObj.map.layers[i].group == "background") {
