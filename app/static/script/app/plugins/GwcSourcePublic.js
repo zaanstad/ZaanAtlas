@@ -171,6 +171,16 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
+                "Luchtfoto 2002 kleur",
+                this.url,
+                {layers: "Lufo2002-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo2002-kleur",
+                    grp: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
                 "Luchtfoto 2007 kleur",
                 this.url,
                 {layers: "Lufo2007-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
@@ -264,7 +274,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
 			 }
 		 });
     },
-
+    
     /** api: method[getSchema]
      *  Gets the schema for a layer of this source, if the layer is a feature
      *  layer. The WMS does not support DescribeLayer and the layer is not
@@ -273,7 +283,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
     getSchema: function(rec, callback, scope) {
         return false;
     },
-    
+
     /** api: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.
      *  :returns: ``GeoExt.data.LayerRecord``
