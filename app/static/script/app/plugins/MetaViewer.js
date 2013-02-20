@@ -34,7 +34,7 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for layer properties menu item (i18n).
      */
-    menuText: "Metadata bekijken",
+    menuText: "Metadata",
 
     /** api: config[tooltip]
      *  ``String``
@@ -62,6 +62,7 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
             	maximizable: true,
             	layout: "auto",
             	autoScroll: true,
+                closeAction: "close",
                 height: 500,
                 width: 650
             };
@@ -152,6 +153,35 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
 		return result && unescape(result[1]) || "";
 	},
 
+    printDiv: function(div_id) {
+
+          var DocumentContainer = document.getElementById(div_id);
+          var html = '<html><head>'+
+                '<title>ZaanAtlas</title>' +
+                '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' +
+                '<!-- GeoExplorer resources -->' +
+                '<link rel="stylesheet" type="text/css" href="../externals/ext/resources/css/ext-all.css">' +
+                '<link rel="stylesheet" type="text/css" href="../externals/ext/resources/css/xtheme-zaanstad.css">' +
+                '<link rel="stylesheet" type="text/css" href="../externals/GeoExt/resources/css/popup.css">' +
+                '<link rel="stylesheet" type="text/css" href="../externals/GeoExt/resources/css/gxtheme-gray.css">' +
+                '<link rel="stylesheet" type="text/css" href="../externals/gxp/src/theme/all.css">' +
+                '<link rel="stylesheet" type="text/css" href="../theme/app/geoexplorer.css" />' +
+                '<!-- Zaanstad resources -->' +
+                '<link rel="stylesheet" type="text/css" href="../theme/app/zaanstad-composer.css" />' +
+                '<link rel="stylesheet" type="text/css" href="../theme/app/zaanstad-getfeatureinfo.css" />' +
+                '<link rel="shortcut icon" href="../theme/app/img/favicon.ico">' +
+                '</head><body style="background:#ffffff;" onload="window.print();window.close();";>' +
+                DocumentContainer.innerHTML+
+                '</body></html>';
+
+              var WindowObject = window.open(); //window.open("", "", "toolbars=no,scrollbars=yes,status=no,resizable=no");
+              WindowObject.document.writeln(html);
+              WindowObject.document.close();
+              WindowObject.focus();
+              //WindowObject.print();
+              //WindowObject.close();
+    },
+
 	/** api: function[createGeoServerStylerConfig]
 	 *  :arg layerRecord: ``GeoExt.data.LayerRecord`` Layer record to configure the
 	 *      dialog for.
@@ -163,7 +193,7 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
 	 *  "styleselected", "modified" and "saved" events that take care of saving
 	 *  styles and keeping the layer view updated.
 	 */
-	createMetaConfig: function(oid) {
+	createMetaConfig: function(oid, title) {
 		
 		var OLrequest = OpenLayers.Request.GET({
 			url : this.catalog + "/srv/nl/metadata.show.embedded?uuid=" + oid + "&currTab=simple",
@@ -172,18 +202,27 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
 			 "Content-Type": "application/html"
 			},
 			success : function(response) {
-				//document.getElementById(oid).innerHTML = response.responseText;
-				Ext.getCmp(oid).update(response.responseText);
+				Ext.getCmp(oid + gxp.plugins.MetaViewer.prototype.ptype).update("<div id=" + oid + "-print><div class='simple'><h1>" + title + "</h1></div>" + response.responseText + "</div>");
 			},
 			failure : function(response) {
-				Ext.getCmp(oid).update(" Fout:\n"+ response.status + "<br>" +response.statusText);
+				Ext.getCmp(oid + gxp.plugins.MetaViewer.prototype.ptype).update(" Fout:\n"+ response.status + "<br>" +response.statusText);
 			}
 		});
 
 		return {
-            xtype: "container",
-            id: oid,
-            //html: "<div id=" + oid + ">Metadata opvragen...</div>"
+            //xtype: "container",
+            layout: "fit",
+            title: "Kaartlaag: " + title,
+            tools: [{
+                id:'print',
+                tooltip: 'Print de inhoud van dit venster',
+                handler: function(event){ 
+                    this.printDiv(this.metaid + "-print"); 
+                },
+                scope: this
+                }],
+            id: oid + this.ptype,
+            bodyStyle: "padding: 10px",
             html: "Metadata opvragen..."
 		};
 	},
@@ -193,11 +232,10 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
         var record = this.target.selectedLayer;
 
         var origCfg = this.initialConfig.outputConfig || {};
-        this.outputConfig.title = origCfg.title ||
-            this.menuText + ": " + record.get("title");
+        this.outputConfig.title = origCfg.title || this.menuText;
 
-        Ext.apply(config, this.createMetaConfig(this.metaid));
-        Ext.applyIf(config, {style: "padding: 10px"});
+        Ext.apply(config, this.createMetaConfig(this.metaid, record.get("title")));
+        //Ext.applyIf(config, {style: "padding: 10px"});
         
         var output = gxp.plugins.MetaViewer.superclass.addOutput.call(this, config);
     }

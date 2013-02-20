@@ -105,7 +105,7 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 							};
 						};
 						if (!layer_info) {
-							info_plugin.infolaagtoevoegen();
+              info_plugin.infolaagtoevoegen();
 							map.events.register('click',map, function (e) {
 								try {
 									if (popup) {
@@ -142,17 +142,17 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 						
 						}			
                     } else {
-                    	popup.close();
-                        info.controls[i].deactivate()
-                        info_plugin.infolaagverwijderen();
-						map.events.remove("click");
+                      popup.close();
+                      info.controls[i].deactivate();
+                      info_plugin.infolaagverwijderen();
+                      map.events.remove("click");
 					};                   
                 }
              }
         }]);
         var infoButton = this.actions[0].items[0];
-		layer_info = false;
-		aantal_popups = 1;
+        layer_info = false;
+        aantal_popups = 1;
         var info = {controls: []};
 
         var updateInfo = function() {
@@ -218,7 +218,15 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 							
 								var baseConfig = {
 									title: title,
-									layout: "fit",
+                  layout: "fit",
+                  tools: [{
+                      id:'print',
+                      tooltip: 'Print de inhoud van dit venster',
+                      handler: function(event){ 
+                          this.printDiv(popup.layout.activeItem.body.id); 
+                      },
+                      scope: this
+                      }],
 									autoScroll: true,
 									autoWidth: true,
 									collapsible: true
@@ -286,6 +294,33 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 			};
 		};	
     },
+
+    printDiv: function(div_id) {
+
+      var DocumentContainer = document.getElementById(div_id);
+      var html = '<html><head>'+
+            '<title>ZaanAtlas</title>' +
+            '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' +
+            '<!-- GeoExplorer resources -->' +
+            '<link rel="stylesheet" type="text/css" href="../externals/ext/resources/css/ext-all.css">' +
+            '<link rel="stylesheet" type="text/css" href="../externals/ext/resources/css/xtheme-zaanstad.css">' +
+            '<link rel="stylesheet" type="text/css" href="../externals/GeoExt/resources/css/popup.css">' +
+            '<link rel="stylesheet" type="text/css" href="../externals/GeoExt/resources/css/gxtheme-gray.css">' +
+            '<link rel="stylesheet" type="text/css" href="../externals/gxp/src/theme/all.css">' +
+            '<link rel="stylesheet" type="text/css" href="../theme/app/geoexplorer.css" />' +
+            '<!-- Zaanstad resources -->' +
+            '<link rel="stylesheet" type="text/css" href="../theme/app/zaanstad-composer.css" />' +
+            '<link rel="stylesheet" type="text/css" href="../theme/app/zaanstad-getfeatureinfo.css" />' +
+            '<link rel="shortcut icon" href="../theme/app/img/favicon.ico">' +
+            '</head><body style="background:#ffffff;" onload="window.print();window.close();";>' +
+            DocumentContainer.innerHTML+
+            '</body></html>';
+
+          var WindowObject = window.open(); //window.open("", "", "width=595,height=842,toolbars=no,scrollbars=yes,status=no,resizable=no");
+          WindowObject.document.writeln(html);
+          WindowObject.document.close();
+          WindowObject.focus();
+    },
     
     infolaagtoevoegen: function(){
     
@@ -328,8 +363,8 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
                 layout: "accordion",
                 width: 400,
                 height: 600,
-				x: kaartposition[0] + kaartsize.width - 400,
-				y: kaartposition[1],
+				        x: kaartposition[0] + kaartsize.width - 400,
+				        y: kaartposition[1],
                 listeners: {
                     close: (function(key) {
 					aantal_popups = 1;
@@ -342,6 +377,14 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
         var baseConfig = {
             title: title,
             layout: "fit",
+            tools: [{
+                id:'print',
+                tooltip: 'Print de inhoud van dit venster',
+                handler: function(event){ 
+                    this.printDiv(popup.layout.activeItem.body.id); 
+                },
+                scope: this
+                }],
             autoScroll: true,
             autoWidth: true,
             collapsible: true
