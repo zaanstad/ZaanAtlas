@@ -28,11 +28,6 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gxp_streetview */
     ptype: "app_streetview",
 
-    /** private: property[popupCache]
-     *  ``Object``
-     */
-    popupCache: null,
-
     /** api: config[infoActionTip]
      *  ``String``
      *  Text for feature info action tooltip (i18n).
@@ -48,7 +43,6 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
-        this.popupCache = {};
 		streetview_plugin = this;
 		
         var actions = gxp.plugins.Streetview.superclass.addActions.call(this, [{
@@ -65,7 +59,7 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
                         streetview.controls[i].activate();
                     } else {
                         streetview.controls[i].deactivate();
-                        streetview_plugin.popup.close();
+                        streetview_plugin.streetview_popup.close();
                     }
                 }
              }
@@ -74,21 +68,21 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
         var streetviewButton = this.actions[0].items[0];
         streetviewButton.setVisible(!app.intraEnabled);
         var streetview = {controls: []};
-		var updateStreetView = function() {
-		var control;
-		for (var i = 0, len = streetview.controls.length; i < len; i++){
-			control = streetview.controls[i];
-			control.deactivate();  // TODO: remove when http://trac.openlayers.org/ticket/2130 is closed
-			control.destroy();
-		}
 
-            streetview.controls = [];
+		var updateStreetView = function() {
+			var control;
+			for (var i = 0, len = streetview.controls.length; i < len; i++){
+				control = streetview.controls[i];
+				control.deactivate();  // TODO: remove when http://trac.openlayers.org/ticket/2130 is closed
+				control.destroy();
+			}
+
+	        streetview.controls = [];
 			var Clicker = OpenLayers.Class(OpenLayers.Control, {                
 				defaults: {
 					pixelTolerance: 1,
 					stopSingle: true
 				},
-
 				initialize: function(options) {
 					this.handlerOptions = OpenLayers.Util.extend(
 						{}, this.defaults
@@ -98,13 +92,11 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
 						this, {click: this.trigger}, this.handlerOptions
 					);
 				}, 
-
 				trigger: function(event) {
 						streetview_plugin.openPopup(this.map.getLonLatFromViewPortPx(event.xy));	
 				}
-
 			});
-			
+				
 			//dragcontrol.draw();
 			var clickcontrol = new Clicker()
 			this.target.mapPanel.map.addControl(clickcontrol);
@@ -126,11 +118,11 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
 		if (!location) {
 			location = this.target.mapPanel.map.getCenter();
 		};
-		if (this.popup && this.popup.anc) {
-			this.popup.close();
+		if (this.streetview_popup && this.streetview_popup.anc) {
+			this.streetview_popup.close();
 		};
 			
-		this.popup = new GeoExt.Popup({
+		this.streetview_popup = new GeoExt.Popup({
 			title: "Street View",
 			location: location,
 			zoom: 2,
@@ -142,7 +134,8 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
 						xtype: 'gxp_googlestreetviewpanel'
 					}]	
 		});	
-		this.popup.show();	
+		this.streetview_popup.show();
+		this.streetview_popup.panIntoView();
 	} 
 });
 
