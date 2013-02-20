@@ -128,8 +128,9 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 actionTarget: {target: "paneltbar", index: 0}
             }, {
                 ptype: "gxp_print",
-                customParams: {outputFilename: "ZaanAtlas-print", includeLegend: true},
-                printService: config.printService,                
+                customParams: {outputFilename: "ZaanAtlas-print"},
+                printService: config.printService,
+                //includeLegend: true,
                 actionTarget: {target: "paneltbar", index: 1}
             }
         ];
