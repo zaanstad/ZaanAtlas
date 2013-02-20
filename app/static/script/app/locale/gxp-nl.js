@@ -157,8 +157,10 @@ GeoExt.Lang.add("nl", {
     },
 
     "gxp.plugins.Zoom.prototype": {
+        zoomMenuText: "Zoom venster",
         zoomInMenuText: "Inzoomen",
         zoomOutMenuText: "Uitzoomen",
+        zoomTooltip: "Zoom venster",
         zoomInTooltip: "Inzoomen",
         zoomOutTooltip: "Uitzoomen"
     },
