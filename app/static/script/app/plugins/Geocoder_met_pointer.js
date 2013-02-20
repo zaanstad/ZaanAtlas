@@ -95,30 +95,32 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
 		featureType: "vw_adres",
 		featurePrefix: "geo",
 		srsName: "EPSG:28992",
+        maxFeatures: 50,
+        outputFormat: "JSON",
 		fieldName: "adres",
 		geometryName: "geom",
 		emptyText: "Zoek een adres ...",
-		listEmptyText: "- niets gevonden -",
-		customSortInfo: {
-			matcher: "^[a-zA-Z]\\s+(\\d*)+.*$",
-			//matcher: "^(\\d+)\\s+(.*)$",
-			parts: [
-				{order: 0, sortType: "asUCString"},
-				{order: 1, sortType: "asInt"}
-			]
-		}
+		listEmptyText: "- niets gevonden -"
+		//,customSortInfo: {
+		//	matcher: "^[a-zA-Z]\\s+(\\d*)+.*$",
+		//	//matcher: "^(\\d+)\\s+(.*)$",
+		//	parts: [
+		//		{order: 0, sortType: "asUCString"},
+		//		{order: 1, sortType: "asInt"}
+		//	]
+		//}
 	},
 	
 	zoom: 8,
     
-/** api: method[addActions]
-*/
-	 /** private: method[constructor]
-	*/
+	/** private: method[constructor]
+	 */
     constructor: function(config) {
         gxp.plugins.GeocoderMetPointer.superclass.constructor.apply(this, arguments);
     },
 	
+    /** api: method[addActions]
+    */
     addActions: function() {
         var selectedLayer;
         var actions = gxp.plugins.GeocoderMetPointer.superclass.addActions.apply(this, [{
@@ -164,9 +166,9 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
     },
     
     
-/** api: method[showCapabilitiesGrid]
-* Shows the window with a capabilities grid.
-*/
+    /** api: method[showCapabilitiesGrid]
+     * Shows the window with a capabilities grid.
+     */
     showCapabilitiesGrid: function() {        
         this.initCapGrid();
         Tool_button = this.actions[0].items[0];
@@ -175,35 +177,24 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
     },
 
     /**
-* private: method[initCapGrid]
-* Constructs a window with a capabilities grid.
-*/
+     * private: method[initCapGrid]
+     * Constructs a window with a capabilities grid.
+     */
     initCapGrid: function() {
-        //this.baseUrl =  window.location.host;
-        this.baseUrl = "";
-	
-        var style =new OpenLayers.StyleMap({
-			// Set the external graphic and background graphic images.
-			externalGraphic: "../theme/app/img/flag.png",
-			backgroundGraphic: "../theme/app/img/marker-shadow.png",
-			
-			// Makes sure the background graphic is placed correctly relative
-			// to the external graphic.
-			backgroundXOffset:  0,
-			backgroundYOffset: -24,
-			
-			//graphicXOffset: -0.5,
-			graphicYOffset: -27,
-			
-			// Set the z-indexes of both graphics to make sure the background
-			// graphics stay in the background (shadows on top of markers looks
-			// odd; let's not do that).
-			//graphicZIndex: 10,
-			//backgroundGraphicZIndex: 11,
-            pointRadius: 15
+
+        var hereStyle = new OpenLayers.StyleMap({
+            "default": new OpenLayers.Style({
+                graphicName: "circle",
+                pointRadius: 18, // sized according to type attribute
+                fillColor: "#BB0C4F",
+                fillOpacity: 0.3,
+                strokeColor: "#BB0C4F",
+                strokeWidth: 4,
+                graphicZIndex: 1
+            })
         });
 		
-        symboollayer1 = new OpenLayers.Layer.Vector("Adres", {styleMap: style, displayInLayerSwitcher: false});	
+        symboollayer1 = new OpenLayers.Layer.Vector("Adres", {styleMap: hereStyle, displayInLayerSwitcher: false});	
         //symboollayer1.opacity = 0.5;	
         kaart = this.target.mapPanel;
         var kaart1 = this.target.mapPanel;
