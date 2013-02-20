@@ -321,7 +321,6 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                     queryable = "any";
          
                 var operator = "contains";
-                var sortby = "Title";
                 var query = this.query;
                 var tb = Ext.getCmp('tb_itemstekst');
                 //var array = this.query.split(" ");
@@ -330,7 +329,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 }
 
                 if (this.query == "%") {
-                    setXpathValue(this.defaults_xml, "/defaults/sortby", sortby + '');
+                    setXpathValue(this.defaults_xml, "/defaults/sortby", "Title" + '');
                     setXpathValue(this.defaults_xml, "/defaults/sortorder", 'ASC' + '');                    
                     tb.setText('Alfabetische lijst');
                 }

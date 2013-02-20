@@ -9,6 +9,6 @@
 <propertyname>AnyText</propertyname>
 <literal></literal>
 <sortby></sortby>
-<sortorder></sortorder>
+<sortorder>relevance</sortorder>
 <id></id>
 </defaults>
