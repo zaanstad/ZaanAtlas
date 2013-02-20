@@ -181,7 +181,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 leaf: true, 
                 text: gxp.plugins.Legend.prototype.tooltip, 
                 checked: true, 
-                iconCls: "gxp-icon-legend",
+                iconCls: gxp.plugins.Legend.prototype.iconCls,
                 ptype: "gxp_legend"
         }];
 
@@ -189,21 +189,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
     }, 
 
     loadConfig: function(config) {
-    /* fix scroll behaviour
-	config.map.controls = [
-			new OpenLayers.Control.Navigation(
-				{
-				mouseWheelOptions:{cumulative:false}, 
-				zoomWheelOptions: {interval: 1000}, 
-				dragPanOptions: {enableKinetic: true}
-				}),
-			new OpenLayers.Control.PanPanel(),
-			new OpenLayers.Control.ZoomPanel(),
-			//new OpenLayers.Control.KeyboardDefaults(),
-			new OpenLayers.Control.Attribution()
-			];
-        */
-        
+       
         var mapUrl = window.location.hash.substr(1);
         var match = mapUrl.match(/^maps\/(\d+)$/);
         var bookm = mapUrl.match(/q=/);
@@ -246,7 +232,13 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 		} else if (bookm) {
 			var urlConf = unescape(mapUrl.split('q=')[1]);
 			var queryConfig = Ext.util.JSON.decode(urlConf);
-			queryConfig.map.controls = config.map.controls;
+            // Hard fix some default settings
+			//queryConfig.map.controls = config.map.controls;
+            queryConfig.map.sources = config.map.sources;
+            queryConfig.map.wrapDateLine = config.map.wrapDateLine;
+            queryConfig.map.restrictedExtent = config.map.restrictedExtent;
+            queryConfig.map.maxExtent = config.map.maxExtent;
+
             Ext.apply(config, queryConfig);
 			this.applyConfig(config);
 			window.location.hash = "";
