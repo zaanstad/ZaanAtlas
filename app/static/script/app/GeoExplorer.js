@@ -4,6 +4,19 @@
 
 Ext.USE_NATIVE_JSON = true;
 
+function hst_componentReady() {
+    app.fireEvent('hst_componentReady');
+}
+
+function hst_apiReady() {
+    app.fireEvent('hst_apiReady');
+}
+
+function hst_viewChanged() {
+    app.fireEvent('hst_viewChanged');
+}
+
+
 // Fixes problem with OpenLayers.Projection.defaults and RD EPSG
 OpenLayers.Projection.defaults = {
 	"EPSG:28992": {
@@ -224,7 +237,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                         scope: this
                     });
                     delete this.id;
-                    window.location.hash = "";
+                    //window.location.hash = "";
                     this.applyConfig(config);
                 },
                 scope: this
@@ -241,7 +254,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 
             Ext.apply(config, queryConfig);
 			this.applyConfig(config);
-			window.location.hash = "";
+			//window.location.hash = "";
         } else {
             var query = Ext.urlDecode(document.location.search.substr(1));
             if (query) {

@@ -39,11 +39,18 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
      *  Title for info popup (i18n).
      */
     popupTitle: "Cyclorama",
+
+    api: null,
+
+    popup: null,
+
+    symboollayer: null,
+
+    firstClick: true,
      
     /** api: method[addActions]
      */
     addActions: function() {
-		cyclo_plugin = this;
 		
         var actions = gxp.plugins.Cyclorama.superclass.addActions.call(this, [{
             tooltip: this.infoActionTip,
@@ -56,106 +63,351 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
                 for (var i = 0, len = cyclo.controls.length; i < len; i++){
                     if (pressed) {
                         cyclo.controls[i].activate();
+                        this.openPopup();
+                        this.initViewer();
                     } else {
                         cyclo.controls[i].deactivate();
-                        cyclo_plugin.cyclo_popup.close();
+                        this.cyclo_popup.hide();
+                        this.disableViewer();
                     }
                 }
-             }
+             },
+             scope: this
         }]);
         
         var cycloButton = this.actions[0].items[0];
         cycloButton.setVisible(app.intraEnabled);
-        var cyclo = {controls: []};
 
-		var updateCyclo = function() {
-			var control;
-			for (var i = 0, len = cyclo.controls.length; i < len; i++){
-				control = cyclo.controls[i];
-				control.deactivate();  // TODO: remove when http://trac.openlayers.org/ticket/2130 is closed
-				control.destroy();
-			}
-
-        	cyclo.controls = [];
-			var Clicker = OpenLayers.Class(OpenLayers.Control, {                
-				defaults: {
-					pixelTolerance: 1,
-					stopSingle: true
-				},
-				initialize: function(options) {
-					this.handlerOptions = OpenLayers.Util.extend(
-						{}, this.defaults
-					);
-					OpenLayers.Control.prototype.initialize.apply(this, arguments); 
-					this.handler = new OpenLayers.Handler.Click(
-						this, {click: this.trigger}, this.handlerOptions
-					);
-				}, 
-				trigger: function(event) {
-						cyclo_plugin.openPopup(this.map.getLonLatFromViewPortPx(event.xy));	
-				}
-			});
-		
-			//dragcontrol.draw();
-			var clickcontrol = new Clicker()
-			this.target.mapPanel.map.addControl(clickcontrol);
-			cyclo.controls.push(clickcontrol);
-			if(cycloButton.pressed) {
-				clickcontrol.activate()
-				};
-		}
-	
-        this.target.mapPanel.layers.on("update", updateCyclo, this);
-        this.target.mapPanel.layers.on("add", updateCyclo, this);
-        this.target.mapPanel.layers.on("remove", updateCyclo, this);
+        this.startClicker();
         
         return actions;
     },
-	
-	openPopup: function (location) {
-    
-		if (!location) {
-			location = this.target.mapPanel.map.getCenter();
-		};
-		if (this.cyclo_popup && this.cyclo_popup.anc) {
-			this.cyclo_popup.close();
-		};
-		var mapsize = cyclo_plugin.target.mapPanel.map.size;
-		var cyclo_url = "https://globespotter.cyclomedia.com/nl/?Showmap=false&posx="+ location.lon + "&posy=" + location.lat;
-		if (mapsize.h < 700 || mapsize.w < 1024) {
-	        Ext.Msg.show({
-				title: "Te weinig ruimte",
-				msg: "Er is te weinig ruimte om de cyclorama's te tonen.<br/><br/>" +
-					  "Maak het beeld van de ZaanAtlas groter zodat de dialoog " +
-					  "van de cyclorama's past, of klik " +
-					  "<a href=" + cyclo_url + " target=_blank>hier</a> om de cyclorama's in een nieuw venster te openen.",
-				width: 300,
-				icon: Ext.MessageBox.INFO
-			});
-		} else {
-			this.cyclo_popup = new GeoExt.Popup({
-	        				   border:false,
-							   map: this.target.mapPanel.map,
-	                           layout: 'fit',
-							   location: location,
-							   maximizable: true,
-							   collapsible: true,
-							   anchored: true,
-							   frame: true,
-							   html: "<iframe src='" + cyclo_url + "' width='100%'  height='100%' seamless allowTransparency='true'/>",
-							   listeners: {
-									close: function() {
-									// closing a popup destroys it, but our reference is truthy
-									this.cyclo_popup = null;
-									}
-									}
 
-							   });
-			this.cyclo_popup.setSize(1024, 700);
-			this.cyclo_popup.show();
-			this.cyclo_popup.panIntoView();
+    startClicker: function() {
+
+    cyclo = {controls: []};
+
+	var Clicker = OpenLayers.Class(OpenLayers.Control, {                
+	    defaults: {
+	        pixelTolerance: 2,
+	        stopSingle: true
+	    },
+	    initialize: function(options) {
+	        this.handlerOptions = OpenLayers.Util.extend(
+	            {}, this.defaults
+	        );
+	        OpenLayers.Control.prototype.initialize.apply(this, arguments); 
+	        this.handler = new OpenLayers.Handler.Click(
+	            this, {click: this.trigger}, this.handlerOptions
+	        );
+	    }, 
+	    trigger: function(event) {
+	        this.scope.openNearestImage(event, this.map);
+	    },
+	    scope: this
+	});
+	var clickcontrol = new Clicker()
+	this.target.mapPanel.map.addControl(clickcontrol);
+	cyclo.controls.push(clickcontrol);
+	},
+
+	openPopup: function() {
+
+		var viewer_api = "https://globespotter.cyclomedia.com/v27/api/viewer_api.swf"
+
+		if (Ext.isIE) {
+			var html = "<object classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000' width='100%' height='100%' id='japi'>"+
+	        "<param name='movie' value=" + viewer_api + " />"+
+	        "<param name='quality' value='high' />"+
+	        "<param name='bgcolor' value='#888888' />"+
+	        "<param name='wmode' value='opaque' />"+
+	        "<param name='allowScriptAccess' value='always' />"+
+	        "<param name='allowFullScreen' value='true' />"+
+	        "<!-- Flash message from CycloMedia. --><b>Flash installation</b><br/>In order to use GlobeSpotter, Adobe Flash Player version 10 or higher is required. The player can be installed from the Adobe website. On the website you can find the installation instructions, but for your convenience they have also been listed below:<p/><br><b>Flash player installation instructions</b><ul><li>- You can only install Flash Player if you have administrative access.</li><li>- If you do not have administrative access please contact the IT department or the systemsadministrator for the installation of Flash Player.</li><li>- Before you start downloading Adobe Flash Player, it is recommended that you close all otheropen browser windows.</li><li>- Go to the download site of Adobe Flash Player: <a href='http://get.adobe.com/flashplayer/'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash Player' /></a></li><li>- Deselect additional downloads, as they will not be necessary for the functioning of GlobeSpotter.</li><li>- Click 'Agree and install now'</li><li>- After this you will get a popup with the question: Do you want to install this software?? Click on 'Install'</li><li>- Wait until Adobe Flash Player has finished installing</li><li>- Once done it is highly recommended you restart your browser program</li><li>- Now you can return to the GlobeSpotter startup page and begin using the application</li></ul>- For support please contact:<br/><a href='mailto:support@cyclomedia.nl'>support@cyclomedia.nl</a>"+
+	    	"</object>"
+	    } else {
+	    	var html = "<object type='application/x-shockwave-flash' data=" + viewer_api + " width='100%' height='100%' id='japi'>"+
+	        "<param name='quality' value='high' />"+
+	        "<param name='bgcolor' value='#888888' />"+
+	        "<param name='wmode' value='opaque' />"+
+	        "<param name='allowScriptAccess' value='always' />"+
+	        "<param name='allowFullScreen' value='true' />"+
+	        "<!-- Flash message from CycloMedia. --><b>Flash installation</b><br/>In order to use GlobeSpotter, Adobe Flash Player version 10 or higher is required. The player can be installed from the Adobe website. On the website you can find the installation instructions, but for your convenience they have also been listed below:<p/><br><b>Flash player installation instructions</b><ul><li>- You can only install Flash Player if you have administrative access.</li><li>- If you do not have administrative access please contact the IT department or the systemsadministrator for the installation of Flash Player.</li><li>- Before you start downloading Adobe Flash Player, it is recommended that you close all otheropen browser windows.</li><li>- Go to the download site of Adobe Flash Player: <a href='http://get.adobe.com/flashplayer/'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash Player' /></a></li><li>- Deselect additional downloads, as they will not be necessary for the functioning of GlobeSpotter.</li><li>- Click 'Agree and install now'</li><li>- After this you will get a popup with the question: Do you want to install this software?? Click on 'Install'</li><li>- Wait until Adobe Flash Player has finished installing</li><li>- Once done it is highly recommended you restart your browser program</li><li>- Now you can return to the GlobeSpotter startup page and begin using the application</li></ul>- For support please contact:<br/><a href='mailto:support@cyclomedia.nl'>support@cyclomedia.nl</a>"+
+	    	"</object>"
+	    }
+
+        var bbarItems = new Ext.Toolbar({  
+            items: [  
+            {
+                xtype: 'checkbox',
+                checked: true,
+                fieldLabel: '',
+                labelSeparator: '',
+                boxLabel: 'Laatst bekende opnamelocaties tonen',
+                name: 'fav-animal-monkey',
+                handler: function(field, value) {
+		            this.setAllDates(value);            
+		        },
+		        scope: this
+            }, {
+                xtype: 'tbfill'
+            }, {
+                text: 'Open Globespotter',
+                xtype: 'button',
+                iconCls: 'icon-expand',
+                handler: function() {
+                    this.openGlobeSpotter();
+                },
+                scope: this
+            }
+            ]
+        });
+
+        if (!this.cyclo_popup) {
+
+			this.cyclo_popup = new Ext.Window({
+				title: this.popupTitle,
+				id: 'cyclo_popup',
+				border: false,
+				layout: 'fit',
+				closeAction: 'hide',
+				maximizable: true,
+	            height: 400,
+	            width: 600,
+                x: this.target.mapPanel.getPosition()[0] + this.target.mapPanel.getSize().width - 600,
+                y: this.target.mapPanel.getPosition()[1],
+				bbar: bbarItems,
+				html: html
+				});
 		}
-	} 
+	},
+
+	openGlobeSpotter: function() {
+		var imageId = this.api.getImageID(0);
+		var rotation = this.api.getYaw(0);
+		var cyclo_url = "https://globespotter.cyclomedia.com/nl/?ImageId=" + imageId + "&Yaw=" + rotation;
+		window.open(cyclo_url);
+	},
+
+    initViewer: function() {
+    	app.on('hst_componentReady', this.componentReady, this);
+    	app.on('hst_apiReady', this.apiReady, this);
+		app.on('hst_viewChanged', this.viewChanged, this);
+		this.infolaagToevoegen();
+    },
+
+    disableViewer: function() {
+    	app.un('hst_componentReady', this.componentReady, this);
+    	app.un('hst_apiReady', this.apiReady, this);
+		app.un('hst_viewChanged', this.viewChanged, this);
+		this.infolaagVerwijderen();
+    },
+
+	infolaagToevoegen: function(){
+
+		if (!this.symboollayer) {
+
+		OpenLayers.Renderer.symbol.pointer = [0, 0, -2, 6, 0, 5, 2, 6, 0, 0];
+		var style = new OpenLayers.StyleMap({
+		    "default": new OpenLayers.Style(null, {
+		        rules: [new OpenLayers.Rule({
+		            symbolizer: {
+		                "Point": {
+		                    pointRadius: 20,
+		                    graphicName: "pointer",
+		                    fillColor: "#FF0000",
+		                    rotation: "${angle}",
+		                    fillOpacity: 0.9,
+		                    strokeWidth: 3,
+		                    strokeOpacity: 1,
+		                    strokeColor: "#FFFFFF"
+		                }
+		            }
+		        })]
+		    })
+		});
+
+		this.symboollayer = new OpenLayers.Layer.Vector("CycloInfo", {styleMap: style, displayInLayerSwitcher: false});   
+		this.target.mapPanel.layers.map.addLayers([this.symboollayer]); 
+
+		} else {
+			this.symboollayer.setVisibility(true);
+		}
+	},
+
+	infolaagVerwijderen: function() {
+		this.symboollayer.setVisibility(false);
+	},
+
+	componentReady: function() {                
+	    var api = document.getElementById("japi");
+	    
+	    try
+	    {
+	        var SRS = "EPSG:28992";
+	        var ADDRESS_LANGUAGE_CODE = "nl";
+	        // Set an API key.
+	        api.setAPIKey("ezEdm3chO78t-LY9OnARGro9y7gRu3oF-nMxO3olunElqzwVCvgxODUhKrYt23EV");
+	        api.setSRSNameViewer(SRS);
+	        api.setSRSNameAddress(SRS);
+	        api.setAddressLanguageCode(ADDRESS_LANGUAGE_CODE);
+	    }
+	    catch(error) // Its a string ...
+	    {
+	        alert(error);
+	    }
+	    
+	    addToLog("hst_componentReady()");
+	},
+
+	apiReady: function() {
+	    this.api = document.getElementById("japi");
+
+	    this.api.setLanguageLocale('nl');
+	    //this.api.setViewerRotationButtonsVisible(true);
+	    this.api.setViewerTitleBarVisible(false);
+	    this.api.setViewerToolBarVisible(false);
+	    this.api.setMaxViewers(1);
+	    this.api.setViewerZoomBoxEnabled(false);
+
+	    if (this.firstClick) {
+	    	this.api.openNearestImage(this.firstClick.lon + ',' + this.firstClick.lat, 1);
+	    	this.firstClick = false;
+			var testPanel = new Ext.Panel({
+                                renderTo: 'cyclo_popup',
+                                floating: true,
+                                layout: {type: 'table', columns: 3},
+                                frame: false,
+								border: false,
+								shadow: false,
+								bodyStyle: 'background:transparent;',
+                                items: [  
+					            {
+					            	iconCls: 'caret-left',
+					            	scale: 'small',
+					                xtype: 'button',
+					                repeat: true,
+					                rowspan: 2,
+					                handler: function() {
+					                    this.api.rotateLeft(0,5);
+					                },
+					                scope: this
+					            }, {
+					            	iconCls: 'caret-up',
+					            	scale: 'small',
+					                xtype: 'button',
+					                repeat: true,
+					                handler: function() {
+					                    this.api.rotateUp(0,5);
+					                },
+					                scope: this
+					            }, {
+					            	iconCls: 'caret-right',
+					            	scale: 'small',
+					                xtype: 'button',
+					                repeat: true,
+					                rowspan: 2,
+					                handler: function() {
+					                    this.api.rotateRight(0,5);
+					                },
+					                scope: this
+					            }, {
+					            	iconCls: 'caret-down',
+					            	scale: 'small',
+					                xtype: 'button',
+					                repeat: true,
+					                handler: function() {
+					                    this.api.rotateDown(0,5);
+					                },
+					                scope: this
+					            }
+					            ],
+					            listeners:{
+				                    'afterrender': function(panel){
+				                    	panel.show();
+				                        panel.setPosition(15,35);
+				                    }
+				                }
+                            });
+	    }
+
+	    addToLog("hst_apiReady()");
+	},
+
+	checkApiReady: function() {
+	    if(this.api == null || !this.api.getAPIReadyState()) {
+	        alert("API not ready.");
+	        return false;
+	    } else {
+	        return true;
+	    }   
+	},
+
+	viewChanged: function() {
+		var rd = this.api.getRecordingLocation(0);
+		var rotation = this.api.getYaw(0);
+
+        var feature = new OpenLayers.Feature.Vector(
+                        new OpenLayers.Geometry.Point(rd.x, rd.y), {angle: rotation}
+                    );
+
+        this.symboollayer.removeAllFeatures();
+        this.symboollayer.addFeatures([feature]);
+        this.symboollayer.redraw();
+
+	},
+
+	setAllDates: function(bool) {
+
+	    if(this.checkApiReady()) {
+            try
+            {
+			    this.api.setUseDateRange(!bool);
+			    this.api.setDateFrom("2000-01-01T00:00:00.000Z");
+			    this.api.setDateTo(JSON.parse(JSON.stringify(new Date())));
+            }
+            catch(error)
+            {
+                alert("Error while opening an image: " + error);
+            }      
+	    }
+	},
+
+	openNearestImage: function(evt, map) {
+
+		this.cyclo_popup.show();
+		var rd = map.getLonLatFromViewPortPx(evt.xy);
+		if (!rd) {
+			rd = map.getCenter();
+		};
+		var mapsize = map.size;
+
+		if (!this.firstClick) {
+		    if(this.checkApiReady()) {
+		        var query = rd.lon + ',' + rd.lat;
+		        var maxLocations = 1;
+
+		        if(query == null && query == "")
+		        {
+		            alert("Invalid input.");
+		        }
+		        else
+		        {
+		            try
+		            {
+		                this.api.openNearestImage(query, maxLocations);
+		            }
+		            catch(error)
+		            {
+		                alert("Error while opening an image: " + error);
+		            }
+		        }                    
+		    }
+		} else {
+			this.firstClick = rd;
+		}
+	}
+
 });
 
 Ext.preg(gxp.plugins.Cyclorama.prototype.ptype, gxp.plugins.Cyclorama);
