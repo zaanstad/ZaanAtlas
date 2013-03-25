@@ -43,7 +43,6 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
-		streetview_plugin = this;
 		
         var actions = gxp.plugins.Streetview.superclass.addActions.call(this, [{
             tooltip: this.infoActionTip,
@@ -59,84 +58,72 @@ gxp.plugins.Streetview = Ext.extend(gxp.plugins.Tool, {
                         streetview.controls[i].activate();
                     } else {
                         streetview.controls[i].deactivate();
-                        streetview_plugin.streetview_popup.close();
+                        streetview_popup.close();
                     }
                 }
              }
         }]);
+
+		var openPopup = function(evt, map) {
+
+			var location = map.getLonLatFromViewPortPx(evt.xy);	    
+			if (!location) {
+				location = map.getCenter();
+			};
+			if (streetview_popup && streetview_popup.anc) {
+				streetview_popup.close();
+			};
+				
+			streetview_popup = new GeoExt.Popup({
+				title: "Street View",
+				location: location,
+				zoom: 2,
+				width: 400,
+				height: 500,
+				collapsible: true,
+				map: map,
+				items: [{  
+							xtype: 'gxp_googlestreetviewpanel'
+						}]	
+			});	
+			streetview_popup.show();
+			streetview_popup.panIntoView();
+		};
         
+        var streetview_popup;
         var streetviewButton = this.actions[0].items[0];
         streetviewButton.setVisible(!app.intraEnabled);
         var streetview = {controls: []};
 
-		var updateStreetView = function() {
-			var control;
-			for (var i = 0, len = streetview.controls.length; i < len; i++){
-				control = streetview.controls[i];
-				control.deactivate();  // TODO: remove when http://trac.openlayers.org/ticket/2130 is closed
-				control.destroy();
-			}
+		var Clicker = OpenLayers.Class(OpenLayers.Control, {                
+		    defaults: {
+		        pixelTolerance: 2,
+		        stopSingle: true
+		    },
+		    initialize: function(options) {
+		        this.handlerOptions = OpenLayers.Util.extend(
+		            {}, this.defaults
+		        );
+		        OpenLayers.Control.prototype.initialize.apply(this, arguments); 
+		        this.handler = new OpenLayers.Handler.Click(
+		            this, {click: this.trigger}, this.handlerOptions
+		        );
+		    }, 
+		    trigger: function(event) {
+		        openPopup(event, this.map);	
+		    },
+		    scope: this
 
-	        streetview.controls = [];
-			var Clicker = OpenLayers.Class(OpenLayers.Control, {                
-				defaults: {
-					pixelTolerance: 1,
-					stopSingle: true
-				},
-				initialize: function(options) {
-					this.handlerOptions = OpenLayers.Util.extend(
-						{}, this.defaults
-					);
-					OpenLayers.Control.prototype.initialize.apply(this, arguments); 
-					this.handler = new OpenLayers.Handler.Click(
-						this, {click: this.trigger}, this.handlerOptions
-					);
-				}, 
-				trigger: function(event) {
-						streetview_plugin.openPopup(this.map.getLonLatFromViewPortPx(event.xy));	
-				}
-			});
-				
-			//dragcontrol.draw();
-			var clickcontrol = new Clicker()
-			this.target.mapPanel.map.addControl(clickcontrol);
-			streetview.controls.push(clickcontrol);
-			if(streetviewButton.pressed) {
-				clickcontrol.activate()
-			};
-		}
-		
-        this.target.mapPanel.layers.on("update", updateStreetView, this);
-        this.target.mapPanel.layers.on("add", updateStreetView, this);
-        this.target.mapPanel.layers.on("remove", updateStreetView, this);
+		});
+		var clickcontrol = new Clicker()
+		this.target.mapPanel.map.addControl(clickcontrol);
+		streetview.controls.push(clickcontrol);
+		if(streetviewButton.pressed) {
+			clickcontrol.activate()
+		};
         
         return actions;
-    },
-	
-	openPopup: function (location) {
-    
-		if (!location) {
-			location = this.target.mapPanel.map.getCenter();
-		};
-		if (this.streetview_popup && this.streetview_popup.anc) {
-			this.streetview_popup.close();
-		};
-			
-		this.streetview_popup = new GeoExt.Popup({
-			title: "Street View",
-			location: location,
-			zoom: 2,
-			width: 400,
-			height: 500,
-			collapsible: true,
-			map: this.target.mapPanel.map,
-			items: [{  
-						xtype: 'gxp_googlestreetviewpanel'
-					}]	
-		});	
-		this.streetview_popup.show();
-		this.streetview_popup.panIntoView();
-	} 
+    }
 });
 
 Ext.preg(gxp.plugins.Streetview.prototype.ptype, gxp.plugins.Streetview);
