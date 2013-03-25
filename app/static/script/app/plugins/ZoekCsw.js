@@ -36,25 +36,31 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for add menu item (i18n).
      */
-    addActionText: "Toevoegen",
+    addActionText: "Kaartenbak",
     
     /** api: config[addActionMenuText]
      *  ``String``
      *  Text for add menu item (i18n).
      */
-    addActionMenuText: "Kaartlagen toevoegen",
+    addActionMenuText: "Kaarten uit de kaartenbak",
 
     /** api: config[addActionTip]
      *  ``String``
      *  Text for add action tooltip (i18n).
      */
-    addActionTip: "Voeg kaartlagen toe",
+    addActionTip: "Voeg kaarten toe",
        
     /** api: config[doneText]
      *  ``String``
      *  Text for Done button (i18n).
      */
     doneText: "Sluiten",
+
+    /** api: config[autoLoad]
+     *  ``Boolean``
+     *  If provided, the catalog dialog will be shown after loading of the app.
+     */
+    autoLoad: false,
     
     /** api: config[search]
      *  ``Object | Boolean``
@@ -68,23 +74,6 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
      *  The currently selected layer source.
      */
     selectedSource: null,
-
-    /** private: method[constructor]
-     */
-    constructor: function(config) {
-        this.addEvents(
-            /** api: event[sourceselected]
-             *  Fired when a new source is selected.
-             *
-             *  Listener arguments:
-             *
-             *  * tool - :class:`gxp.plugins.ZoekCsw` This tool.
-             *  * source - :class:`gxp.plugins.LayerSource` The selected source.
-             */
-            "cswsourceselected"
-            );
-        gxp.plugins.ZoekCsw.superclass.constructor.apply(this, arguments);        
-    },
     
     /** api: method[addActions]
      */
@@ -94,13 +83,17 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             tooltip : this.addActionTip,
             text: this.addActionText,
             menuText: this.addActionMenuText,
-            disabled: true,
-            iconCls: "gxp-icon-addlayers",
+            //disabled: true,
+            iconCls: "icon-addlayers",
             handler : this.showCapabilitiesGrid,
             scope: this
         }]);
         
-        this.target.on("ready", function() { actions[0].enable(); });
+        this.target.on("ready", function() { 
+          if (this.autoLoad) {
+            this.showCapabilitiesGrid();
+          }
+        }, this);
         return actions;
     },
         
@@ -141,11 +134,11 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
         	var outputDiv = document.getElementById("csw-output");
         	outputDiv.innerHTML = "";
         	if (this.query != "") {
-				outputDiv.style.display = "block";
-				document.getElementById("csw-details").style.display = "none";
-				outputDiv.innerHTML = message;
+        				outputDiv.style.display = "block";
+        				document.getElementById("csw-details").style.display = "none";
+        				outputDiv.innerHTML = message;
                 this.init = false;
-				getRecords(1);
+				        getRecords(1);
             }
         };
         
@@ -163,13 +156,13 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
 					new Ext.Button({
 						id: add_id,
 						renderTo: add_id,
-						text: 'Voeg laag toe',
+						text: 'Voeg kaart toe',
 						iconCls: 'icon-addlayers',
 						handler: getRecordvalueById.createDelegate(this, [add_record], ["string"] ),
 						scope: this
 						});
                 } else {
-					items[i].title = "Deze laag is alleen intern beschikbaar";
+					items[i].title = "Deze kaart is alleen intern beschikbaar";
 					new Ext.Button({
 						id: add_id,
 						renderTo: add_id,
@@ -239,11 +232,11 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
         };
         
         function hideDetails() {
-		  document.getElementById("csw-output").style.display = "block";
-		  document.getElementById("csw-details").style.display = "none";
-		  Ext.getCmp('txtSearch').show();
-		  Ext.getCmp('btnSearch').show();
-		  Ext.getCmp('btnList').show();
+      	  document.getElementById("csw-output").style.display = "block";
+      	  document.getElementById("csw-details").style.display = "none";
+      	  Ext.getCmp('txtSearch').show();
+      	  Ext.getCmp('btnSearch').show();
+      	  Ext.getCmp('btnList').show();
           Ext.getCmp('tb_itemstekst').show();
           Ext.getCmp('tb_listtext').show();
           Ext.getCmp('btn_previousrecords').show();
@@ -253,32 +246,32 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
         }
         
         function embedMeta(id) {
-		  document.getElementById("csw-output").style.display = "none";
-		  document.getElementById("csw-details").innerHTML = ' Metadata opvragen...';
-		  document.getElementById("csw-details").style.display = "block";
+          document.getElementById("csw-output").style.display = "none";
+          document.getElementById("csw-details").innerHTML = ' Metadata opvragen...';
+          document.getElementById("csw-details").style.display = "block";
 		  
-            var OLrequest = OpenLayers.Request.GET({
-                 url : "http://geo.zaanstad.nl/geonetwork/srv/nl/metadata.show.embedded?uuid=" + id + "&currTab=simple",
-                 async: true,
-                 headers: {
-                     "Content-Type": "application/html"
-                 },
-                 success : function(response) {
-                     document.getElementById("csw-details").innerHTML = response.responseText;
-                 },
-                 failure : function(response) {
-                 	document.getElementById("csw-details").innerHTML= " Fout:\n"+ response.status + "<br>" +response.statusText;
-                 }
-             });
-            Ext.getCmp('txtSearch').hide();
-		  	Ext.getCmp('btnSearch').hide();
-		  	Ext.getCmp('btnList').hide();
-            Ext.getCmp('tb_itemstekst').hide();
-            Ext.getCmp('tb_listtext').hide();
-            Ext.getCmp('btn_previousrecords').hide();
-            Ext.getCmp('btn_nextrecords').hide();
-            Ext.getCmp('tb_metatext').show();
-            Ext.getCmp('btnTerug').show();
+          var OLrequest = OpenLayers.Request.GET({
+               url : "http://geo.zaanstad.nl/geonetwork/srv/nl/metadata.show.embedded?uuid=" + id + "&currTab=simple",
+               async: true,
+               headers: {
+                   "Content-Type": "application/html"
+               },
+               success : function(response) {
+                   document.getElementById("csw-details").innerHTML = response.responseText;
+               },
+               failure : function(response) {
+               	document.getElementById("csw-details").innerHTML= " Fout:\n"+ response.status + "<br>" +response.statusText;
+               }
+           });
+          Ext.getCmp('txtSearch').hide();
+	  	    Ext.getCmp('btnSearch').hide();
+	  	    Ext.getCmp('btnList').hide();
+          Ext.getCmp('tb_itemstekst').hide();
+          Ext.getCmp('tb_listtext').hide();
+          Ext.getCmp('btn_previousrecords').hide();
+          Ext.getCmp('btn_nextrecords').hide();
+          Ext.getCmp('tb_metatext').show();
+          Ext.getCmp('btnTerug').show();
         }
         
         function handleCSWResponse (request, xml) { 
@@ -598,7 +591,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 }, {
                     id: 'btnList',
                     xtype: 'button',
-                    iconCls:'icon-view-list',
+                    iconCls:'icon-book-open',
                     text: 'Alfabetische lijst',
                     handler: function(f,e) {
                         if(e.shiftKey){
@@ -692,7 +685,8 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             closeAction: "hide",
             layout: "border",
             maximizable: true,  
-            height: 600,
+            height: this.target.mapPanel.getSize().height, //600,
+            maxHeight: 800,
             width: 650,
             //modal: true,
             items: htmlcontainer,

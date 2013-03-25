@@ -77,7 +77,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 search: {selectedSource: "http://geo.zaanstad.nl/geonetwork/srv/nl/csw"}
             }, {
                 ptype: "gxp_addlayers",
-                showButtonText: true,
+                //showButtonText: true,
                 addActionText: 'Externe laag',
                 upload: true,
                 border: false,	
@@ -87,7 +87,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 actionTarget: ["layers.tbar", "layers.contextMenu"]
             }, {
                 ptype: "gxp_layerproperties",
-                outputConfig: {defaults: {height: 400}, width: 400},
+                outputConfig: {autoHeight: true, width: 400},
                 actionTarget: ["layers.tbar", "layers.contextMenu"]
         	}, {
                 ptype: "gxp_metaviewer",
@@ -140,6 +140,8 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
 
     loadConfig: function(config) {
         GeoExplorer.Composer.superclass.loadConfig.apply(this, arguments);
+
+        var mapUrl = window.location.hash.substr(1);
         
         var query = Ext.urlDecode(document.location.search.substr(1));
         if (query && query.styler) {
@@ -161,7 +163,10 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 }
                 this.doAuthorized(styler.roles, styler.addOutput, styler);
             }, this, {single: true});            
+        } else if (mapUrl == "") {
+            gxp.plugins.ZoekCsw.prototype.autoLoad = true;
         }
+        window.location.hash = "";
     },
 
     /** private: method[setCookieValue]
