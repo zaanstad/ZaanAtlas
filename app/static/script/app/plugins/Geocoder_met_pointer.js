@@ -95,20 +95,12 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
 		featureType: "vw_adres",
 		featurePrefix: "geo",
 		srsName: "EPSG:28992",
-        maxFeatures: 50,
+        maxFeatures: 70,
         outputFormat: "JSON",
 		fieldName: "adres",
 		geometryName: "geom",
 		emptyText: "Zoek een adres ...",
 		listEmptyText: "- niets gevonden -"
-		//,customSortInfo: {
-		//	matcher: "^[a-zA-Z]\\s+(\\d*)+.*$",
-		//	//matcher: "^(\\d+)\\s+(.*)$",
-		//	parts: [
-		//		{order: 0, sortType: "asUCString"},
-		//		{order: 1, sortType: "asInt"}
-		//	]
-		//}
 	},
 	
 	zoom: 8,
@@ -158,9 +150,9 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
             feature.fid = 1;
             feature.geometry = location;
 						
-            symboollayer1.removeAllFeatures();
-            symboollayer1.addFeatures([feature]);
-            symboollayer1.redraw();
+            symboollayer.removeAllFeatures();
+            symboollayer.addFeatures([feature]);
+            symboollayer.redraw();
             
         }
     },
@@ -172,7 +164,6 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
     showCapabilitiesGrid: function() {        
         this.initCapGrid();
         Tool_button = this.actions[0].items[0];
-        //Tool_button = this.target.toolbar.items.items[14];
         Tool_button.disable();
     },
 
@@ -194,20 +185,19 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
             })
         });
 		
-        symboollayer1 = new OpenLayers.Layer.Vector("Adres", {styleMap: hereStyle, displayInLayerSwitcher: false});	
-        //symboollayer1.opacity = 0.5;	
-        kaart = this.target.mapPanel;
-        var kaart1 = this.target.mapPanel;
-        kaart.map.addLayers([symboollayer1]);
-		var kaartposition = kaart.getPosition();
-		var kaartsize = kaart.getSize();
-		
+        symboollayer = new OpenLayers.Layer.Vector("Adres", {styleMap: hereStyle, displayInLayerSwitcher: false});	
+        this.target.mapPanel.map.addLayers([symboollayer]);
+		var kaartposition = this.target.mapPanel.getPosition();
+		var kaartsize = this.target.mapPanel.getSize();
 		
 		var combo = new gxp.form.AutoCompleteComboBox(Ext.apply({
         	width: 250,
         	selectOnFocus: true,
             listeners: {
                 select: this.onComboSelect,
+                beforeQuery: function(q) {
+                  q.query = q.query.trim().replace(/\ /g,'*');
+                },
                 scope: this
             }
         }, this.outputConfig));
@@ -247,12 +237,12 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
             listeners: {
                 destroy: function(win) {
                     Tool_button.enable();
-                    var aantal = kaart.map.layers.length;
+                    var aantal = this.target.mapPanel.map.layers.length;
                     for(var p = 0; p < aantal; p++) {
-                        if (kaart.map.layers[p].name == "Adres") { 
+                        if (this.target.mapPanel.map.layers[p].name == "Adres") { 
                             //map.layers[p].destroy();
-                            kaart.map.removeLayer(kaart.map.layers[p]);
-                        };	
+                            this.target.mapPanel.map.removeLayer(this.target.mapPanel.map.layers[p]);
+                        };
                     };
                 },
                 scope: this

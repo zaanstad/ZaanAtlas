@@ -32,21 +32,13 @@ gxp.plugins.Geocoder = Ext.extend(gxp.plugins.Tool, {
 		url: "/geoserver/wfs",
 		featureType: "vw_adres",
 		featurePrefix: "geo",
-        srsName: "EPSG:28992",
-        maxFeatures: 50,
-        outputFormat: "JSON",
+    srsName: "EPSG:28992",
+    maxFeatures: 70,
+    outputFormat: "JSON",
 		fieldName: "adres",
 		geometryName: "geom",
 		emptyText: "Zoek een adres ...",
-		listEmptyText: "- niets gevonden -",
-		customSortInfo: {
-			matcher: "^[a-zA-Z]\\s+(\\d*)+.*$",
-			//matcher: "^(\\d+)\\s+(.*)$",
-			parts: [
-				{order: 0, sortType: "asUCString"},
-				{order: 1, sortType: "asInt"}
-			]
-		}
+		listEmptyText: "- niets gevonden -"
 	},
 	
 	/** api: config[infoActionTip]
@@ -74,6 +66,9 @@ gxp.plugins.Geocoder = Ext.extend(gxp.plugins.Tool, {
         	selectOnFocus: true,
             listeners: {
                 select: this.onComboSelect,
+                beforeQuery: function(q) {
+                  q.query = q.query.trim().replace(/\ /g,'*');
+                },
                 scope: this
             }
         }, this.outputConfig));
