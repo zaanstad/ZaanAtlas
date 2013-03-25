@@ -6,9 +6,17 @@
  * of the license.
  */
 
+/**
+ * @requires plugins/Tool.js
+ * @requires plugins/FeatureEditorGrid.js
+ * @requires GeoExt/widgets/Popup.js
+ * @requires OpenLayers/Control/WMSGetFeatureInfo.js
+ * @requires OpenLayers/Format/WMSGetFeatureInfo.js
+ */
+
 /** api: (define)
  *  module = gxp.plugins
- *  class = WMSGetFeatureInfo
+ *  class = WMSGetFeatureInfoZaanAtlas
  */
 
 /** api: (extends)
@@ -33,10 +41,7 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
      */
     outputTarget: "map",
 
-    /** private: property[popupCache]
-     *  ``Object``
-     */
-    popupCache: null,
+    popup: null,
 
     /** api: config[infoActionTip]
      *  ``String``
@@ -50,6 +55,11 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
      */
     popupTitle: "Info van locatie",
     
+    /** api: config[text]
+     *  ``String`` Text for the GetFeatureInfo button (i18n).
+     */
+    buttonText: "Info van locatie",
+    
     /** api: config[format]
      *  ``String`` Either "html" or "grid". If set to "grid", GML will be
      *  requested from the server and displayed in an Ext.PropertyGrid.
@@ -57,6 +67,10 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
      *  Default is "html".
      */
     format: "html",
+
+    symboollayer: null,
+
+    xy: new OpenLayers.Pixel(0,0),
     
     /** api: config[vendorParams]
      *  ``Object``
@@ -85,13 +99,12 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
-        this.popupCache = {};
-        info_plugin = this;
-		map = this.target.mapPanel.map;
-		
+        //this.popupCache = {};
+        
         var actions = gxp.plugins.WMSGetFeatureInfoZaanAtlas.superclass.addActions.call(this, [{
             tooltip: this.infoActionTip,
             iconCls: "gxp-icon-getfeatureinfo",
+            buttonText: this.buttonText,
             toggleGroup: this.toggleGroup,
             enableToggle: true,
             allowDepress: true,
@@ -99,68 +112,27 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
                 for (var i = 0, len = info.controls.length; i < len; i++){
                     if (pressed) {
                         info.controls[i].activate();
-						for(var p = 1; p < map.layers.length; p++) {
-							if (map.layers[p].name == "Info"){
-								layer_info = true;
-							};
-						};
-						if (!layer_info) {
-              info_plugin.infolaagtoevoegen();
-							map.events.register('click',map, function (e) {
-								try {
-									if (popup) {
-										popup.removeAll();
-									};
-								}
-								catch(err){};
-								
-								for(var p = 1; p < map.layers.length; p++) {
-									if (map.layers[p].name == "Info"){
-										layer_info = true;
-									};
-								};
-								
-								if (!layer_info) {
-									info_plugin.infolaagtoevoegen();
-								};
-								
-								var location = map.getLonLatFromViewPortPx(e.xy);
-								
-								var punt = new OpenLayers.Geometry.Point();
-								punt.x = location.lon;
-								punt.y = location.lat;
-											
-								var feature = new OpenLayers.Feature.Vector();
-								feature.fid = 1;
-								feature.geometry = punt;
-											
-								symboollayer.removeAllFeatures();
-								symboollayer.addFeatures([feature]);
-								symboollayer.redraw();
-								
-							});	
-						
-						}			
                     } else {
-                      popup.close();
-                      info.controls[i].deactivate();
-                      info_plugin.infolaagverwijderen();
-                      map.events.remove("click");
-					};                   
+                        info.controls[i].deactivate();
+                    }
+                }
+                if (pressed) {
+                  infolaagToevoegen();
+                } else {
+                  infolaagverwijderen();
+                  popupverwijderen();
                 }
              }
         }]);
         var infoButton = this.actions[0].items[0];
-        layer_info = false;
-        aantal_popups = 1;
-        var info = {controls: []};
 
+        var info = {controls: []};
         var updateInfo = function() {
             var queryableLayers = this.target.mapPanel.layers.queryBy(function(x){
                 return x.get("queryable");
             });
 
-           
+            var map = this.target.mapPanel.map;
             var control;
             for (var i = 0, len = info.controls.length; i < len; i++){
                 control = info.controls[i];
@@ -188,76 +160,24 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
                     url: layer.url,
                     queryVisible: true,
                     layers: [layer],
+                    drillDown: true,
                     infoFormat: infoFormat,
                     vendorParams: vendorParams,
                     eventListeners: {
                         getfeatureinfo: function(evt) {
-                            var title = x.get("title") || x.get("name");                     
-							if (aantal_popups == 1) {
-								if (infoFormat == "text/html") {
-									var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
-									if (match && !match[1].match(/^\s*$/)) {
-										this.displayPopup(evt, title, match[1]);
-									}
-								} else if (infoFormat == "text/plain") {
-                                	this.displayPopup(evt, title, '<pre>' + evt.text + '</pre>');
-								} else {
-									this.displayPopup(evt, title);
-								}
-							} else {
-								if (infoFormat == "text/html") {
-									var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
-									if (match && !match[1].match(/^\s*$/)) {
-										var text = match[1];
-									}
-								} else if (infoFormat == "text/plain") {
-                                	var text = '<pre>' + evt.text + '</pre>';
-								} else {
-									var text = null;
-								};
-							
-								var baseConfig = {
-									title: title,
-                  layout: "fit",
-                  tools: [{
-                      id:'print',
-                      tooltip: 'Print de inhoud van dit venster',
-                      handler: function(event){ 
-                          this.printDiv(popup.layout.activeItem.body.id); 
-                      },
-                      scope: this
-                      }],
-									autoScroll: true,
-									autoWidth: true,
-									collapsible: true
-								};
-								var features = evt.features, config = [];
-								if (!text && features) {
-									var feature;
-									for (var i=0,ii=features.length; i<ii; ++i) {
-										feature = features[i];
-										config.push(Ext.apply({
-											xtype: "propertygrid",
-											listeners: {
-												'beforeedit': function (e) { 
-													return false; 
-												} 
-											},
-											title: feature.fid ? feature.fid : title,
-											source: feature.attributes
-										}, this.itemConfig));
-									}
-								} else if (text) {
-									config.push(Ext.apply({
-										title: title,
-										html: text
-									}, baseConfig));
-								}
-		
-								popup.add(config);
-								popup.doLayout();
-							}									
+                            var title = x.get("title") || x.get("name");
+                            if (infoFormat == "text/html") {
+                                var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
+                                if (match && !match[1].match(/^\s*$/)) {
+                                    this.displayPopup(evt, title, match[1]);
+                                }
+                            } else if (infoFormat == "text/plain") {
+                                this.displayPopup(evt, title, '<pre>' + evt.text + '</pre>');
+                            } else if (evt.features && evt.features.length > 0) {
+                                this.displayPopup(evt, title, null,  x.get("getFeatureInfo"));
+                            }
                         },
+                        beforegetfeatureinfo: this.beforeGetFeatureInfo,
                         scope: this
                     }
                 }, this.controlOptions));
@@ -265,34 +185,96 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
                 info.controls.push(control);
                 if(infoButton.pressed) {
                     control.activate();
-				}
+                }
             }, this);
-			
 
         };
-				
+
+      var infolaagToevoegen = function(){
+
+        var style = new OpenLayers.StyleMap({
+            "pointer": new OpenLayers.Style({
+              // Set the external graphic and background graphic images.
+              externalGraphic: "../theme/app/img/marker.png",
+              backgroundGraphic: "../theme/app/img/marker-shadow.png",
+
+              // Makes sure the background graphic is placed correctly relative
+              // to the external graphic.
+              backgroundXOffset:  -2, backgroundYOffset: -26,
+              graphicXOffset: -10, graphicYOffset: -32,
+
+              // Set the z-indexes of both graphics to make sure the background
+              // graphics stay in the background (shadows on top of markers looks odd; let's not do that).
+              graphicZIndex: 10,
+              backgroundGraphicZIndex: 11,
+              pointRadius: 15
+              }),
+            "default": new OpenLayers.Style(null, {
+                rules: [new OpenLayers.Rule({
+                    symbolizer: {
+                        "Point": {
+                            pointRadius: 8,
+                            graphicName: "circle",
+                            fillColor: "#FFFF00",
+                            fillOpacity: 0.9,
+                            strokeWidth: 1,
+                            strokeOpacity: 1,
+                            strokeColor: "#4D4DFF"
+                        },
+                        "Line": {
+                            strokeWidth: 3,
+                            strokeOpacity: 1,
+                            strokeColor: "#4D4DFF"
+                        },
+                        "Polygon": {
+                            strokeWidth: 2,
+                            strokeOpacity: 1,
+                            strokeColor: "#4D4DFF",
+                            fillColor: "#FFFF00",
+                            fillOpacity: 0.4
+                        }
+                    }
+                })]
+            })
+        });
+
+        var symboollayer = new OpenLayers.Layer.Vector("Info", {styleMap: style, displayInLayerSwitcher: false});   
+        this.app.mapPanel.layers.map.addLayers([symboollayer]);
+        gxp.plugins.WMSGetFeatureInfoZaanAtlas.prototype.symboollayer = symboollayer;    
+      };
+
+      var infolaagverwijderen = function() {
+        //this.symboollayer.destroy();
+        for(var p = 1; p < this.app.mapPanel.layers.map.layers.length; p++) {
+          if (this.app.mapPanel.layers.map.layers[p].name == "Info"){
+            this.app.mapPanel.layers.map.layers[p].destroy();
+          }
+        } 
+      };
+
+      var popupverwijderen = function() {
+        var popup = Ext.getCmp('WMSGetFeatureInfoZaanAtlas');
+        if (popup) {
+          popup.hide();
+        }
+      };
+        
         this.target.mapPanel.layers.on("update", updateInfo, this);
         this.target.mapPanel.layers.on("add", updateInfo, this);
         this.target.mapPanel.layers.on("remove", updateInfo, this);
         
-		kaart = this.target.mapPanel;
-        //var kaart1 = this.target.mapPanel;
-        //kaart.map.addLayers([symboollayer]);
-		kaartposition = kaart.getPosition();
-		kaartsize = kaart.getSize();
-		
         return actions;
     },
 
-    infolaagverwijderen: function() {   	
-    	for(var p = 1; p < map.layers.length; p++) {
-			if (map.layers[p].name == "Info"){
-	
-				layer_info = false;
-				//map.removeLayer(map.layers[p]);
-				map.layers[p].destroy();
-			};
-		};	
+    beforeGetFeatureInfo: function(evt) {
+      if (!(evt.xy === this.xy)) {
+        this.xy = evt.xy;
+        this.symboollayer.removeAllFeatures();
+        this.tekenPrikker(evt.xy);
+        if (this.popup) {
+            this.popup.removeAll();
+          }
+      }
     },
 
     printDiv: function(div_id) {
@@ -316,39 +298,39 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
             DocumentContainer.innerHTML+
             '</body></html>';
 
-          var WindowObject = window.open(); //window.open("", "", "width=595,height=842,toolbars=no,scrollbars=yes,status=no,resizable=no");
-          WindowObject.document.writeln(html);
-          WindowObject.document.close();
-          WindowObject.focus();
+          var windowObject = window.open(); //window.open("", "", "width=595,height=842,toolbars=no,scrollbars=yes,status=no,resizable=no");
+          windowObject.document.writeln(html);
+          windowObject.document.close();
+          windowObject.focus();
     },
-    
-    infolaagtoevoegen: function(){
-    
-		var style =new OpenLayers.StyleMap({
-		// Set the external graphic and background graphic images.
-		externalGraphic: "../theme/app/img/marker.png",
-		backgroundGraphic: "../theme/app/img/marker-shadow.png",
-		
-		// Makes sure the background graphic is placed correctly relative
-		// to the external graphic.
-		backgroundXOffset:  -2,
-		backgroundYOffset: -26,
-		
-		graphicXOffset: -10,
-		graphicYOffset: -32,
-		
-		// Set the z-indexes of both graphics to make sure the background
-		// graphics stay in the background (shadows on top of markers looks odd; let's not do that).
-		graphicZIndex: 10,
-		backgroundGraphicZIndex: 11,
-		pointRadius: 15
-		});
 
-		symboollayer = new OpenLayers.Layer.Vector("Info", {styleMap: style, displayInLayerSwitcher: false});		
-		map.addLayers([symboollayer]);		
-		//map.setLayerIndex(symboollayer, map.layers.length);			
-	},
-    
+    tekenPrikker: function(xy) {
+
+        var location = this.target.mapPanel.map.getLonLatFromViewPortPx(xy);
+        var punt = new OpenLayers.Geometry.Point();
+        punt.x = location.lon;
+        punt.y = location.lat;
+              
+        var feature = new OpenLayers.Feature.Vector();
+        feature.fid = 1;
+        feature.geometry = punt;
+        feature.renderIntent = "pointer";
+
+        this.symboollayer.addFeatures([feature]);
+        this.symboollayer.redraw();
+    },
+
+    tekenFeatures: function(features) {
+      var feature;
+      for (var i=0,ii=features.length; i<ii; ++i) {
+          feature = features[i];
+          
+          this.symboollayer.addFeatures([feature]);
+        }
+
+      this.symboollayer.redraw();
+    },
+
     /** private: method[displayPopup]
      * :arg evt: the event object from a 
      *     :class:`OpenLayers.Control.GetFeatureInfo` control
@@ -356,32 +338,47 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
      *     reporting the info to the user
      * :arg text: ``String`` Body text.
      */
-    displayPopup: function(evt, title, text) {
+    displayPopup: function(evt, title, text, featureinfo) {
 
-		popup = new Ext.Window({		
+        featureinfo = featureinfo || {};
+        if (!this.popup) {
+            this.popup = this.addOutput({
+                id: "WMSGetFeatureInfoZaanAtlas",
+                xtype: "window",
                 title: this.popupTitle,
                 layout: "accordion",
+                fill: false,
+                autoScroll: true,
+                closeAction: "hide",
+                x: this.target.mapPanel.getPosition()[0] + this.target.mapPanel.getSize().width - 400,
+                y: this.target.mapPanel.getPosition()[1],
+                map: this.target.mapPanel,
                 width: 400,
                 height: 600,
-				        x: kaartposition[0] + kaartsize.width - 400,
-				        y: kaartposition[1],
                 listeners: {
                     close: (function(key) {
-					aantal_popups = 1;
-					symboollayer.removeAllFeatures();
-					}),
+                    this.symboollayer.removeAllFeatures();
+                    }),
                     scope: this
+                  },
+                defaults: {
+                    layout: "fit",
+                    autoScroll: true,
+                    //autoHeight: true,
+                    autoWidth: true,
+                    collapsible: true
                 }
             });
+        } 
 
-        var baseConfig = {
+        this.itemConfig = {
             title: title,
             layout: "fit",
             tools: [{
                 id:'print',
                 tooltip: 'Print de inhoud van dit venster',
                 handler: function(event){ 
-                    this.printDiv(popup.layout.activeItem.body.id); 
+                    this.printDiv(this.popup.layout.activeItem.body.id); 
                 },
                 scope: this
                 }],
@@ -389,32 +386,36 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
             autoWidth: true,
             collapsible: true
         };
+
         var features = evt.features, config = [];
         if (!text && features) {
+            this.tekenFeatures(features);
             var feature;
             for (var i=0,ii=features.length; i<ii; ++i) {
                 feature = features[i];
                 config.push(Ext.apply({
-                    xtype: "propertygrid",
+                    xtype: "gxp_editorgrid",
+                    readOnly: true,
                     listeners: {
-                        'beforeedit': function (e) { 
-                            return false; 
-                        } 
+                        'beforeedit': function (e) {
+                            return false;
+                        }
                     },
                     title: feature.fid ? feature.fid : title,
-                    source: feature.attributes
+                    feature: feature,
+                    fields: featureinfo.fields,
+                    propertyNames: featureinfo.propertyNames
                 }, this.itemConfig));
             }
         } else if (text) {
             config.push(Ext.apply({
                 title: title,
                 html: text
-            }, baseConfig));
+            }, this.itemConfig));
         }
-        popup.add(config);
-        popup.doLayout();
-		popup.show();
-		aantal_popups = aantal_popups + 1;
+        this.popup.add(config);
+        this.popup.doLayout();
+        this.popup.show();
     }
     
 });
