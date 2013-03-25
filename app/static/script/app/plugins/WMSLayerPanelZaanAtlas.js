@@ -209,7 +209,7 @@ gxp.WMSLayerPanelZaanAtlas = Ext.extend(gxp.WMSLayerPanel, {
                     grow: true,
                     anchor: '99%',
                     width: '100%',
-                    growMax: 100,
+                    growMax: 150,
                     ref: "../../cqlField",
                     hidden: true
                 }],
