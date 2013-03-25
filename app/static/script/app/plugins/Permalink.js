@@ -104,10 +104,14 @@ Ext.namespace("gxp.plugins");
      */ 
     getShortURL: function(callback, scope, longURL) {
         //alert(longURL.toString().length);
-        if (longURL.toString().length > 1536) {
-            this.getTinyURL(callback, scope, longURL);
-        } else {
+        if (Ext.isIE6 || Ext.isIE7 || Ext.isIE8) {
             this.getBitlyURL(callback, scope, longURL);
+        } else {
+            if (longURL.toString().length > 1536) {
+                this.getTinyURL(callback, scope, longURL);
+            } else {
+                this.getBitlyURL(callback, scope, longURL);
+            }
         }
     },
 
@@ -116,11 +120,12 @@ Ext.namespace("gxp.plugins");
      * Saves the map config and displays the URL in a window.
      */ 
     getTinyURL: function(callback, scope, longURL) {
+        //Ext.Ajax.request({
         OpenLayers.Request.GET({
             url: this.APIS.tinyurl + encodeURIComponent(longURL),
             async: true,
             headers: {
-             "Content-Type": "application/html"
+             "Content-Type": "application/txt"
             },
             callback: function(response) {
                 if (callback) {
@@ -265,10 +270,17 @@ Ext.namespace("gxp.plugins");
              * Increasing this dedicated memory to 16k resolves the pb (adding a tag 
              * <headerBufferSize>16384</headerBufferSize> in web/pom.xml) 
              */
-            if (getWindowLocation(config).toString().length > 2356) {
-                return true;
+            if (Ext.isIE6 || Ext.isIE7 || Ext.isIE8) {
+                if (getWindowLocation(config).toString().length > 1536) {
+                    return true;
+                }
+                return false;
+            } else {
+                if (getWindowLocation(config).toString().length > 2356) {
+                    return true;
+                }
+                return false;
             }
-            return false;
         };
 
         function hideLongLinkMsg(config) {
@@ -351,6 +363,12 @@ Ext.namespace("gxp.plugins");
                     }
                 },
                 scope: this
+            }, {
+                xtype:  "container",
+                region: "center",
+                hidden: !hideLinkButton(configString),
+                html:   "<br><br><font color='blue'>De bladwijzer die je probeert aan te maken bevat erg veel informatie, de verkorte link en " +
+                        "de verkorte link emailen zijn daarom niet beschikbaar.<br><br></font>"
             }
         ]
         }];
