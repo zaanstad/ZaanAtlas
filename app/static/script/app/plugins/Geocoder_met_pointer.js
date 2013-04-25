@@ -99,7 +99,7 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
         outputFormat: "JSON",
 		fieldName: "adres",
 		geometryName: "geom",
-		emptyText: "Zoek een adres ...",
+		emptyText: "Type een adres ...",
 		listEmptyText: "- niets gevonden -"
 	},
 	
@@ -121,20 +121,33 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
             text: this.menuText,
             iconCls: "gxp-icon-find",
             cls: 'adres-button',
-            handler: this.showCapabilitiesGrid,
+            enableToggle: true,
+            allowDepress: true,
+            //handler: this.showCapabilitiesGrid,
+            toggleHandler: function(button, pressed) {
+                if (pressed) {
+                    this.showCapabilitiesGrid();
+                } else {
+                    this.capGrid.close();
+                    var aantal = this.target.mapPanel.map.layers.length;
+                    for(var p = 0; p < aantal; p++) {
+                        if (this.target.mapPanel.map.layers[p].name == "Adres") { 
+                            //map.layers[p].destroy();
+                            this.target.mapPanel.map.removeLayer(this.target.mapPanel.map.layers[p]);
+                        };
+                    };
+                }
+             },
             scope: this
         }]);
         
-        this.target.on("ready", function() {
-            actions[0].enable();
-        });
         return actions;
     },
 
     /** api: method[addOutput]
      */
     addOutput: function(config) {
-        return gxp.plugins.GeocoderMetPointer.superclass.addOutput.call(this, this.combo);
+        return gxp.plugins.GeocoderMetPointer.superclass.addOutput.call(this, combo);
     },
     
     /** private: method[onComboSelect]
@@ -156,22 +169,12 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
             
         }
     },
-    
-    
-    /** api: method[showCapabilitiesGrid]
-     * Shows the window with a capabilities grid.
-     */
-    showCapabilitiesGrid: function() {        
-        this.initCapGrid();
-        Tool_button = this.actions[0].items[0];
-        Tool_button.disable();
-    },
 
     /**
      * private: method[initCapGrid]
      * Constructs a window with a capabilities grid.
      */
-    initCapGrid: function() {
+    showCapabilitiesGrid: function() {
 
         var hereStyle = new OpenLayers.StyleMap({
             "default": new OpenLayers.Style({
@@ -192,6 +195,7 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
 		
 		var combo = new gxp.form.AutoCompleteComboBox(Ext.apply({
         	width: 250,
+            id: "GeocoderMetPointer",
         	selectOnFocus: true,
             listeners: {
                 select: this.onComboSelect,
@@ -202,9 +206,8 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
             }
         }, this.outputConfig));
         
-        //var bounds = target.mapPanel.map.restrictedExtent;
-        
-        var bounds = this.target.mapPanel.map.maxExtent;
+        var bounds = target.mapPanel.map.restrictedExtent;
+        //var bounds = this.target.mapPanel.map.maxExtent;
         if (bounds && !combo.bounds) {
             this.target.on({
                 ready: function() {
@@ -215,42 +218,25 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
             })
         };
 		
-        this.combo = combo;
-		
-		var items = [combo];
-		
         this.capGrid = new Ext.Window({
             title: "Zoeken op adres",
-            //fieldDefaults: {labelAlign: 'top'},
-            bodyStyle:'padding:5px 5px 0',
-            closeAction: "close",
+            shadow: false,
+            closable: false,
             layout: "fit",
-            height: 80,
             width: 370,
             x: kaartposition[0] + kaartsize.width - 370,
             y: kaartposition[1],
-            //maxWidth: 600,
-            //maxHeight: 150,
-            //modal: true,
             resizable: false, 
-            items: items,
+            items: [combo],
             listeners: {
-                destroy: function(win) {
-                    Tool_button.enable();
-                    var aantal = this.target.mapPanel.map.layers.length;
-                    for(var p = 0; p < aantal; p++) {
-                        if (this.target.mapPanel.map.layers[p].name == "Adres") { 
-                            //map.layers[p].destroy();
-                            this.target.mapPanel.map.removeLayer(this.target.mapPanel.map.layers[p]);
-                        };
-                    };
+                afterrender: function(cmp){
+                    Ext.getCmp("GeocoderMetPointer").focus(true, 100);
                 },
                 scope: this
             }
         });
 
         this.capGrid.show();
-        formulier = this.capGrid;    	
     }
 });
 Ext.preg(gxp.plugins.GeocoderMetPointer.prototype.ptype, gxp.plugins.GeocoderMetPointer);
