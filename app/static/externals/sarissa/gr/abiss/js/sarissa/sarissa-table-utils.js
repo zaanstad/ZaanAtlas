@@ -4,7 +4,7 @@
  * ====================================================================
  * Sarissa table utils are dependent on sarissa.js and are used for 
  * stuff like table sorting.
- * @version 0.9.9.5
+ * @version 0.9.9.6
  * @author: Copyright 2004-2008 Emmanouil Batsis, mailto: mbatsis at users full stop sourceforge full stop net
  * ====================================================================
  * Licence

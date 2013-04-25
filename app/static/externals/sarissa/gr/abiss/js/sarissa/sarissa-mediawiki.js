@@ -3,7 +3,7 @@
  * About Sarissa: http://dev.abiss.gr/sarissa
  * ====================================================================
  * Sarissa cross browser XML library - IE XPath Emulation 
- * @version 0.9.9.5
+ * @version 0.9.9.6
  * @author: Copyright 2004-2008 Emmanouil Batsis, mailto: mbatsis at users full stop sourceforge full stop net
  *
  * This script depends on sarissa.js and provides an API for remote MediaWiki

@@ -31,6 +31,12 @@ IE Emu Series [http://webfx.eae.net/dhtml/ieemu/] and Cross-Browser DOM Wrapper
  
 ################################################################################################
 
+0.9.9.6
+    * DOMParser in IE9 return a document object, which does not support some methods like 
+      selectNodes. Force using of activex object. Thanks to Kostas Katsamakas and Leo Tohill.
+    * in IE9, XMLSerializer's method serializeToString raise an exception with xml document 
+    (No such interface supported). Thanks to Keith Pepin.
+
 0.9.9.5
     * AllowXsltScript is false by default in MSXML 6, causing an error when an XSLT 
       file includes <msxsl:script> element(s). Thanks to Glen Di Persio, Web Developer

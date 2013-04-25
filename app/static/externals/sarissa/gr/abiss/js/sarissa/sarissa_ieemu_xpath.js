@@ -3,7 +3,7 @@
  * About
  * ====================================================================
  * Sarissa cross browser XML library - IE XPath Emulation 
- * @version 0.9.9.5
+ * @version 0.9.9.6
  * @author: Copyright 2004-2007 Emmanouil Batsis, mailto: mbatsis at users full stop sourceforge full stop net
  *
  * This script emulates Internet Explorer's selectNodes and selectSingleNode
@@ -89,9 +89,12 @@ if(Sarissa._SARISSA_HAS_DOM_FEATURE && document.implementation.hasFeature("XPath
     * first like:</p>
     * <pre>Sarissa.setXpathNamespaces(oDoc, "xmlns:myprefix'http://mynsURI'");</pre>
     * <p><b>Note 1 </b>: Use this method only if the source document features
-    * a default namespace (without a prefix), otherwise just use IE's setProperty
-    * (moz will rezolve non-default namespaces by itself). You will need to map that
-    * namespace to a prefix for queries to work.</p>
+    * a default namespace (without a prefix) or contains namespace declarations with
+    * a scope that does not cover the entire document (i.e. declared but not within the 
+    * root element node). Otherwise just use IE's setProperty. You will need to map that
+    * namespace to a prefix for queries to work.
+    * Moz/FF will resolve non-default namespaces automatically if those are declared 
+    *  in the root element. </p>
     * <p><b>Note 2 </b>: This method calls IE's setProperty method to set the
     * appropriate namespace-prefix mappings, so you dont have to do that.</p>
     * @param oDoc The target XMLDocument to set the namespace mappings for.
