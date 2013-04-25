@@ -514,7 +514,10 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                  },
                  success : function(response) {
                      //alert(response.responseText);
-                     xml = response.responseXML;
+                     var xml = response.responseXML;
+                     if (!xml) {
+                       var parser = new DOMParser();
+                       xml = parser.parseFromString(response.responseText, 'text/xml'); }
                      handleCSWResponse("getrecords", xml);
                  },
                  failure : function(response) {
