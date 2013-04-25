@@ -12,7 +12,7 @@
 	url = https://github.com/openlayers/openlayers.git
 [submodule "app/static/externals/PrintPreview"]
 	path = app/static/externals/PrintPreview
-	url = https://github.com/GeoNode/PrintPreview.git
+	url = https://github.com/opengeo/PrintPreview.git
 [submodule "externals/stick"]
 	path = externals/stick
 	url = https://github.com/hns/stick.git
