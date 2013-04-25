@@ -342,33 +342,33 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
 
         featureinfo = featureinfo || {};
         if (!this.popup) {
-            this.popup = this.addOutput({
-                id: "WMSGetFeatureInfoZaanAtlas",
-                xtype: "window",
-                title: this.popupTitle,
-                layout: "accordion",
-                fill: false,
-                autoScroll: true,
-                closeAction: "hide",
-                x: this.target.mapPanel.getPosition()[0] + this.target.mapPanel.getSize().width - 400,
-                y: this.target.mapPanel.getPosition()[1],
-                map: this.target.mapPanel,
-                width: 400,
-                height: 600,
-                listeners: {
-                    close: (function(key) {
+          this.popup = new Ext.Window({ //this.addOutput({
+              id: "WMSGetFeatureInfoZaanAtlas",
+              xtype: "window",
+              title: this.popupTitle,
+              layout: "accordion",
+              fill: false,
+              autoScroll: true,
+              closeAction: "hide",
+              map: this.target.mapPanel,
+              width: 400,
+              height: 600,
+              x: this.target.mapPanel.getPosition()[0] + this.target.mapPanel.getSize().width - 400,
+              y: this.target.mapPanel.getPosition()[1],
+              listeners: {
+                  close: function(key) {
                     this.symboollayer.removeAllFeatures();
-                    }),
-                    scope: this
                   },
-                defaults: {
-                    layout: "fit",
-                    autoScroll: true,
-                    //autoHeight: true,
-                    autoWidth: true,
-                    collapsible: true
-                }
-            });
+                  scope: this
+                },
+              defaults: {
+                  layout: "fit",
+                  autoScroll: true,
+                  //autoHeight: true,
+                  autoWidth: true,
+                  collapsible: true
+              }
+          });
         } 
 
         this.itemConfig = {
