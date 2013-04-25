@@ -49,11 +49,6 @@ div.simple table a:visited {
 	font-weight:bold;
 	text-decoration:none;
 }
-div.simple table a:active,
-div.simple table a:hover {
-	color: #bd5a35;
-	text-decoration:underline;
-}
 div.simple table {
 	font-family:Arial, Helvetica, sans-serif;
 	color:#666;
@@ -136,9 +131,4 @@ div.simple table tr:last-child td:last-child{
 	-moz-border-radius-bottomright:3px;
 	-webkit-border-bottom-right-radius:3px;
 	border-bottom-right-radius:3px;
-}
-div.simple table tr:hover td{
-	background: #f2f2f2;
-	background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
-	background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	
 }
