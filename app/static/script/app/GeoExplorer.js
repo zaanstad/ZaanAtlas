@@ -4,19 +4,6 @@
 
 Ext.USE_NATIVE_JSON = true;
 
-function hst_componentReady() {
-    app.fireEvent('hst_componentReady');
-}
-
-function hst_apiReady() {
-    app.fireEvent('hst_apiReady');
-}
-
-function hst_viewChanged() {
-    app.fireEvent('hst_viewChanged');
-}
-
-
 // Fixes problem with OpenLayers.Projection.defaults and RD EPSG
 OpenLayers.Projection.defaults = {
 	"EPSG:28992": {

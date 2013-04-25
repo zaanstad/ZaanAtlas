@@ -6,6 +6,18 @@
  * of the license.
  */
 
+function hst_componentReady() {
+    app.fireEvent('hst_componentReady');
+}
+
+function hst_apiReady() {
+    app.fireEvent('hst_apiReady');
+}
+
+function hst_viewChanged() {
+    app.fireEvent('hst_viewChanged');
+}
+
 /** api: (define)
  *  module = gxp.plugins
  *  class = Cyclorama
