@@ -311,9 +311,9 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
      * Attach a handler to the login button and set its text.
      */
     applyLoginState: function(iconCls, text, handler, scope) {
-        this.loginButton.setIconClass(iconCls);
-        this.loginButton.setText(text);
-        this.loginButton.setHandler(handler, scope);
+        //this.loginButton.setIconClass(iconCls);
+        //this.loginButton.setText(text);
+        //this.loginButton.setHandler(handler, scope);
     },
 
     /** private: method[showLogin]
@@ -339,16 +339,8 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
      * Create the toolbar configuration for the main view.
      */
     createTools: function() {
-        var tools = GeoExplorer.Composer.superclass.createTools.apply(this, arguments);
-
-        this.loginButton = new Ext.Button();
-        //tools.push(['->', this.loginButton]);
-        tools.push([
-        	'->',
-        	{
-        	ptype: "gxp_geocodermetpointer",
-        	actionTarget: {target: "paneltbar"}
-        	}]);
+        //var tools = GeoExplorer.Composer.superclass.createTools.apply(this, arguments);
+        var tools = [];
 
         // unauthorized, show login button
         if (this.authorizedRoles.length === 0) {
@@ -361,17 +353,10 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             this.showLogout(user);
         }
 
-        //var aboutButton = new Ext.Button({
-        //    scale: 'logo',
-        //    iconCls: "icon-logo",
-        //    handler: this.displayAppInfo,
-        //    scope: this
-        //});
-
-        //tools.unshift("-");
         tools.unshift("-");
         tools.unshift("-");
-        //tools.unshift(aboutButton);
+        tools.unshift("-");
+        tools.push("->");
         return tools;
     },
 

@@ -298,7 +298,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
      * Create the various parts that compose the layout.
      */
     initPortal: function() {
-    
+   
 		var header = new Ext.Container({
         	height: 50,
         	html: "<div id='top'>" +
@@ -306,7 +306,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         		  "<div id='headnav'>" +
         		  "<a href='#' onclick='app.displayAppInfo(); return false;'>Info</a>" + 
         		  "<a href='mailto:geo-informatie@zaanstad.nl?subject=ZaanAtlas'>Contact</a>" + 
-        		  "<a href='#' onclick='app.showLoginDialog(); return false;' id='login-link'>Login</a>" + 
+        		  "<a href='#' id='login-link' onclick='app.showLoginDialog(); return false;'>Login</a>" + 
         		  "</div>" +
         		  "</div>"
         	});
@@ -315,13 +315,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         	id: "tree",
         	title: "Lagen",
         	layout: "fit",
-            collapsible: true,
-            header: true
-        });
-        
-        var westPanel2 = new Ext.Panel({
-            collapsible: true,
-            title: "Test",
             collapsible: true,
             header: true
         });

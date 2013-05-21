@@ -128,7 +128,7 @@ body {
 /* Pan- and Zoom- Panel Styles*/
 
 .olControlPanPanel div {
-    background-image:url(../../externals/ext/resources/images/gray/panel/tool-sprites.gif);
+    background-image:url(../../externals/ext/resources/images/zaanstad/panel/tool-sprites.gif);
     height:15px;
     width:15px;
     /* workaround for button height in IE */
@@ -160,7 +160,7 @@ body {
 }
 
 .olControlZoomPanel div {
-    background-image:url(../../externals/ext/resources/images/gray/panel/tool-sprites.gif);
+    background-image:url(../../externals/ext/resources/images/zaanstad/panel/tool-sprites.gif);
     height:15px;
     width:15px;
     /* workaround for button height in IE */

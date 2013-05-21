@@ -87,7 +87,7 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  Attribution string for tile server.
      */
-	url: "http://map16z/geowebcache/service/wms",
+    url: "http://map16z/geowebcache/service/wms",
 
     /** private: property[ready]
      *  ``Boolean``
@@ -98,8 +98,8 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
      *  ``Bool``
      *  Checks weather the browser is before IE9.
      */
-	isIEBeforeIE9: Ext.isIE6 || Ext.isIE7 || Ext.isIE8,
-	
+    isIEBeforeIE9: Ext.isIE6 || Ext.isIE7 || Ext.isIE8,
+    
     /** api: method[createStore]
      *
      *  Creates a store of layer records.  Fires "ready" when store is loaded.
@@ -109,7 +109,7 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
         var options = {
             projection: "EPSG:28992",
             resolutions: [53.76, 26.88, 13.44, 6.72, 3.36, 1.68, 0.84, 0.42, 0.21, 0.105, 0.0525],
-			maxExtent: new OpenLayers.Bounds(12628.0541,308179.0423,287879.2541,610955.3622999999),
+            maxExtent: new OpenLayers.Bounds(12628.0541,308179.0423,287879.2541,610955.3622999999),
             units: "m",
             buffer: 1,
             transitionEffect: "resize",
@@ -154,24 +154,24 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
             ]
         });
 
-		// ping server of lazy source with capability request, to see if it is available
-		var paramString = OpenLayers.Util.getParameterString({SERVICE: "WMS", REQUEST: "getcapabilities", VERSION: "1.1.1"});
-		url = OpenLayers.Util.urlAppend(this.url, paramString);
-		var OLrequest = OpenLayers.Request.GET({
-			 url : url,
-			 async: true,
-			 scope: this,
-			 success : function(response) {
-			 	this.ready = true;
-			 	this.fireEvent("ready", this);
-			 },
-			 failure : function(response) {
-			 	this.fireEvent("failure", this,
+        // ping server of lazy source with capability request, to see if it is available
+        var paramString = OpenLayers.Util.getParameterString({SERVICE: "WMS", REQUEST: "getcapabilities", VERSION: "1.1.1"});
+        url = OpenLayers.Util.urlAppend(this.url, paramString);
+        var OLrequest = OpenLayers.Request.GET({
+             url : url,
+             async: true,
+             scope: this,
+             success : function(response) {
+                this.ready = true;
+                this.fireEvent("ready", this);
+             },
+             failure : function(response) {
+                this.fireEvent("failure", this,
                             "Layer source not available.",
                             "Unable to contact WMS service."
                         );
-			 }
-		 });
+             }
+         });
     },
 
    /** api: method[getSchema]

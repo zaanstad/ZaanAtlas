@@ -342,7 +342,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 //alert(new XMLSerializer().serializeToString(request_xml));
                 var request = GetXmlContent(request_xml);
 
-    			sendCSWRequest(request);
+    			      sendCSWRequest(request);
                 //csw_response = sendCSWRequest(request);
                 //alert(new XMLSerializer().serializeToString(csw_response));
 
