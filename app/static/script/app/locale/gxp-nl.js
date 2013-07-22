@@ -94,8 +94,8 @@ GeoExt.Lang.add("nl", {
     "gxp.plugins.Measure.prototype": {
         lengthMenuText: "Lengte",
         areaMenuText: "Oppervlakte",
-        lengthTooltip: "Meet lengte",
-        areaTooltip: "Meet oppervlakte",
+        lengthTooltip: "Meet lengte<br><small><i>dubbelklik om te stoppen</i></small>",
+        areaTooltip: "Meet oppervlakte<br><small><i>dubbelklik om te stoppen</i></small>",
         measureTooltip: "Meten"
     },
 
