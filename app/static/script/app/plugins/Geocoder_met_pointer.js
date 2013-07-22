@@ -123,10 +123,10 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
             cls: 'adres-button',
             enableToggle: true,
             allowDepress: true,
-            //handler: this.showCapabilitiesGrid,
+            //handler: this.showLocationPointer,
             toggleHandler: function(button, pressed) {
                 if (pressed) {
-                    this.showCapabilitiesGrid();
+                    this.showLocationPointer();
                 } else {
                     this.capGrid.close();
                     var aantal = this.target.mapPanel.map.layers.length;
@@ -171,10 +171,10 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
     },
 
     /**
-     * private: method[initCapGrid]
+     * private: method[showLocationPointer]
      * Constructs a window with a capabilities grid.
      */
-    showCapabilitiesGrid: function() {
+    showLocationPointer: function() {
 
         var hereStyle = new OpenLayers.StyleMap({
             "default": new OpenLayers.Style({
@@ -206,8 +206,7 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
             }
         }, this.outputConfig));
         
-        var bounds = target.mapPanel.map.restrictedExtent;
-        //var bounds = this.target.mapPanel.map.maxExtent;
+        var bounds = this.target.mapPanel.map.restrictedExtent;
         if (bounds && !combo.bounds) {
             this.target.on({
                 ready: function() {
@@ -224,6 +223,7 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
             closable: false,
             layout: "fit",
             width: 370,
+            constrain: true,
             x: kaartposition[0] + kaartsize.width - 370,
             y: kaartposition[1],
             resizable: false, 

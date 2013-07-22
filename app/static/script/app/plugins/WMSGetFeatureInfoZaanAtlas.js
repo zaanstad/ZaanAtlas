@@ -345,6 +345,7 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
           this.popup = new Ext.Window({ //this.addOutput({
               id: "WMSGetFeatureInfoZaanAtlas",
               xtype: "window",
+              constrain: true,
               title: this.popupTitle,
               layout: "accordion",
               fill: false,
