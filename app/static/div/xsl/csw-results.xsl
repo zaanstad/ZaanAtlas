@@ -95,7 +95,7 @@
 
 <xsl:template match="dct:abstract">
     <strong><xsl:text>Samenvatting: </xsl:text></strong>
-    <xsl:value-of select="substring(.,1,200)"/>
+    <xsl:value-of select="substring(.,1,220)"/>
     <xsl:text>...</xsl:text>
     <br/>
 </xsl:template>
@@ -104,7 +104,7 @@
   <strong><xsl:text>Bron: </xsl:text></strong>
   <xsl:choose>
     <xsl:when test=".!=''">
-		<xsl:value-of select="substring(.,1,100)"/>
+		<xsl:value-of select="substring(.,1,120)"/>
 		<xsl:text>...</xsl:text>
 		<br/>
     </xsl:when>
