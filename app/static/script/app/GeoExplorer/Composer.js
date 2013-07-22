@@ -50,9 +50,9 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                     template: this.zoomSliderText
                 })
             }
-        ];    
+        ];
 
-        if (config.authStatus === 401) {
+        if (config.authStatus === 401 || this.getCookieValue(this.cookieParamName) === null) {
             // user has not authenticated or is not authorized
             this.authorizedRoles = [];
         } else {
