@@ -219,7 +219,13 @@ Ext.namespace("gxp.plugins");
         this.emailBodyText = generateMailBody();
 
         function createUrlString() {
-            //delete configObj.map.maxExtent;
+            delete configObj.map.maxExtent;
+            delete configObj.map.projection;
+            delete configObj.map.resolutions;
+            delete configObj.map.restrictedExtent;
+            delete configObj.map.sources;
+            delete configObj.map.units;
+            delete configObj.map.wrapDateLine;
             
             for (var i = 0, len = configObj.map.layers.length; i < len; i++){
             
@@ -231,7 +237,7 @@ Ext.namespace("gxp.plugins");
                 delete configObj.map.layers[i].minscale;
                 delete configObj.map.layers[i].maxscale;
                 if (configObj.map.layers[i].styles == "") {
-                    delete configObj.map.layers[i].group;
+                    delete configObj.map.layers[i].styles;
                 }
                 if (configObj.map.layers[i].cql_filter == "") {
                     delete configObj.map.layers[i].cql_filter;

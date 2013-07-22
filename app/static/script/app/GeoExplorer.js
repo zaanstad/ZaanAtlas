@@ -234,12 +234,15 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 			var queryConfig = Ext.util.JSON.decode(urlConf);
             // Hard fix some default settings
 			//queryConfig.map.controls = config.map.controls;
-            queryConfig.map.sources = config.map.sources;
-            queryConfig.map.wrapDateLine = config.map.wrapDateLine;
-            queryConfig.map.restrictedExtent = config.map.restrictedExtent;
-            queryConfig.map.maxExtent = config.map.maxExtent;
+            //queryConfig.map.sources = config.map.sources;
+            //queryConfig.map.wrapDateLine = config.map.wrapDateLine;
+            //queryConfig.map.restrictedExtent = config.map.restrictedExtent;
+            //queryConfig.map.maxExtent = config.map.maxExtent;
 
-            Ext.apply(config, queryConfig);
+            //Ext.apply(config, queryConfig);
+            config.map.layers = queryConfig.map.layers;
+            config.map.zoom = queryConfig.map.zoom;
+            config.map.center = queryConfig.map.center;
 			this.applyConfig(config);
 			//window.location.hash = "";
         } else {
