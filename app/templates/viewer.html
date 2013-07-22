@@ -13,6 +13,9 @@
     <script>
         Ext.BLANK_IMAGE_URL = "../theme/app/img/blank.gif";
         OpenLayers.ImgPath = "../theme/app/img/";
+        // avoid pink tiles
+        OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
+        OpenLayers.Util.onImageLoadErrorColor = "transparent";
         // optionally set locale based on query string parameter
         var params = Ext.urlDecode(window.location.search.substring(1));
 		if (params.lang) {
