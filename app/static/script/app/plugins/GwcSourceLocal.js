@@ -126,7 +126,8 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionMapfactory,
                     type: "Zaanstad1812",
-                    grp: "background"
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=0490d7d2-27ae-4842-ae93-ba9a53bc1bd4",
+                    group: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
@@ -136,25 +137,27 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionCitoplan,
                     type: "citoplan",
-                    grp: "background"
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=993da2d0-8541-4f57-9ec3-b106529ff9a1",
+                    group: "background"
                 }, options)
             )
         ];
-        
+     
         this.store = new GeoExt.data.LayerStore({
             layers: layers,
             fields: [
                 {name: "source", type: "string"},
                 {name: "name", type: "string", mapping: "type"},
-                {name: "group", type: "string", mapping: "grp"},
+                {name: "group", type: "string", mapping: "group"},
                 {name: "fixed", type: "boolean", defaultValue: false},
                 {name: "properties", type: "string", defaultValue: "gxp_wmslayerpanel"},
                 {name: "queryable", type: "boolean", mapping: "queryable"},
-                {name: "selected", type: "boolean"}
+                {name: "selected", type: "boolean"},
+                {name: "metadata", type: "string", mapping: "metadata"}
             ]
         });
 
-        // ping server of lazy source with capability request, to see if it is available
+        /* ping server of lazy source with capability request, to see if it is available
         var paramString = OpenLayers.Util.getParameterString({SERVICE: "WMS", REQUEST: "getcapabilities", VERSION: "1.1.1"});
         url = OpenLayers.Util.urlAppend(this.url, paramString);
         var OLrequest = OpenLayers.Request.GET({
@@ -172,9 +175,11 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
                         );
              }
          });
+        */
+        this.fireEvent("ready", this);
     },
 
-   /** api: method[getSchema]
+    /** api: method[getSchema]
      *  Gets the schema for a layer of this source, if the layer is a feature
      *  layer. The WMS does not support DescribeLayer and the layer is not
      *   associated with a WFS feature type.
@@ -209,6 +214,11 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
                 record.set("title", config.title);
             }
 
+            if (config.opacity) {
+                // use this to detect if the layer was added from a bookmark url
+                record.set("group", config.group);
+            }
+
             layer.addOptions({
                 visibility: ("visibility" in config) ? config.visibility : true,
                 opacity: ("opacity" in config) ? config.opacity : 1
@@ -217,10 +227,9 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
             record.set("selected", config.selected || false);
             record.set("source", config.source);
             record.set("name", config.name);
-            record.set("properties", "gxp_wmslayerpanel");
-            if ("group" in config) {
-                record.set("group", config.group);
-            }
+
+            var obj = new Array({format: "text/html", href: record.get("metadata"), type: "ISO19115:2003"});
+            record.set("metadataURLs", obj);
 
             record.data.layer = layer;
             record.commit();
