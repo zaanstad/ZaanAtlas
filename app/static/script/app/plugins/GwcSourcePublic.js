@@ -180,6 +180,39 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
+                "Luchtfoto 1958",
+                this.url,
+                {layers: "Lufo1958-zw", format: "image/png8"},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo1958-zw",
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=9e5a760c-435e-42b9-b2c7-c868a191d812",
+                    group: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
+                "Luchtfoto 1978",
+                this.url,
+                {layers: "Lufo1978-zw", format: "image/png8"},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo1978-zw",
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=dbc5567d-f817-42db-9371-df42714db5d4",
+                    group: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
+                "Luchtfoto 1983",
+                this.url,
+                {layers: "Lufo1983-zw", format: "image/png8"},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo1983-zw",
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=922a4ce3-3960-49f4-91ce-e13b4e592bcb",
+                    group: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
                 "Luchtfoto 2002 kleur",
                 this.url,
                 {layers: "Lufo2002-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
@@ -248,7 +281,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "GBKZ",
                 this.url,
-                {layers: "GBKZ", format: "image/png"},
+                {layers: "GBKZ", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionZaanstad,
                     type: "gbkz",
