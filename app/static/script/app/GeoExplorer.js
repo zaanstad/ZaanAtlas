@@ -179,10 +179,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 ptype: "gxp_zoomtoextent"
             }, {
                 leaf: true, 
-                text: gxp.plugins.Legend.prototype.tooltip, 
-                checked: true, 
-                iconCls: gxp.plugins.Legend.prototype.iconCls,
-                ptype: "gxp_legend"
         }];
 
         GeoExplorer.superclass.constructor.apply(this, arguments);
