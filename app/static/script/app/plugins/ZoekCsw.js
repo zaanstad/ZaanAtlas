@@ -1,8 +1,8 @@
 /**
- * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ * Copyright (c) 2008-2013 Zaanstad Municipality
+ *
  * Published under the GPL license.
- * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * See https://github.com/teamgeo/zaanatlas/raw/master/license.txt for the full text
  * of the license.
  */
 
@@ -394,16 +394,16 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             var protocol = textValue(getElementsByTag(getElementsByTag(server[0], gmd, "protocol")[0], gco, "CharacterString")[0]);
             var layer = textValue(getElementsByTag(getElementsByTag(server[0], gmd, "name")[0], gco, "CharacterString")[0]);
         	
-        	var layertype = layerKey(url);    
-			var source = this.target.layerSources[layertype.key];
+          	var layertype = layerKey(url);
+            var source = this.target.layerSources[layertype.key];
 			        
-			if (source.lazy) {
-				source.store.load({callback: (function() {
-					insertLayer(layer, title, source, layertype.singletile, layertype.background);
-				}).createDelegate(this)});
-			} else {
-				insertLayer(layer, title, source, layertype.singletile, layertype.background);
-			}
+            if (source.lazy) {
+            	source.store.load({callback: (function() {
+            		insertLayer(layer, title, source, layertype.singletile, layertype.background);
+            	}).createDelegate(this)});
+            } else {
+            	insertLayer(layer, title, source, layertype.singletile, layertype.background);
+            }
         };
         
         function insertLayer(name, title, source, singletile, background) {
