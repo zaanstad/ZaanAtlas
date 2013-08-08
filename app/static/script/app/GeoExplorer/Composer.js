@@ -467,6 +467,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
            l.setActiveItem(next);
            Ext.getCmp('wizard-prev').setDisabled(next==0);
            Ext.getCmp('wizard-next').setDisabled(next==2);
+           Ext.getCmp('resettools').setDisabled(next!=1);
            if (incr == 1) {
            		this.about.title = Ext.getDom('titleText').value;
 				this.about['abstract'] = Ext.getDom('descriptionText').value;
@@ -523,6 +524,18 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                    	this.save(this.openPreview.createDelegate(this, [embedMap]));
                },
                scope: this
+           },{
+               id: 'resettools',
+               text: "Reset tools",
+               handler: function() {
+                    this.viewerTools.length = 0;
+                    Ext.apply(this.viewerTools, this.getViewerTools());
+                    var area = Ext.getCmp('geobuilder-1');
+                    area.root.reload();
+                    //this.save(this.openPreview.createDelegate(this, [embedMap]));
+               },
+               scope: this,
+               disabled: true
            }, '->', {
                id: 'wizard-prev',
                text: this.backText,

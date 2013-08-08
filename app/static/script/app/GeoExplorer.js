@@ -111,7 +111,13 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         // both the Composer and the Viewer need to know about the viewerTools
         // First row in each object is needed to correctly render a tool in the treeview
         // of the embed map dialog. TODO: make this more flexible so this is not needed.
-        config.viewerTools = [
+        config.viewerTools = new this.getViewerTools();
+
+        GeoExplorer.superclass.constructor.apply(this, arguments);
+    }, 
+
+    getViewerTools: function() {
+        var tools = [
             {
                 leaf: true, 
                 text: gxp.plugins.Navigation.prototype.tooltip, 
@@ -171,8 +177,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 checked: true
         }];
 
-        GeoExplorer.superclass.constructor.apply(this, arguments);
-    }, 
+        return tools;
+    },
 
     loadConfig: function(config) {
        
