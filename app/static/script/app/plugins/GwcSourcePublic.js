@@ -301,6 +301,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "properties", type: "string", defaultValue: "gxp_wmslayerpanel"},
                 {name: "queryable", type: "boolean", mapping: "queryable"},
                 {name: "selected", type: "boolean"},
+                {name: "hideInLegend", type: "boolean", defaultValue: true},
                 {name: "metadata", type: "string", mapping: "metadata"}
             ]
         });
