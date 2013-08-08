@@ -296,7 +296,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         		  "<div id='headnav'>" +
         		  "<a href='#' onclick='app.displayAppInfo(); return false;'>Info</a>" + 
         		  "<a href='mailto:geo-informatie@zaanstad.nl?subject=ZaanAtlas'>Contact</a>" + 
-        		  "<a href='#' id='login-link' onclick='app.showLoginDialog(); return false;'>Login</a>" + 
+        		  "<a href='#' id='login-link' onclick='app.authenticate(); return false;'>Login</a>" + 
         		  "</div>" +
         		  "</div>"
         	});
