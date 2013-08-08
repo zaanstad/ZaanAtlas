@@ -150,6 +150,7 @@ gxp.AdminOverlay = Ext.extend(Ext.Panel, {
 				var url = window.location.href.split('#')[0];
 				var nieuwe_url = url + "#maps/" + mapid;	
 				window.open(nieuwe_url, '_self');
+                location.reload(true)
 			}
         };
 
