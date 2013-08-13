@@ -41,7 +41,8 @@
 	  <xsl:if test="./literal !=''">
         <csw:Constraint version="1.1.0">
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc" xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
-            <ogc:PropertyIsLike escape="\" singleChar="_" wildCard="%">
+            <ogc:And>
+            <ogc:PropertyIsLike escape="\" singleChar="_" wildCard="*" matchCase="false">
               <ogc:PropertyName>
 			  <xsl:value-of select="./propertyname"/>
 			  </ogc:PropertyName>
@@ -49,6 +50,11 @@
               <xsl:value-of select="./literal"/>
               </ogc:Literal>
             </ogc:PropertyIsLike>
+            <ogc:PropertyIsEqualTo>
+              <ogc:PropertyName>dc:type</ogc:PropertyName>
+              <ogc:Literal>dataset</ogc:Literal>
+            </ogc:PropertyIsEqualTo>
+          </ogc:And>
           </ogc:Filter>
         </csw:Constraint>
 	  </xsl:if>
