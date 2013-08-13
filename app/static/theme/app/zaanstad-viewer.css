@@ -28,6 +28,15 @@
     border:none;
     margin:5px;
 }
+.gx-popup-anc {
+    background: url("http://geo.zaanstad.nl/zaanatlas/externals/GeoExt/resources/images/gray/anchor.png") no-repeat scroll 0 0 transparent;
+    height: 16px;
+    left: 5px;
+    pointer-events: none;
+    position: absolute;
+    width: 31px;
+    z-index: 2;
+}
 .olControlZoomPanel {
 	display: none;
 }
