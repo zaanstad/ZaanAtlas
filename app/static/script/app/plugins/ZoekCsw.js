@@ -282,18 +282,17 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             outputDiv.innerHTML = output;
 
             if (generateNavigateButton()) {
-
                 generateAddButtons();
                 generateInfoButtons();
             } else {
 
-                outputDiv.innerHTML = "<div class='cswresults'><div class='meta_title'>Uitleg geen resultaten gevonden</div>" +
+                outputDiv.innerHTML = "<div class='cswresults'><div class='meta_title'>Uitleg voor geen resultaten gevonden</div>" +
                     "<p><strong>Zoeken naar Geo-informatie</strong><br>" +
-                    "In dit formulier kan gezocht worden naar kaartlagen uit de kaartenbak van de ZaanAtlas. Voer één of meerdere zoektermen in en klik vervolgens op de knop zoeken om een lijst te zien van records die aan al de voorwaarden voldoen van de zoekterm(en). Er is geen verschil tussen hoofdletters en kleine letters. Het is mogelijk om op verschillende manieren te zoeken:</p>" +
+                    "In dit formulier kan gezocht worden naar kaartlagen uit de kaartenbak van de ZaanAtlas. Voer één of meerdere zoektermen in en klik vervolgens op de knop zoeken om een lijst te zien van records die aan al de voorwaarden voldoen van de zoekterm(en). Er is geen verschil tussen hoofdletters en kleine letters.<br>Het is mogelijk om op verschillende manieren te zoeken:</p>" +
                     "<p><strong>Zoekterm:</strong> De waarde die hier is ingevuld is de waarde waarop gezocht gaat worden. Gebruik korte sleutelwoorden voor het beste resultaat zoals <i>luchtfoto</i> of <i>kadaster</i>. Lange of vage begrippen, zoals <i>beleidsintensivering</i>, zullen niet snel een gewenste resultaat opleveren.<br>Voor een specifieker resultaat, gebruik dan meerdere zoektermen, zoals bijvoorbeeld <i>luchtfoto 2002</i>." +
                     "<p><strong>Wildcard zoeken:</strong> Met een asterisk (*) kan een willekeurige reeks tekens aangeduid worden, zoals bijvoorbeeld <i>luchtfoto 200*</i> meer resultaten oplevert." +
                     "<p><strong>Naam bronhouder:</strong> Het is mogelijk om op achternaam van een bronhouder te zoeken en de records te vinden waarvoor deze persoon aanspreekpunt is." +
-                    "<p>Naast het zoeken in de catalogus is het ook mogelijk om een <strong>alfabetische lijst</strong> op te vragen van de kaartlagen. Klik hiervoor op de knop <i>Alfabische lijst</i> en navigeer door de lijst met de knoppen linksonder." +
+                    "<p>Naast het zoeken in de catalogus is het ook mogelijk om een <strong>alfabetische lijst</strong> op te vragen van de kaartlagen. Klik hiervoor op de knop <i>Alfabetische lijst</i> en navigeer door de lijst met de knoppen linksonder." +
                     "</div>";
             }
 
