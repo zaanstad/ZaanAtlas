@@ -288,11 +288,12 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
 
                 outputDiv.innerHTML = "<div class='cswresults'><div class='meta_title'>Uitleg voor geen resultaten gevonden</div>" +
                     "<p><strong>Zoeken naar Geo-informatie</strong><br>" +
-                    "In dit formulier kan gezocht worden naar kaartlagen uit de kaartenbak van de ZaanAtlas. Voer één of meerdere zoektermen in en klik vervolgens op de knop zoeken om een lijst te zien van records die aan al de voorwaarden voldoen van de zoekterm(en). Er is geen verschil tussen hoofdletters en kleine letters.<br>Het is mogelijk om op verschillende manieren te zoeken:</p>" +
-                    "<p><strong>Zoekterm:</strong> De waarde die hier is ingevuld is de waarde waarop gezocht gaat worden. Gebruik korte sleutelwoorden voor het beste resultaat zoals <i>luchtfoto</i> of <i>kadaster</i>. Lange of vage begrippen, zoals <i>beleidsintensivering</i>, zullen niet snel een gewenste resultaat opleveren.<br>Voor een specifieker resultaat, gebruik dan meerdere zoektermen, zoals bijvoorbeeld <i>luchtfoto 2002</i>." +
-                    "<p><strong>Wildcard zoeken:</strong> Met een asterisk (*) kan een willekeurige reeks tekens aangeduid worden, zoals bijvoorbeeld <i>luchtfoto 200*</i> meer resultaten oplevert." +
-                    "<p><strong>Naam bronhouder:</strong> Het is mogelijk om op achternaam van een bronhouder te zoeken en de records te vinden waarvoor deze persoon aanspreekpunt is." +
-                    "<p>Naast het zoeken in de catalogus is het ook mogelijk om een <strong>alfabetische lijst</strong> op te vragen van de kaartlagen. Klik hiervoor op de knop <i>Alfabetische lijst</i> en navigeer door de lijst met de knoppen linksonder." +
+                    "In dit formulier kan gezocht worden naar kaartlagen uit de kaartenbak van de ZaanAtlas. Voer één of meerdere zoektermen in en klik vervolgens op de knop zoeken om een lijst te zien van records die aan al de voorwaarden voldoen van de zoekterm(en). Er is geen verschil tussen hoofdletters en kleine letters.</p>" +
+                    "<p>Het is mogelijk om op verschillende manieren te zoeken:</p>" +
+                    "<p><strong>Zoekterm:</strong> De waarde die hier is ingevuld is de waarde waarop gezocht gaat worden. Gebruik korte sleutelwoorden voor het beste resultaat zoals <i>luchtfoto</i> of <i>kadaster</i>. Lange of vage begrippen, zoals <i>beleidsintensivering</i>, zullen niet snel een gewenste resultaat opleveren.<br>Voor een specifieker resultaat, gebruik dan meerdere zoektermen, zoals bijvoorbeeld <i>luchtfoto 2002</i>.</p>" +
+                    "<p><strong>Wildcard zoeken:</strong> Met een asterisk (*) kan een willekeurige reeks tekens aangeduid worden, zoals bijvoorbeeld <i>luchtfoto 200*</i> meer resultaten oplevert.</p>" +
+                    "<p><strong>Naam bronhouder:</strong> Het is mogelijk om op achternaam van een bronhouder te zoeken en de records te vinden waarvoor deze persoon aanspreekpunt is.</p>" +
+                    "<p>Naast het zoeken in de catalogus is het ook mogelijk om een <strong>alfabetische lijst</strong> op te vragen van de kaartlagen. Klik hiervoor op de knop <i>Alfabetische lijst</i> en navigeer door de lijst met de knoppen linksonder.</p>" +
                     "</div>";
             }
 
@@ -304,14 +305,19 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             if (typeof start == "undefined") {
                 start = 1;
             }
+
             if (this.init) {
-                var processor = new XSLTProcessor();
-                processor.importStylesheet(this.getrecords_xsl);
+                this.query = "*";
+
                 setXpathValue(this.defaults_xml, "/defaults/startposition", start + '');
                 setXpathValue(this.defaults_xml, "/defaults/outputschema", "http://www.opengis.net/cat/csw/2.0.2");
                 setXpathValue(this.defaults_xml, "/defaults/propertyname", "modified");
                 setXpathValue(this.defaults_xml, "/defaults/sortby", "modified");
+                setXpathValue(this.defaults_xml, "/defaults/literal", this.query + '');
                 setXpathValue(this.defaults_xml, "/defaults/sortorder", "DESC");
+
+                var processor = new XSLTProcessor();
+                processor.importStylesheet(this.getrecords_xsl);
                 var request_xml = processor.transformToDocument(this.defaults_xml);
                 var request = GetXmlContent(request_xml);
                 sendCSWRequest(request);
@@ -321,8 +327,6 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 /*because geonetwork doen not follow the specs*/
                 if (this.cswhost.indexOf('geonetwork') != -1)
                     queryable = "any";
-
-                var query = this.query;
 
                 if (this.query == "*") {
                     setXpathValue(this.defaults_xml, "/defaults/sortby", "Title");
@@ -334,7 +338,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
 
                 setXpathValue(this.defaults_xml, "/defaults/outputschema", this.schema + '');
                 setXpathValue(this.defaults_xml, "/defaults/propertyname", queryable + '');
-                setXpathValue(this.defaults_xml, "/defaults/literal", query + '');
+                setXpathValue(this.defaults_xml, "/defaults/literal", this.query + '');
                 setXpathValue(this.defaults_xml, "/defaults/startposition", start + '');
 
                 var processor = new XSLTProcessor();
