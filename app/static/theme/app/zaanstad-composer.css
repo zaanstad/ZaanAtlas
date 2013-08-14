@@ -1,3 +1,8 @@
+/* setting font fixes combobox rendering issues in IE. See
+ * http://extjs.com/forum/showthread.php?t=72505 */
+body {
+    font-family:helvetica,tahoma,verdana,sans-serif;
+}
 .cswresults
 {
 	font-family:Arial, Helvetica, sans-serif;
@@ -144,8 +149,11 @@ div.admin-overlay div.admin-overlay-element {
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKASURBVDjLxVNLTxNRFP7udDp9TCEtFSzloUBwY4FUF0ZjVDYsTDSw0/gjXBii/gk2GjZudO1G4wONK40CGkQSRKTybqGAfVHa6dy5M/d6WwMhccnCk3yLk3u+L9+55xwihMBRQsERQz2crK+vX3Txyn1SyfXDMnyE24AjwR0Q4qLQw1M82H4vGo1+3OeQ/RZSqdQTV2XnhkKzmqaoYJaJQj4P27LgcQGNdTocRmFzyWiJv2zqil0/EJDkt67C0oAGhtTmJpLpHEwSAPNEwBwCy+bQ7W1EsYlYWxiKdMSjvbPhniu96tra2ohmbAxovILZxCq0E5dh6M1g0jllAqYEZRw7lhRp1ZDdewW9tILAykRPingfk9Ti7BbJJ47viiC645cwNm2gYPAaefhWH4TgGB79JoU4vG6Cu0MNyMx/Bv8+hkzJtlWWW27yRfrQ0dhS+4sq0aAOqHQgOK8JGJbMKZf9/h1asPssyv56sBejqupuinEtEHI5jgNFURCuA5JZB6a0fPvBF1BLClbsmoPT7X5wKVqrbWhFqDMmFFHcKLLiNmzbBmMM7WEFAY2jbDCUJbFsMpQkjgUI4ifVWk21lqaXoBQ2mMJ94adi6wes5AxoMYOw7uBcl4JTEQFVULhhId5GcO2MJtuUEykXQRc+gb1/hLTl/VobY2JmctyfnTvvUwlEqCMPvdGEHrKgevj+wlTrxO8VL1+ebLaSc1gwA2kj9bPlYJGmPrx7bm0lrkbIrhrwewFPPbjbj+pzdSPtUh7YXsRqpiT2gp1T9NfEhcGR1zY5fEzjo3c8ud3SIKV0SJrp1wgCLjiS7/CKaU5LPCOcj918+Gb+n1X+b9f4B22tbKhgZZpBAAAAAElFTkSuQmCC);
 }
 .x-btn .icon-delete {
-    /* map_delete.png 
+    /* map_delete.png */
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALVSURBVBgZBcE7jBRlAADg79+dvb2929u9F8cbIeHhK8TeggiNHnbQaDS2xsICDXbGzt7KWEi0sLHQGEUiYhTQYEKEEDlCcrzUg4PjgL2dmZ3Z3bnx+8L80VfOzMzNHKxWqwAgAAAIAiBgWKx7+ODhL9HM3MzBzz85IVSC4foAAEFQKgWQDmIEZVlRrpdKhfePv3cwqlarCkNh8JXk9CVTZ1Irx3cYn2i6fv0P15LP3F3pmJhoub/aUY1q1pLMW/OlWlRVAeh0VnWeGbEWx9JTC+L4njiOhfySvNfVS7v6vVivFxtmiRDWEUQB0G5voBwYe3eaj/9SPzJrbvMWjcENveEeE5MTRqoVUW1EnGZCyBFUgKDT6YjjridzhbWpod7XixTryvScQR5Lu4lBnsqzRD9PhVCCCKDdnqMcmGy3dN5+1tSnq4YHNqvP5nb0V9Wa243Vq2ojNd20jzUCFQLIslwSpzprHd3xwuO9ZF/eVBaZSv+krBfr54ksia33EwEEUQA0GpOarUS71QK1N3ZqHDsvKp6yZeaqrNGztXlFfWRFv3dbtfKmgCgAup1EHOdIXFxa9s+gYuPuwr4T1y0dTsxc+FD8288eLz8SmmPW5xMBkRAEtCY3WRvmLqep2/2a6alpy4eCQyeH7py9Z7Rz3/7XP1Df9ZzelZ8snD9j95OmCpRl6c9/b/l+ccF/j1ZlWSaOE3Geu/B0qXb2d3sOHDF641fhi9eM3fzGzh1Tdj+6KgpIh4mVYqA+0jTeaMvyvuZoU/vvO7bdTS0NMqObdjF/DED00WatLBYRhFAxoaUXUvWiYSw0bbz2wMhSz60X96tcOC29/IPx796R95al6K5VxfUx0XBYKIrC1ukXbJ0hgCDswUvMhiA+klg4961tUw1Rtaa7MnR7pWpxcp/w6tHDP26Ym325WosQBEAAADyf3LL97kUTWSIeHbPY3uvscNOp/wGooE3b/ShD8gAAAABJRU5ErkJggg==);
+}
+.x-btn .icon-save {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAtBJREFUeNpcU0trFEEQ/noeu9ndmd1NNlnzwOBFJF6UgPkB60VjwIPBi4In0Vy8KN4ED4IHFcSjhwgeFPEaUAhRQfEBIfGkiWgMiYkmm0hm5z3TM23NLLuY9Ex3DzVdVd/3VTUbHT85U6lWarIs4//BsHewti3ZeRRja3PrlZI4Tz54BCYx8Djc4yDoabo5oZXahJAg4sQe4dr1qzUlyRyBg4VPYE/Po3PGQf36IAq6hsXF9/hqP8R63YCuF7GxbUBWVDRsDxdGBVRFhtTKZxjbMIYyaFgWnJdfYFm/aVpg/jx814TrmAhcCy5N7tlgLE4RKS1epVIPIELkr3QBt+eQPdONal8/cuEPuPwg9LKOjCxBUTOwHI8C+GkAqcXXMAzKaGKnGqHRyeE+/w6QUMJ5i9AnVKZNuwOfsge0MyZSTwVtBNUUQblUhHH5MG6+Ow/9A4kXcHRqEtaX6iQ0oOUDxILhzqQFKyonAZokPM+HbTUjm4WIOHuojRzC6WENUx9/4ca5oV1FffymjtfxWUgtDXK5MrRihZD0Qtd64Pgh/po8/Tc9u9F29MjUIPr1nSAVsi2iadikQSKMjdm1P5AotEw0Q9Lh3sQw4rT2gExrnnD7vk/lDIgCa3ZYsdyLBvfx2XGwHKjoUCV4hOLWs+UUZtJ5cSIqnRWCVnrzatwUMTF8Wv2J+bUFaJpOenjUlQJ+xCFLanKCkkSUizW7UMTgPERAAqcUHG6jHoXIZjQUciXKHMB0QqhMwcSYTsECOiWlWQXx7lAyuPt0BdsNu1kFRvXRUYTLHGSjHPJMoxYQxFdFDBeTc5fQnR9M26burOLisfv01UFCkwacR4iiCANdRzFQaRWVYUoxcKAX2KeZOH5kBOXMQApixxtAtcCRz1ATJfqNjZ960VPtPiGryq4r+y2soa9/P8rZMkEupjeVxTGYiBAT0oWVJWw2QvwTYAAv1FSfQgpjmgAAAABJRU5ErkJggg==);
 }
 .x-btn .icon-addlayers {
 	/* add.png */
@@ -186,6 +194,15 @@ div.admin-overlay div.admin-overlay-element {
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAKCAYAAACXDi8zAAAAMUlEQVQI12NgYGDIB2IhBizgPxCfwyb5H5fkf1yS/9HwWSBmI1oCq1FYLcfqXKweBADuSxvVXInoYgAAAABJRU5ErkJggg==);
 	width:10px!important;
 	height:10px!important;
+}
+.olControlAttribution {
+    bottom: 5px;
+    font-size: 10px;
+    left: 10px;
+    right: inherit;
+}
+.gx-info-panel {
+    margin: 1em;
 }
 #atlasLogo {
     background-image: url(img/logo_zaanatlas_groot.png);

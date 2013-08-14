@@ -1,14 +1,22 @@
+/* setting font fixes combobox rendering issues in IE. See
+ * http://extjs.com/forum/showthread.php?t=72505 */
+body {
+    font-family:helvetica,tahoma,verdana,sans-serif;
+}
 .x-btn-icon .x-btn-logoklein .x-btn-text{
     height: 16px;
     width: 96px;
 }
-.icon-logo-klein {
+.x-btn .icon-logo-klein {
 	/* logo_zaanatlas_klein.png */
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF0AAAAQCAYAAAB0t3NxAAAB60lEQVRYw+2YwXHDIBBFfcuZFmjBLXBJAW5BV+dGC7TATNyAWiAl0IJaoAWCPItnvbMIsCaODhz+WNgfbL39XhidYoynofdqQED6+fiMIP1v0L+uV5cUK9IHgrYAtKXiUyA5oO8DPiFoq6beRB8F+jlJEWkEPKyeg6U81tJ+aOhMESSAztCf0nS7fU9JLikkxSSfpF/wRJBJssg7J4lKymd0fSE+RwqT5UrQYe11XoDPPFOsC1n77kkSu6AnwCLJbwA/A5yAYGV4utVDoHOyW7187dMUJvIZAmeBseGgp9czwA4w1xY8eD0P13ZX0mvACXiBxianudOTAS9JcvXD9fpeYFJGQeC0qz3tBaAKUrh7mmGs0TyRN+pd7YUBbkpepnU81Onh0q+pj2kZkimE2wmdtpeH0EnoqVVBYeSrGykFbjeAG9wCAJLDoFo8PdCZGy5JvQIdpTpCa9G4yOTf5sl3hhL4GnSLgHvmJKPy6QVvflwhWj2d0F0jdFeAO8NYFKDnsWHaS+RaENfueqHHBjmA4nPPBUCWto4WTyt0knLXcIxUG8dLV4DuUWo12Ujx78ibrSOJV38NXQLEBaBaJulVTwd0V7s5cpR0JJl4vi1AlwB6AaiWJh3WsqSQMz2ujmcv44HXgD70Bv0CZ02RRVp1ocQAAAAASUVORK5CYII=);
 }
-.icon-expand {
+.x-btn .icon-expand {
 	/* expand.png */
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA4UlEQVQ4y6XSzQmDQBAF4EEU9CB6EPHnoCh4EDVagSWlhJSQEiwhJWwJKSGlTGZCJohskjVZ+GB9zlsUFuDfNY5jME2TIriT4i70fa+GYcBfcBfatkVDF3Lsum5mkkPTNLjDWX5dMqjrGg0tXKyq6kz7g+RQFAV+U5blo0z75Zkd5R3keY4GrmRZPd9kD0mSIEvT9JRl2bzFuczoQBRFyN7dkziOA5nRgTAMkX26bDKjA77vI/t0gMzogOd5yFzXPW2LlAWcy4wOOI6jCP5IgW3bgWVZiuBOirvrLy7IbOi17uc770DLCv13AAAAAElFTkSuQmCC);
+}
+.x-btn .icon-layer-switcher {
+   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHnSURBVDjLpZM/a1RRFMTPfXv3L5sYIXYSxMbCWsTCOo1JGlPYWKeyshE7v4JNwCZfQRBBBBsLERsbv4K1hGz23TMz91i8t4muleQ0h1vM3B/MnBQRdpVJz78c3Y8wq5KJMlJGyOg0OAyrXbr9/tmnr38a5IjYFOtnUUawE+NvkZfVGw/XCTIhE5Ums/GL0WRklZckWCM5P1vuHBzvPuhJXvUGNEJpPB3d8sLXgoYEh6IGdGYAGc4Gjrw4XbbD0eA7Ch5fEMBpdCY4Ex2T2cb0TcQ4VSqRSiQToUSnTefTiailt37t4Hj3GxyWUWBwNMTY4Byb2Z2zX4uXVdoi61zSlqg5wZkv/UatsShLH1iynyjYz966oSMwFI4IWUS9LdWNKm0ImhEYwzV050xSeMHALBovsFzajgAFqRSfEDSx3hQ1AzShYwTnAI4BWh+SGnoLC4uKQusJcK9dtNuL0+XdzetzK63vEMwXwi7GhAITa+PFI8IqHJbfHn34aGZ2eLL3pMnNDxRYlYogEWzgSl0KNDgrnIHOgAQtr+LoSR5569ae+7YXJDhq/3ugIAAanQFnNTMQtLR+C4cnewHHOxQEHOGFtTOg4BBBsaMLUU/zejUvSMpllVf3QO+r3re1Sv8S/O80dsX5DaeOJ5G2UDDRAAAAAElFTkSuQmCC);
 }
 /* gxp_scaleoverlay */
 .legend-overlay {
@@ -29,13 +37,30 @@
     margin:5px;
 }
 .gx-popup-anc {
-    background: url("http://geo.zaanstad.nl/zaanatlas/externals/GeoExt/resources/images/gray/anchor.png") no-repeat scroll 0 0 transparent;
+    /* anchor.png */
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAQCAYAAADu+KTsAAAAh0lEQVQ4y9WU0QnAIAxEs/8ALtB1OkMm0B2sH4UgcuZIDTTgj0be8wKKPFVKuVT1bq25Vq11e77qGXuDM3hiixFAcBo8C9jLO5BXDII9CXilqBczAuyiwIwASoJ+MRLwxGx7QuDICD4BswLhqCMCR8BI4J3zUTD6iFLAqwRSwbNAOtgKyF+rAyZE/Ril2pEfAAAAAElFTkSuQmCC) no-repeat scroll 0 0 transparent;
     height: 16px;
     left: 5px;
     pointer-events: none;
     position: absolute;
     width: 31px;
     z-index: 2;
+}
+.gx-popup-anc.top {
+  -webkit-transform: rotate(180deg);     /* Chrome and other webkit browsers */
+  -moz-transform: rotate(180deg);        /* FF */
+  -o-transform: rotate(180deg);          /* Opera */
+  -ms-transform: rotate(180deg);         /* IE9 */
+  transform: rotate(180deg);             /* W3C complaint browsers */
+  /* IE8 and below */
+  filter: progid:DXImageTransform.Microsoft.Matrix(M11=-1, M12=0, M21=0, M22=-1, DX=0, DY=0, SizingMethod='auto expand');
+  top: -16px;
+}
+.olControlAttribution {
+    bottom: 5px;
+    font-size: 10px;
+    left: 10px;
+    right: inherit;
 }
 .olControlZoomPanel {
 	display: none;
