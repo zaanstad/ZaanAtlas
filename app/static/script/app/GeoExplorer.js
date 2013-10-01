@@ -152,13 +152,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 ptype: "gxp_zoom"
             }, {
                 leaf: true, 
-                text: gxp.plugins.NavigationHistory.prototype.previousTooltip + " / " + gxp.plugins.NavigationHistory.prototype.nextTooltip, 
-                checked: false, 
-                iconCls: "gxp-icon-zoom-previous",
-                numberOfButtons: 2,
-                ptype: "gxp_navigationhistory"
-            }, {
-                leaf: true, 
                 text: gxp.plugins.ZoomToExtent.prototype.tooltip, 
                 checked: false, 
                 iconCls: gxp.plugins.ZoomToExtent.prototype.iconCls,
