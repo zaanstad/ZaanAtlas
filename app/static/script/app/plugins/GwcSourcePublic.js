@@ -63,7 +63,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  A descriptive title for this layer source (i18n).
      */
-    title: "GeoWebCache Layers",
+    title: "GeoWebCache Internet",
 
     /** api: config[attributionZaanstad]
      *  ``String``
@@ -91,7 +91,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
 
     urlArray: ["http://geo.zaanstad.nl/geowebcache/service/wms",
     //            "http://geo1.zaanstad.nl/geowebcache/service/wms",
-                "https://geo2.zaanstad.nl/geowebcache/service/wms"],
+                "http://geo2.zaanstad.nl/geowebcache/service/wms"],
 
     /** private: property[ready]
      *  ``Boolean``
@@ -169,7 +169,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
-                "Luchtfoto",
+                "Luchtfoto grijstinten",
                 this.url,
                 {layers: "Luchtfoto", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
@@ -213,7 +213,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
-                "Luchtfoto 2002 kleur",
+                "Luchtfoto 2002",
                 this.url,
                 {layers: "Lufo2002-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
                 OpenLayers.Util.applyDefaults({                
@@ -224,7 +224,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
-                "Luchtfoto 2007 kleur",
+                "Luchtfoto 2007",
                 this.url,
                 {layers: "Lufo2007-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
                 OpenLayers.Util.applyDefaults({                
@@ -235,7 +235,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
-                "Luchtfoto 2008 kleur",
+                "Luchtfoto 2008",
                 this.url,
                 {layers: "Lufo2008-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
                 OpenLayers.Util.applyDefaults({                
@@ -246,7 +246,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
-                "Luchtfoto 2010 kleur",
+                "Luchtfoto 2010",
                 this.url,
                 {layers: "Lufo2010-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
                 OpenLayers.Util.applyDefaults({                
@@ -257,7 +257,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
-                "Luchtfoto 2011 kleur",
+                "Luchtfoto 2011",
                 this.url,
                 {layers: "Lufo2011-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
                 OpenLayers.Util.applyDefaults({                
@@ -268,12 +268,23 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
+                "Luchtfoto 2013",
+                this.url,
+                {layers: "Lufo2013-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo2013-kleur",
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=xxx",
+                    group: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
                 "Topkaart raster 2010",
                 this.url,
                 {layers: "Top25raster-2010", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "top25raster-2010",
+                    type: "Top25raster-2010",
                     metadata: "",
                     group: "background"
                 }, options)

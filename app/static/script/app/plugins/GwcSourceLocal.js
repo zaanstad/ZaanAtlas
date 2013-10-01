@@ -63,7 +63,7 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  A descriptive title for this layer source (i18n).
      */
-    title: "GeoWebCache Layers Intranet",
+    title: "GeoWebCache Intranet",
 
     /** api: config[naipAttribution]
      *  ``String``
@@ -136,7 +136,7 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
                 {layers: "CITOPLAN", format: "image/png8"},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionCitoplan,
-                    type: "citoplan",
+                    type: "CITOPLAN",
                     metadata: "http://geo.zaanstad.nl/geonetwork?uuid=993da2d0-8541-4f57-9ec3-b106529ff9a1",
                     group: "background"
                 }, options)
