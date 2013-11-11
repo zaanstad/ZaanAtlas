@@ -125,7 +125,7 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 
 	openPopup: function() {
 
-		var viewer_api = "https://globespotter.cyclomedia.com/v27/api/viewer_api.swf" //https://globespotter.cyclomedia.com/v28/viewer/globespotter.swf
+		var viewer_api = this.api;
 
 		if (Ext.isIE) {
 			var html = "<object classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000' width='100%' height='100%' id='japi'>"+
