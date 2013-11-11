@@ -87,11 +87,11 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  Attribution string for tile server.
      */
-	url: "http://geo.zaanstad.nl/geowebcache/service/wms",
-
-    urlArray: ["http://geo.zaanstad.nl/geowebcache/service/wms",
-    //            "http://geo1.zaanstad.nl/geowebcache/service/wms",
-                "http://geo2.zaanstad.nl/geowebcache/service/wms"],
+    url: ["http://geo.zaanstad.nl/geowebcache/service/wms",
+        "http://geo1.zaanstad.nl/geowebcache/service/wms",
+        "http://geo2.zaanstad.nl/geowebcache/service/wms",
+        "http://geo3.zaanstad.nl/geowebcache/service/wms"],
+    url: "http://geo.zaanstad.nl/geowebcache/service/wms",
 
     /** private: property[ready]
      *  ``Boolean``
@@ -126,7 +126,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Bestemmingsplannen",
                 this.url,
-                {layers: "Bestemmingsplannen", format: "image/png"},
+                {layers: "Bestemmingsplannen", format: "image/png", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "bestemmingsplannen",
@@ -138,7 +138,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Open Street Map",
                 this.url,
-                {layers: "OSM", format: "image/png8"},
+                {layers: "OSM", format: "image/png8", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "osm",
@@ -149,7 +149,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Zaanstad",
                 this.url,
-                {layers: "Zaanstad", format: "image/png8"},
+                {layers: "Zaanstad", format: "image/png8", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Zaanstad",
@@ -160,7 +160,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Top10atlas",
                 this.url,
-                {layers: "Top10atlas", format: "image/png"},
+                {layers: "Top10atlas", format: "image/png", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Top10atlas",
@@ -171,7 +171,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto grijstinten",
                 this.url,
-                {layers: "Luchtfoto", format: "image/png8"},
+                {layers: "Luchtfoto", format: "image/png8", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionKadaster,
                     type: "lufo",
@@ -182,7 +182,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 1958",
                 this.url,
-                {layers: "Lufo1958-zw", format: "image/png8"},
+                {layers: "Lufo1958-zw", format: "image/png8", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo1958-zw",
@@ -193,7 +193,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 1978",
                 this.url,
-                {layers: "Lufo1978-zw", format: "image/png8"},
+                {layers: "Lufo1978-zw", format: "image/png8", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo1978-zw",
@@ -204,7 +204,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 1983",
                 this.url,
-                {layers: "Lufo1983-zw", format: "image/png8"},
+                {layers: "Lufo1983-zw", format: "image/png8", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo1983-zw",
@@ -215,7 +215,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2002",
                 this.url,
-                {layers: "Lufo2002-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
+                {layers: "Lufo2002-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2002-kleur",
@@ -226,7 +226,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2007",
                 this.url,
-                {layers: "Lufo2007-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
+                {layers: "Lufo2007-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2007-kleur",
@@ -237,7 +237,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2008",
                 this.url,
-                {layers: "Lufo2008-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
+                {layers: "Lufo2008-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2008-kleur",
@@ -248,7 +248,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2010",
                 this.url,
-                {layers: "Lufo2010-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
+                {layers: "Lufo2010-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2010-kleur",
@@ -259,7 +259,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2011",
                 this.url,
-                {layers: "Lufo2011-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
+                {layers: "Lufo2011-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2011-kleur",
@@ -270,18 +270,18 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2013",
                 this.url,
-                {layers: "Lufo2013-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png'},
+                {layers: "Lufo2013-kleur", format: this.isIEBeforeIE9 ? 'image/png8' : 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2013-kleur",
-                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=xxx",
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=e249cf32-c7dc-4f56-b334-c653ab070349",
                     group: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
                 "Topkaart raster 2010",
                 this.url,
-                {layers: "Top25raster-2010", format: "image/png8"},
+                {layers: "Top25raster-2010", format: "image/png8", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Top25raster-2010",
@@ -292,7 +292,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "GBKZ",
                 this.url,
-                {layers: "GBKZ", format: "image/png8"},
+                {layers: "GBKZ", format: "image/png8", tiled: true},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionZaanstad,
                     type: "gbkz",
