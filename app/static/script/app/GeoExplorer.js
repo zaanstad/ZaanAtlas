@@ -180,7 +180,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var bookm = mapUrl.match(/q=/);
         if (match) {
             this.id = Number(match[1]);
-            OpenLayers.Request.GET({
+            Ext.Ajax.request({
                 url: "../" + mapUrl,
                 success: function(request) {
                     var addConfig = Ext.util.JSON.decode(request.responseText);
@@ -217,14 +217,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 		} else if (bookm) {
 			var urlConf = unescape(mapUrl.split('q=')[1]);
 			var queryConfig = Ext.util.JSON.decode(urlConf);
-            // Hard fix some default settings
-			//queryConfig.map.controls = config.map.controls;
-            //queryConfig.map.sources = config.map.sources;
-            //queryConfig.map.wrapDateLine = config.map.wrapDateLine;
-            //queryConfig.map.restrictedExtent = config.map.restrictedExtent;
-            //queryConfig.map.maxExtent = config.map.maxExtent;
-
-            //Ext.apply(config, queryConfig);
+            // Use some settings, not all
             config.map.layers = queryConfig.map.layers;
             config.map.zoom = queryConfig.map.zoom;
             config.map.center = queryConfig.map.center;
@@ -269,7 +262,9 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             
             this.applyConfig(config);
         }
-        
+        // Turn off animated zooming
+        //this.mapPanel.map.zoomDuration = 2;
+        //this.mapPanel.map.zoomTween = null;
     },
     
     displayXHRTrouble: function(msg, status) {
@@ -443,6 +438,12 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             items: [tabs]
         });
         win.show();
+    },
+
+    /** private: method[zoomToFilter]
+     *  Zoom to the extend of a filter
+     */
+    zoomToFilter: function (filter) {
     },
     
     /** private: method[getState]
