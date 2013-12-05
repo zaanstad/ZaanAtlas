@@ -12,7 +12,7 @@
     <script>
     	var app;
 		var detectionCounter = 0;
-		var detectionTimeOut = 3;
+		var detectionTimeOut = 5;
 		var detectionImage = "http://map16z/static/pixel.png" + "?rand=" + Math.random();
 		var detectionElement = document.createElement('img');
 		detectionElement.src = detectionImage;
@@ -37,9 +37,6 @@
             };
         Ext.BLANK_IMAGE_URL = "../theme/app/img/blank.gif";
         OpenLayers.ImgPath = "../theme/app/img/";
-        // avoid pink tiles
-        OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
-        OpenLayers.Util.onImageLoadErrorColor = "transparent";
         GeoExt.Lang.set("nl");
         // optionally set locale based on query string parameter
         var params = Ext.urlDecode(window.location.search.substring(1));
@@ -52,7 +49,7 @@
 			if (detectionElement.complete) {
 				if (detectionElement.width > 0 && detectionElement.height > 0) {
 					intranet= true;
-					reachablePrintService= "http://map11z/print-servlet/pdf/"; //"http://map16z/geoserver/pdf/";
+					reachablePrintService= "http://map11z/print-servlet/pdf/";
 					reachableSources= {
 							tiles: {
 								ptype: "gxp_gwcsource"

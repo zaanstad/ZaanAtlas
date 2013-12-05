@@ -209,6 +209,10 @@ div.admin-overlay div.admin-overlay-element {
     left: 10px;
     right: inherit;
 }
+.olImageLoadError { 
+    /* when OL encounters a 404, don't display the pink image */
+    display: none !important;
+}
 .gx-info-panel {
     margin: 1em;
 }
