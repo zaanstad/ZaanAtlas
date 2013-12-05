@@ -102,6 +102,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             }, {
                 ptype: "gxp_wmsgetfeatureinfozaanatlas", toggleGroup: this.toggleGroup,
                 layerParams: ["CQL_FILTER"],
+                vendorParams: {buffer: 10},
                 actionTarget: {target: "paneltbar", index: 3}
             }, {
                 ptype: "gxp_measure", toggleGroup: this.toggleGroup,
