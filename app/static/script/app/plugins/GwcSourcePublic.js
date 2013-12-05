@@ -87,10 +87,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  Attribution string for tile server.
      */
-    url: ["http://geo.zaanstad.nl/geowebcache/service/wms",
-        "http://geo1.zaanstad.nl/geowebcache/service/wms",
-        "http://geo2.zaanstad.nl/geowebcache/service/wms",
-        "http://geo3.zaanstad.nl/geowebcache/service/wms"],
+    //url: ["http://geo.zaanstad.nl/geowebcache/service/wms",
+    //    "http://geo1.zaanstad.nl/geowebcache/service/wms",
+    //    "http://geo2.zaanstad.nl/geowebcache/service/wms",
+    //    "http://geo3.zaanstad.nl/geowebcache/service/wms"],
     url: "http://geo.zaanstad.nl/geowebcache/service/wms",
 
     /** private: property[ready]
@@ -117,6 +117,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             units: "m",
             buffer: 1,
             transitionEffect: "resize",
+            gutter: 10,
             //singleTile: true,
             tileSize: new OpenLayers.Size(256,256),
             tileOptions: {crossOriginKeyword: null}
