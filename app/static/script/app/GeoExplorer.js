@@ -178,6 +178,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         var mapUrl = window.location.hash.substr(1);
         var match = mapUrl.match(/^maps\/(\d+)$/);
         var bookm = mapUrl.match(/q=/);
+        var filter = mapUrl.match(/filter=/);
         if (match) {
             this.id = Number(match[1]);
             Ext.Ajax.request({
@@ -222,7 +223,22 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             config.map.zoom = queryConfig.map.zoom;
             config.map.center = queryConfig.map.center;
 			this.applyConfig(config);
-			//window.location.hash = "";
+        } else if (filter) {
+            //http://localhost:8080/composer/#filter={"source": "intranet","name": "geo:lki_perceel","cql_filter": "aanduiding = 'ZDM01E01354'"}
+            var urlConf = unescape(mapUrl.split('filter=')[1]);
+            var queryConfig = Ext.util.JSON.decode(urlConf);
+
+            config.map.layers.push({
+                source: queryConfig.source,
+                name: queryConfig.name,
+                cql_filter: queryConfig.cql_filter,
+                selected: true
+            });
+            this.applyConfig(config);
+
+            this.on('layerselectionchange', function(rec) {
+                this.zoomToFilter(rec)
+            }, this, {single: true}); 
         } else {
             var query = Ext.urlDecode(document.location.search.substr(1));
             if (query) {
@@ -265,6 +281,47 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         // Turn off animated zooming
         //this.mapPanel.map.zoomDuration = 2;
         //this.mapPanel.map.zoomTween = null;
+    },
+
+    /** private: method[zoomToFilter]
+     *  Zoom to the extend of a filter
+     */
+    zoomToFilter: function(rec) {
+        var cqlFormat = new OpenLayers.Format.CQL();
+        var cqlString = rec.getLayer().params.CQL_FILTER;
+
+        if (cqlString) {
+            var source = this.layerSources[rec.data.source];
+            source.getWFSProtocol(rec, function(protocol, schema, record) {
+
+                if (!protocol) {
+                    // TODO: add logging to viewer
+                    throw new Error("Failed to get protocol for record: " + record.get("name"));
+                }
+                var wfsLayer = new OpenLayers.Layer.Vector("CQLRESULT", {
+                    strategies: [new OpenLayers.Strategy.Fixed()],
+                    displayInLayerSwitcher: false,
+                    eventListeners: {
+                        'loadend': function (evt) {
+                            var extend = wfsLayer.getDataExtent();
+                            if (extend !== null) {
+                                map.zoomToExtent(extend);
+                            }
+                            map.removeLayer(wfsLayer);
+                        }
+                    },
+                    protocol: new OpenLayers.Protocol.WFS(Ext.apply({
+                        filter: cqlFormat.read(cqlString),
+                        featurePrefix: "",
+                        outputFormat: "JSON",
+                        maxFeatures: 100,
+                        propertyNames: [protocol.geometryName]
+                    }, protocol))
+                });
+                var map = this.mapPanel.map;
+                map.addLayer(wfsLayer);
+            }, this);
+        }
     },
     
     displayXHRTrouble: function(msg, status) {
@@ -438,12 +495,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             items: [tabs]
         });
         win.show();
-    },
-
-    /** private: method[zoomToFilter]
-     *  Zoom to the extend of a filter
-     */
-    zoomToFilter: function (filter) {
     },
     
     /** private: method[getState]

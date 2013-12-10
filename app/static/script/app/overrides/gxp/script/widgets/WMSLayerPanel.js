@@ -237,42 +237,6 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         }
     },
 
-    zoomToFilter: function () {
-        var filter = this.filterBuilder.getFilter();
-
-        if (filter !== null) {
-            this.source.getWFSProtocol(this.layerRecord, function(protocol, schema, record) {
-
-                if (!protocol) {
-                    // TODO: add logging to viewer
-                    throw new Error("Failed to get protocol for record: " + record.get("name"));
-                }
-                var wfsLayer = new OpenLayers.Layer.Vector("CQLRESULT", {
-                    strategies: [new OpenLayers.Strategy.Fixed()],
-                    displayInLayerSwitcher: false,
-                    eventListeners: {
-                        'loadend': function (evt) {
-                            var extend = wfsLayer.getDataExtent();
-                            if (extend !== null) {
-                                map.zoomToExtent(extend);
-                            }
-                            map.removeLayer(wfsLayer);
-                        }
-                    },
-                    protocol: new OpenLayers.Protocol.WFS(Ext.apply({
-                        filter: filter,
-                        featurePrefix: "",
-                        outputFormat: "JSON",
-                        maxFeatures: 100,
-                        propertyNames: [protocol.geometryName]
-                    }, protocol))
-                });
-                var map = this.source.target.mapPanel.map;
-                map.addLayer(wfsLayer);
-            }, this);
-        }
-    },
-
     /** private: method[createStylesPanel]
      *  :arg url: ``String`` url to save styles to
      *
@@ -381,10 +345,10 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                                 this.filterBuilder.setFilter(filter);
                             }
                             //this.fireEvent("change");
-                            this.zoomToFilter();
+                            this.source.target.zoomToFilter(this.layerRecord);
                         } else {
                             //this.fireEvent("change");
-                            this.zoomToFilter();
+                            this.source.target.zoomToFilter(this.layerRecord);
                         }
                     },
                     scope: this
