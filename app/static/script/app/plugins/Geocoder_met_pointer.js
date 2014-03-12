@@ -92,12 +92,12 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
     outputConfig: {
 		url: "/geoserver/wfs",
 		//url: "http://geo.zaanstad.nl/geoserver/wfs",
-		featureType: "bag_adressen_alles",
+		featureType: "zoeklokaties",
 		featurePrefix: "geo",
 		srsName: "EPSG:28992",
         maxFeatures: 70,
         outputFormat: "JSON",
-		fieldName: "adres",
+		fieldName: "lokatie",
 		geometryName: "geom",
 		emptyText: "Type een adres ...",
 		listEmptyText: "- niets gevonden -"
