@@ -87,7 +87,8 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  Attribution string for tile server.
      */
-    url: "http://map16z/geowebcache/service/wms",
+    url_geowebcache: "http://map16z/geowebcache/service/wms",
+    url_mapproxy: "http://map16z/mapproxy/service",
 
     /** private: property[ready]
      *  ``Boolean``
@@ -109,11 +110,11 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
         var options = {
             projection: "EPSG:28992",
             resolutions: [53.76, 26.88, 13.44, 6.72, 3.36, 1.68, 0.84, 0.42, 0.21, 0.105, 0.0525],
-            maxExtent: new OpenLayers.Bounds(12628.0541,308179.0423,287879.2541,610955.3622999999),
+            maxExtent: new OpenLayers.Bounds(-285401.92,22598.08,595401.9199999999,903401.9199999999),
             units: "m",
-            buffer: 1,
+            //buffer: 1,
             transitionEffect: "resize",
-            gutter: 10,
+            //gutter: 10,
             //singleTile: true,
             tileSize: new OpenLayers.Size(256,256),
             tileOptions: {crossOriginKeyword: null}
@@ -122,8 +123,8 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
         var layers = [
             new OpenLayers.Layer.WMS(
                 "Zaanstad 1812",
-                this.url,
-                {layers: "Zaanstad1812", format: "image/png", tiled: true},
+                this.url_mapproxy,
+                {layers: "zaanstad1812", format: "image/png"},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionMapfactory,
                     type: "Zaanstad1812",
@@ -133,8 +134,8 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Cito-Plan",
-                this.url,
-                {layers: "CITOPLAN", format: "image/png8", tiled: true},
+                this.url_mapproxy,
+                {layers: "citoplan", format: "image/png"},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionCitoplan,
                     type: "CITOPLAN",

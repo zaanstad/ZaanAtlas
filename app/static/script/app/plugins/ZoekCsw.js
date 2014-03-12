@@ -457,6 +457,14 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 obj.key = "intratiles";
                 obj.background = true;
             };
+            if (url.toLowerCase().match("geo.zaanstad.nl/mapproxy") != null) {
+                obj.key = "tiles";
+                obj.background = true;
+            };
+            if (url.toLowerCase().match("map16z/mapproxy") != null) {
+                obj.key = "intratiles";
+                obj.background = true;
+            };
             if (url.toLowerCase().match("geo.zaanstad.nl/geoserver") != null) {
                 obj.key = "publiek";
                 obj.background = false;
