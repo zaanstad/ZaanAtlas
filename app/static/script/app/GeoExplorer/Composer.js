@@ -121,7 +121,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 actionTarget: {target: "paneltbar", index: 9}
             }, {
                 ptype: "app_cyclorama", toggleGroup: this.toggleGroup,
-                api: "https://globespotter.cyclomedia.com/v28/api/viewer_api.swf",
+                api_url: "https://globespotter.cyclomedia.com/v285/api/viewer_api.swf",
                 actionTarget: {target: "paneltbar", index: 10}
             }, {
                 ptype: "gxp_geocodermetpointer" ,

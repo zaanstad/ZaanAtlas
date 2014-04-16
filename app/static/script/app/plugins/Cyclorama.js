@@ -52,9 +52,10 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
      */
     popupTitle: "Cyclorama",
 
-    api: null,
+    api_url: null,
+    gsapi: null,
 
-    popup: null,
+    cyclo_popup: null,
 
     symboollayer: null,
 
@@ -125,11 +126,9 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 
 	openPopup: function() {
 
-		var viewer_api = this.api;
-
-		if (Ext.isIE) {
+		if (Ext.isIE8) {
 			var html = "<object classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000' width='100%' height='100%' id='japi'>"+
-	        "<param name='movie' value=" + viewer_api + " />"+
+	        "<param name='movie' value=" + this.api_url + " />"+
 	        "<param name='quality' value='high' />"+
 	        "<param name='bgcolor' value='#888888' />"+
 	        "<param name='wmode' value='opaque' />"+
@@ -138,7 +137,7 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 	        "<!-- Flash message from CycloMedia. --><b>Flash installation</b><br/>In order to use GlobeSpotter, Adobe Flash Player version 10 or higher is required. The player can be installed from the Adobe website. On the website you can find the installation instructions, but for your convenience they have also been listed below:<p/><br><b>Flash player installation instructions</b><ul><li>- You can only install Flash Player if you have administrative access.</li><li>- If you do not have administrative access please contact the IT department or the systemsadministrator for the installation of Flash Player.</li><li>- Before you start downloading Adobe Flash Player, it is recommended that you close all otheropen browser windows.</li><li>- Go to the download site of Adobe Flash Player: <a href='http://get.adobe.com/flashplayer/'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash Player' /></a></li><li>- Deselect additional downloads, as they will not be necessary for the functioning of GlobeSpotter.</li><li>- Click 'Agree and install now'</li><li>- After this you will get a popup with the question: Do you want to install this software?? Click on 'Install'</li><li>- Wait until Adobe Flash Player has finished installing</li><li>- Once done it is highly recommended you restart your browser program</li><li>- Now you can return to the GlobeSpotter startup page and begin using the application</li></ul>- For support please contact:<br/><a href='mailto:support@cyclomedia.nl'>support@cyclomedia.nl</a>"+
 	    	"</object>"
 	    } else {
-	    	var html = "<object type='application/x-shockwave-flash' data=" + viewer_api + " width='100%' height='100%' id='japi'>"+
+	    	var html = "<object type='application/x-shockwave-flash' data=" + this.api_url + " width='100%' height='100%' id='japi'>"+
 	        "<param name='quality' value='high' />"+
 	        "<param name='bgcolor' value='#888888' />"+
 	        "<param name='wmode' value='opaque' />"+
@@ -179,24 +178,33 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 
 			this.cyclo_popup = new Ext.Window({
 				title: this.popupTitle,
-				id: 'cyclo_popup',
+				//id: 'cyclo_popup',
 				border: false,
 				layout: 'fit',
-				closeAction: 'hide',
+			    closeAction : 'hide',
+			    hideMode : 'visibility',
+				//closable: false,
 				maximizable: true,
 	            height: 400,
 	            width: 600,
                 x: this.target.mapPanel.getPosition()[0] + this.target.mapPanel.getSize().width - 600,
                 y: this.target.mapPanel.getPosition()[1],
 				bbar: bbarItems,
-				html: html
-				});
+				html: html,
+				listeners: {
+					'beforehide': function(win) {
+						// This fixes some strange scope shift issues in IE9+
+						this.target.toolbar.focus();
+					},
+					scope: this
+				}
+			 });
 		}
 	},
 
 	openGlobeSpotter: function() {
-		var imageId = this.api.getImageID(0);
-		var rotation = this.api.getYaw(0);
+		var imageId = this.gsapi.getImageID(0);
+		var rotation = this.gsapi.getYaw(0);
 		var cyclo_url = "https://globespotter.cyclomedia.com/nl/?ImageId=" + imageId + "&Yaw=" + rotation;
 		window.open(cyclo_url);
 	},
@@ -252,38 +260,38 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 	},
 
 	componentReady: function() {                
-	    var api = document.getElementById("japi");
+	    this.gsapi = document.getElementById("japi");
 	    
 	    try
 	    {
 	        var SRS = "EPSG:28992";
 	        var ADDRESS_LANGUAGE_CODE = "nl";
 	        // Set an API key.
-	        api.setAPIKey("ezEdm3chO78t-LY9OnARGro9y7gRu3oF-nMxO3olunElqzwVCvgxODUhKrYt23EV");
-	        api.setSRSNameViewer(SRS);
-	        api.setSRSNameAddress(SRS);
-	        api.setAddressLanguageCode(ADDRESS_LANGUAGE_CODE);
+	        this.gsapi.setAPIKey("ezEdm3chO78t-LY9OnARGro9y7gRu3oF-nMxO3olunElqzwVCvgxODUhKrYt23EV");
+	        this.gsapi.setSRSNameViewer(SRS);
+	        this.gsapi.setSRSNameAddress(SRS);
+	        this.gsapi.setAddressLanguageCode(ADDRESS_LANGUAGE_CODE);
 	    }
 	    catch(error) // Its a string ...
 	    {
 	        alert(error);
 	    }
 	    
-	    addToLog("hst_componentReady()");
+	    this.gsapi.addToLog("hst_componentReady()");
 	},
 
 	apiReady: function() {
-	    this.api = document.getElementById("japi");
+	    this.gsapi = document.getElementById("japi");
 
-	    this.api.setLanguageLocale('nl');
-	    //this.api.setViewerRotationButtonsVisible(true);
-	    this.api.setViewerTitleBarVisible(false);
-	    this.api.setViewerToolBarVisible(false);
-	    this.api.setMaxViewers(1);
-	    this.api.setViewerZoomBoxEnabled(false);
+	    this.gsapi.setLanguageLocale('nl');
+	    //this.gsapi.setViewerRotationButtonsVisible(true);
+	    this.gsapi.setViewerTitleBarVisible(false);
+	    this.gsapi.setViewerToolBarVisible(false);
+	    this.gsapi.setMaxViewers(1);
+	    this.gsapi.setViewerZoomBoxEnabled(false);
 
 	    if (this.firstClick) {
-	    	this.api.openNearestImage(this.firstClick.lon + ',' + this.firstClick.lat, 1);
+	    	this.gsapi.openNearestImage(this.firstClick.lon + ',' + this.firstClick.lat, 1);
 	    	this.firstClick = false;
 			var testPanel = new Ext.Panel({
                                 renderTo: 'cyclo_popup',
@@ -301,7 +309,7 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 					                repeat: true,
 					                rowspan: 2,
 					                handler: function() {
-					                    this.api.rotateLeft(0,5);
+					                    this.gsapi.rotateLeft(0,5);
 					                },
 					                scope: this
 					            }, {
@@ -310,7 +318,7 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 					                xtype: 'button',
 					                repeat: true,
 					                handler: function() {
-					                    this.api.rotateUp(0,5);
+					                    this.gsapi.rotateUp(0,5);
 					                },
 					                scope: this
 					            }, {
@@ -320,7 +328,7 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 					                repeat: true,
 					                rowspan: 2,
 					                handler: function() {
-					                    this.api.rotateRight(0,5);
+					                    this.gsapi.rotateRight(0,5);
 					                },
 					                scope: this
 					            }, {
@@ -329,7 +337,7 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 					                xtype: 'button',
 					                repeat: true,
 					                handler: function() {
-					                    this.api.rotateDown(0,5);
+					                    this.gsapi.rotateDown(0,5);
 					                },
 					                scope: this
 					            }
@@ -343,11 +351,12 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
                             });
 	    }
 
-	    addToLog("hst_apiReady()");
+	    this.gsapi.addToLog("hst_apiReady()");
 	},
 
 	checkApiReady: function() {
-	    if(this.api == null || !this.api.getAPIReadyState()) {
+
+	    if(this.gsapi == null || !this.gsapi.getAPIReadyState()) {
 	        alert("API not ready.");
 	        return false;
 	    } else {
@@ -356,8 +365,9 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 	},
 
 	viewChanged: function() {
-		var rd = this.api.getRecordingLocation(0);
-		var rotation = this.api.getYaw(0);
+
+		var rd = this.gsapi.getRecordingLocation(0);
+		var rotation = this.gsapi.getYaw(0);
 
         var feature = new OpenLayers.Feature.Vector(
                         new OpenLayers.Geometry.Point(rd.x, rd.y), {angle: rotation}
@@ -374,9 +384,9 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 	    if(this.checkApiReady()) {
             try
             {
-			    this.api.setUseDateRange(!bool);
-			    this.api.setDateFrom("2000-01-01T00:00:00.000Z");
-			    this.api.setDateTo(JSON.parse(JSON.stringify(new Date())));
+			    this.gsapi.setUseDateRange(!bool);
+			    this.gsapi.setDateFrom("2000-01-01T00:00:00.000Z");
+			    this.gsapi.setDateTo(JSON.parse(JSON.stringify(new Date())));
             }
             catch(error)
             {
@@ -388,6 +398,7 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 	openNearestImage: function(evt, map) {
 
 		this.cyclo_popup.show();
+
 		var rd = map.getLonLatFromViewPortPx(evt.xy);
 		if (!rd) {
 			rd = map.getCenter();
@@ -407,7 +418,7 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 		        {
 		            try
 		            {
-		                this.api.openNearestImage(query, maxLocations);
+		                this.gsapi.openNearestImage(query, maxLocations);
 		            }
 		            catch(error)
 		            {
