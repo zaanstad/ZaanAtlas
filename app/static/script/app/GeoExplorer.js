@@ -226,6 +226,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             this.applyConfig(config);
         } else if (filter) {
             //http://localhost:8080/composer/#filter={"source": "intranet","name": "geo:lki_perceel","cql_filter": "aanduiding = 'ZDM01E01354'", "map":{"center":[112958,498065],"zoom":2} }
+            //http://localhost:8080/composer/#filter={"source": "intranet","name": "geo:lki_perceel" }
             //http://localhost:8080/composer/#filter={"source": "intranet","name": "geo:lki_perceel","map":{"center":[115146.69,497313.09],"zoom":7} }
             //http://localhost:8080/composer/#filter={"map":{"center":[115146.69,497313.09],"zoom":7} }
             //http://localhost:8080/composer/#filter={"map":{ "bbox": [115091.223978078,493523.5271514406,117788.67322395752,496013.933048795] } }
@@ -240,6 +241,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                     selected: true
                 });
             }
+
             if (queryConfig.cql_filter) {
                 this.on('layerselectionchange', function (rec) {
                     this.zoomToFilter(rec)
@@ -247,14 +249,18 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                     single: true
                 });
             } else {
-                if (queryConfig.map.center) {
-                    config.map.zoom = queryConfig.map.zoom;
-                    config.map.center = queryConfig.map.center;
-                }
-                if (queryConfig.map.bbox) {
-                    delete config.map.zoom;
-                    delete config.map.center;
-                    config.map.extent = queryConfig.map.bbox;
+                if (queryConfig.map)
+                {
+                    if (queryConfig.map.center) {
+                        delete config.map.extent;
+                        config.map.zoom = queryConfig.map.zoom;
+                        config.map.center = queryConfig.map.center;
+                    }
+                    if (queryConfig.map.bbox) {
+                        delete config.map.zoom;
+                        delete config.map.center;
+                        config.map.extent = queryConfig.map.bbox;
+                    }
                 }
             }
             this.applyConfig(config);
