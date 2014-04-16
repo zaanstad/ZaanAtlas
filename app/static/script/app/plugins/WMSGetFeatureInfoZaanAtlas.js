@@ -284,24 +284,24 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
             '<title>ZaanAtlas</title>' +
             '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' +
             '<!-- GeoExplorer resources -->' +
+            '<link rel="stylesheet" type="text/css" href="../externals/ext/resources/css/reset-min.css">' +
             '<link rel="stylesheet" type="text/css" href="../externals/ext/resources/css/ext-all.css">' +
             '<link rel="stylesheet" type="text/css" href="../externals/ext/resources/css/xtheme-zaanstad.css">' +
-            '<link rel="stylesheet" type="text/css" href="../externals/GeoExt/resources/css/popup.css">' +
-            '<link rel="stylesheet" type="text/css" href="../externals/GeoExt/resources/css/gxtheme-gray.css">' +
-            '<link rel="stylesheet" type="text/css" href="../externals/gxp/src/theme/all.css">' +
-            '<link rel="stylesheet" type="text/css" href="../theme/app/geoexplorer.css" />' +
+            '<link rel="stylesheet" type="text/css" href="../externals/gxp/theme/all.css">' +
             '<!-- Zaanstad resources -->' +
             '<link rel="stylesheet" type="text/css" href="../theme/app/zaanstad-composer.css" />' +
             '<link rel="stylesheet" type="text/css" href="../theme/app/zaanstad-getfeatureinfo.css" />' +
             '<link rel="shortcut icon" href="../theme/app/img/favicon.ico">' +
-            '</head><body style="background:#ffffff;" onload="window.print();window.close();";>' +
+            '</head><body style="background:#ffffff;">' +
             DocumentContainer.innerHTML+
             '</body></html>';
 
           var windowObject = window.open(); //window.open("", "", "width=595,height=842,toolbars=no,scrollbars=yes,status=no,resizable=no");
           windowObject.document.writeln(html);
           windowObject.document.close();
-          windowObject.focus();
+          
+          setTimeout(function(){windowObject.location.reload();windowObject.print();},500);
+          
     },
 
     tekenPrikker: function(xy) {
