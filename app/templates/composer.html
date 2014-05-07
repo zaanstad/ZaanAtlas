@@ -36,6 +36,8 @@
                 }
             };
         Ext.BLANK_IMAGE_URL = "../theme/app/img/blank.gif";
+        OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
+		OpenLayers.Util.onImageLoadErrorColor = 'transparent'; 
         OpenLayers.ImgPath = "../theme/app/img/";
         GeoExt.Lang.set("nl");
         // optionally set locale based on query string parameter
@@ -48,9 +50,9 @@
 			detectionCounter = detectionCounter + 1;
 			if (detectionElement.complete) {
 				if (detectionElement.width > 0 && detectionElement.height > 0) {
-					intranet= true;
-					reachablePrintService= "http://map11z/print-servlet/pdf/";
-					reachableSources= {
+					intranet = true;
+					reachablePrintService = "http://map11z/print-servlet/pdf/";
+					reachableSources = {
 							tiles: {
 								ptype: "gxp_gwcsource"
 							},
