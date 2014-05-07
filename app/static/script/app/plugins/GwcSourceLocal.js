@@ -124,7 +124,7 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Zaanstad 1812",
                 this.url_mapproxy,
-                {layers: "zaanstad1812", format: "image/png"},
+                {layers: "zaanstad1812", format: "image/png", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionMapfactory,
                     type: "Zaanstad1812",
@@ -135,7 +135,7 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Cito-Plan",
                 this.url_mapproxy,
-                {layers: "citoplan", format: "image/png"},
+                {layers: "citoplan", format: "image/png", tiled: true},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionCitoplan,
                     type: "CITOPLAN",
