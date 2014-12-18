@@ -25,7 +25,8 @@
                 publiek: {
                     url: "/geoserver/ows",
                     //url: "http://geo.zaanstad.nl/geoserver/ows",
-                    title: "Internet",                     
+                    title: "Geoserver publiek",
+                    text: "Deze kaart is publiekelijk beschikbaar",              
                     ptype: "gxp_wmscsource"
                 },
 	            ol: {
@@ -59,7 +60,8 @@
 							publiek: {
 								url: "/geoserver/ows",
 								//url: "http://map11z/geoserver/ows",
-								title: "Internet",   
+								title: "Geoserver publiek",
+								text: "Deze kaart is publiekelijk beschikbaar",
 								ptype: "gxp_wmscsource"
 							},
 				            ol: {
@@ -67,11 +69,13 @@
 				            },
 							intranet: {
 								url: "http://map16z/geoserver/ows",
-								title: "Intranet",
+								title: "Geoserver intern",
+								text: "Deze kaart is alleen intern beschikbaar",
 								ptype: "gxp_wmscsource"
 							},
 							intratiles: {
-								ptype: "gxp_gwcsource_local"
+								ptype: "gxp_gwcsource_local",
+								text: "Deze kaart is alleen intern beschikbaar",
 							},
 							google: {
 								ptype: "gxp_googlesource"
@@ -97,6 +101,7 @@
 				authStatus: {{status}},
 				intraEnabled: intranet,
 				proxy: "../proxy/?url=",
+				//proxy: "../../http_proxy/proxy/?url=",
 				printService: reachablePrintService,
 				about: {
 					title: "ZaanAtlas, de Zaanse kaartenbak",

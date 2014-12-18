@@ -53,21 +53,6 @@ body {
 	background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
 	background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
 }
-.padded-content fieldset {
-    border:1px solid #CCC;
-    -moz-border-radius:4px;
-    -webkit-border-radius:4px;	
-    border-radius:4px;
-}
-.padded-content legend {
-	color: #00A5C7;
-	padding: 6px;
-	font-size:105%;
-	font-weight: bold;
-}
-.padded-content img {
-	display: none;
-}
 .btn_info
 {
 	position: absolute; 

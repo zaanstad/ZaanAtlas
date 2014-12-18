@@ -63,7 +63,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  A descriptive title for this layer source (i18n).
      */
-    title: "GeoWebCache Internet",
+    title: "MapProxy publiek",
+    text: "Deze kaart is publiekelijk beschikbaar",  
 
     /** api: config[attributionZaanstad]
      *  ``String``
@@ -131,7 +132,19 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                     type: "bestemmingsplannen",
                     metadata: "http://geo.zaanstad.nl/geonetwork?uuid=c8c39731-d9be-4977-8df0-4da7b425d0eb",
                     queryable: true,
+                    transparent: true,
                     transitionEffect: null
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
+                "Basisregistratie Topografie (BRT)",
+                this.url_mapproxy,
+                {layers: "BRT", format: "image/png", tiled: true},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionKadaster,
+                    type: "brt",
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=88d48c15-c3dd-44a3-9b5e-224acb28e87d",
+                    group: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(

@@ -63,7 +63,8 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  A descriptive title for this layer source (i18n).
      */
-    title: "GeoWebCache Intranet",
+    title: "MapProxy intern",
+    text: "Deze kaart is alleen intern beschikbaar",
 
     /** api: config[naipAttribution]
      *  ``String``

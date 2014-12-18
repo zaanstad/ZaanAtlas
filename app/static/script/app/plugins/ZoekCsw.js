@@ -249,7 +249,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
 
             var ajaxRequest = Ext.Ajax.request({
                 method: "GET",
-                url: "http://geo.zaanstad.nl/geonetwork/srv/nl/metadata.show.embedded?uuid=" + id + "&currTab=simple",
+                url: "http://geo.zaanstad.nl/geonetwork/srv/dut/view?uuid=" + id + "&currTab=simple",
                 async: true,
                 headers: {
                     "Content-Type": "application/html"
@@ -663,8 +663,8 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             }, {
                 id: 'tb_listtext',
                 xtype: 'tbtext',
-                text: '',
-                style: 'color:#00A5C7;'
+                text: ''
+                //style: 'color:#00A5C7;'
             }]
         });
 
