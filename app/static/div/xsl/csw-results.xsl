@@ -33,14 +33,23 @@
       <xsl:apply-templates select="./dc:identifier"/>
       </div>
       <xsl:variable name="value" select="./dc:URI[@name='thumbnail']" />
-      <xsl:if test="contains($value,'resources.get?')">
-	  <img class="align-left thumbnail" caption="thumbnail">
-	  <xsl:attribute name="src">
-	  	<xsl:text>http://geo.zaanstad.nl/geonetwork/srv/nl/</xsl:text>
-	  	<xsl:value-of select="./dc:URI[@name='thumbnail']"/>
-	  </xsl:attribute>
-	  </img>
-	  </xsl:if>
+        <xsl:choose>
+          <xsl:when test="starts-with($value,'http://')">
+            <img class="align-left thumbnail" caption="thumbnail">
+            <xsl:attribute name="src">
+              <xsl:value-of select="./dc:URI[@name='thumbnail']"/>
+            </xsl:attribute>
+            </img>
+          </xsl:when>
+          <xsl:when test="starts-with($value,'resources.get?')">
+            <img class="align-left thumbnail" caption="thumbnail">
+            <xsl:attribute name="src">
+              <xsl:text>http://geo.zaanstad.nl/geonetwork/srv/nl/</xsl:text>
+              <xsl:value-of select="./dc:URI[@name='thumbnail']"/>
+            </xsl:attribute>
+            </img>
+          </xsl:when>
+        </xsl:choose>
 	  <p>
       <xsl:apply-templates select="./dct:abstract"/>
       <xsl:apply-templates select="./dc:source"/>
