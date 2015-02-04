@@ -162,7 +162,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                     new Ext.Button({
                         id: add_id,
                         renderTo: add_id,
-                        text: 'Niet beschikbaar',
+                        //text: 'Niet beschikbaar',
                         iconCls: 'icon-addlayers-locked',
                         disabled: true,
                         scope: this
@@ -180,7 +180,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 new Ext.Button({
                     id: recordId,
                     renderTo: recordId,
-                    text: 'Metadata',
+                    //text: 'Metadata',
                     iconCls: 'gxp-icon-metadata',
                     handler: embedMeta.createDelegate(this, [recordId]),
                     scope: this
@@ -565,7 +565,8 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             xtype: "container",
             region: "center",
             style: {
-                padding: '10px'
+                padding: '10px',
+                backgroundColor: '#FFFFFF'
             },
             autoScroll: true,
             html: "<div id='csw-output'></div><div id='csw-details'></div>",
