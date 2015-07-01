@@ -72,12 +72,6 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
      */
     attributionZaanstad: "<a href='http://www.zaanstad.nl/' target='_blank'><img src='../theme/app/img/logo_zaanstad.png' border='0'></a>",
 
-    /** api: config[attributionMapfactory]
-     *  ``String``
-     *  Attribution string for NAIP generated layer (i18n).
-     */
-    attributionMapfactory: "<a href='http://www.mapfactory.nl/' target='_blank'><img src='../theme/app/img/logo_mapfactory.png' border='0'></a>",
-
     /** api: config[attributionCitoplan]
      *  ``String``
      *  Attribution string for NAIP generated layer (i18n).
@@ -122,17 +116,6 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
         };
         
         var layers = [
-            new OpenLayers.Layer.WMS(
-                "Zaanstad 1812",
-                this.url_mapproxy,
-                {layers: "zaanstad1812", format: "image/png", tiled: true},
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionMapfactory,
-                    type: "Zaanstad1812",
-                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=0490d7d2-27ae-4842-ae93-ba9a53bc1bd4",
-                    group: "background"
-                }, options)
-            ),
             new OpenLayers.Layer.WMS(
                 "Cito-Plan",
                 this.url_mapproxy,

@@ -181,6 +181,17 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
+                "Zaanstad 1812",
+                this.url_mapproxy,
+                {layers: "Zaanstad1812", format: "image/png", tiled: true},
+                OpenLayers.Util.applyDefaults({
+                    attribution: this.attributionMapfactory,
+                    type: "Zaanstad1812",
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=0490d7d2-27ae-4842-ae93-ba9a53bc1bd4",
+                    group: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
                 "Luchtfoto grijstinten",
                 this.url_mapproxy,
                 {layers: "Luchtfoto", format: "image/png", tiled: true},
