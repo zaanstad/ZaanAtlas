@@ -136,7 +136,7 @@
 </xsl:template>  
 
 <xsl:template match="dc:URI">
-    <xsl:if test="contains(@protocol, 'http-get-map') or contains(@protocol, 'ogc.wms_xml')">
+    <xsl:if test="contains(@protocol, 'http-get-map') or contains(@protocol, 'ogc.wms_xml') or contains(@protocol, 'OGC:WMS')">
 	  <div class="btn_add">
 	  <xsl:attribute name="id">
 		<xsl:text>btn-add-</xsl:text>
