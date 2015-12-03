@@ -316,6 +316,18 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
+                "Luchtfoto 2015",
+                this.url_mapproxy,
+                {layers: "Lufo2015-kleur", format: 'image/png', tiled: true},
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo2015-kleur",
+                    tiled: true,
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=c7a92d7d-4c00-4e3f-9ad2-57f1df28dd4d",
+                    group: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
                 "Topkaart raster 2010",
                 this.url_mapproxy,
                 {layers: "Top25raster-2010", format: "image/png", tiled: true},
