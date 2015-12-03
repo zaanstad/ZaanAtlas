@@ -1,22 +1,19 @@
 /*
 This file is part of Ext JS 3.4
 
-Copyright (c) 2011-2013 Sencha Inc
+Copyright (c) 2011-2014 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as
-published by the Free Software Foundation and appearing in the file LICENSE included in the
-packaging of this file.
-
-Please review the following information to ensure the GNU General Public License version 3.0
-requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial
+Software License Agreement provided with the Software or, alternatively, in accordance with the
+terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department
 at http://www.sencha.com/contact.
 
-Build date: 2013-04-03 15:07:25
+Build date: 2014-10-27 12:52:39
 */
 // for old browsers
 window.undefined = window.undefined;
@@ -32,11 +29,11 @@ Ext = {
      * The version of the framework
      * @type String
      */
-    version : '3.4.1.1',
+    version : '3.4.3',
     versionDetail : {
         major : 3,
         minor : 4,
-        patch : 1.1
+        patch : 3
     }
 };
 
@@ -78,14 +75,15 @@ Ext.apply = function(o, c, defaults){
         isSafari2 = isSafari && check(/applewebkit\/4/), // unique to Safari 2
         isSafari3 = isSafari && check(/version\/3/),
         isSafari4 = isSafari && check(/version\/4/),
-        isIE = !isOpera && check(/msie/),
+        isIE = !isOpera && (check(/msie/) || check(/trident/)),
+        isIE6 = isIE && check(/msie 6/),
         isIE7 = isIE && ((check(/msie 7/) && docMode != 8 && docMode != 9 && docMode != 10) || docMode == 7),
         isIE8 = isIE && ((check(/msie 8/) && docMode != 7 && docMode != 9 && docMode != 10) || docMode == 8),
         isIE9 = isIE && ((check(/msie 9/) && docMode != 7 && docMode != 8 && docMode != 10) || docMode == 9),
         isIE10 = isIE && ((check(/msie 10/) && docMode != 7 && docMode != 8 && docMode != 9) || docMode == 10),
-        isIE6 = isIE && check(/msie 6/),
+        isIE11 = isIE && ((check(/trident\/7.0/) && docMode != 7 && docMode != 8 && docMode != 9 && docMode != 10) || docMode == 11),
         isIE9m = isIE && (isIE6 || isIE7 || isIE8 || isIE9),
-        isGecko = !isWebKit && check(/gecko/),
+        isGecko = (!isIE && !isWebKit) && check(/gecko/),
         isGecko2 = isGecko && check(/rv:1\.8/),
         isGecko3 = isGecko && check(/rv:1\.9/),
         isBorderBox = isIE9m && !isStrict,
@@ -1017,7 +1015,7 @@ function(el){
          * @param {HTMLElement} node The node to remove
          * @method
          */
-        removeNode : isIE && !isIE8 ? function(){
+        removeNode : isIE9m ? function(){
             var d;
             return function(n){
                 if(n && n.tagName != 'BODY'){
@@ -1208,6 +1206,12 @@ function(el){
          * @type Boolean
          */
         isIE10 : isIE10,
+
+        /**
+         * True if the detected browser is Internet Explorer 11.x
+         * @type Boolean
+         */
+        isIE11: isIE11,
         
         /**
          * True if the detected browser is Internet Explorer 9.x or lower
@@ -1219,11 +1223,11 @@ function(el){
          * True if the detected browser is Internet Explorer 10.x or higher
          * @type Boolean
          */ 
-        isIE10p : isIE && !(isIE6 || isIE7 || isIE8 || isIE9),
+        isIE10p : isIE && !isIE9m,
         
         // IE10 quirks behaves like Gecko/WebKit quirks, so don't include it here
         // Used internally
-        isIEQuirks: isIE && (!isStrict && (isIE6 || isIE7 || isIE8 || isIE9)),
+        isIEQuirks: isIE && !isStrict && isIE9m,
                 
         /**
          * True if the detected browser uses the Gecko layout engine (e.g. Mozilla, Firefox).
