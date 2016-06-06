@@ -16,15 +16,14 @@
 		var detectionImage = "http://map16z/static/pixel.png" + "?rand=" + Math.random();
 		var detectionElement = document.createElement('img');
 		detectionElement.src = detectionImage;
-		var reachablePrintService= "";
 		var intranet = false;
 		var reachableSources= {
                 tiles: {
                 	ptype: "gxp_gwcsource"
                 },
                 publiek: {
-                    url: "/geoserver/ows",
-                    //url: "http://geo.zaanstad.nl/geoserver/ows",
+                    //url: "/geoserver/ows",
+                    url: "http://geo.zaanstad.nl/geoserver/ows",
                     title: "Geoserver publiek",
                     text: "Deze kaart is publiekelijk beschikbaar",              
                     ptype: "gxp_wmscsource"
@@ -52,14 +51,13 @@
 			if (detectionElement.complete) {
 				if (detectionElement.width > 0 && detectionElement.height > 0) {
 					intranet = true;
-					reachablePrintService = "http://map11z/print-servlet/pdf/";
 					reachableSources = {
 							tiles: {
 								ptype: "gxp_gwcsource"
 							},
 							publiek: {
-								url: "/geoserver/ows",
-								//url: "http://map11z/geoserver/ows",
+								//url: "/geoserver/ows",
+								url: "http://geo.zaanstad.nl/geoserver/ows",
 								title: "Geoserver publiek",
 								text: "Deze kaart is publiekelijk beschikbaar",
 								ptype: "gxp_wmscsource"
@@ -101,8 +99,7 @@
 				authStatus: {{status}},
 				intraEnabled: intranet,
 				proxy: "../proxy/?url=",
-				//proxy: "../../http_proxy/proxy/?url=",
-				printService: reachablePrintService,
+				printService: "/print-servlet/pdf/",
 				about: {
 					title: "ZaanAtlas, de Zaanse kaartenbak",
 					"abstract": "Een applicatie voor het samenstellen en publiceren van " +

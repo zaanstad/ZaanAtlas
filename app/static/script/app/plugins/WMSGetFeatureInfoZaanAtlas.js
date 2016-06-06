@@ -59,6 +59,26 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` Text for the GetFeatureInfo button (i18n).
      */
     buttonText: "Info van locatie",
+
+    /**
+     * APIProperty: maxFeatures
+     * {Integer} Maximum number of features to return from a WMS query. This
+     *     sets the feature_count parameter on WMS GetFeatureInfo
+     *     requests.
+     */
+    maxFeatures: 50,
+
+    /**
+     * Property: vendorParams
+     * {Object} Additional parameters that will be added to the request, for
+     * WMS implementations that support them. This could e.g. look like
+     * (start code)
+     * {
+     *     radius: 5
+     * }
+     * (end)
+     */
+    vendorParams: {},
     
     /** api: config[format]
      *  ``String`` Either "html" or "grid". If set to "grid", GML will be
@@ -116,9 +136,7 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
                         info.controls[i].deactivate();
                     }
                 }
-                if (pressed) {
-                  infolaagToevoegen();
-                } else {
+                if (!pressed) {
                   infolaagverwijderen();
                   popupverwijderen();
                 }
@@ -161,6 +179,7 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
                     queryVisible: true,
                     layers: [layer],
                     drillDown: true,
+                    maxFeatures: this.maxFeatures,
                     infoFormat: infoFormat,
                     vendorParams: vendorParams,
                     eventListeners: {
@@ -187,10 +206,36 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
                     control.activate();
                 }
             }, this);
-
         };
 
-      var infolaagToevoegen = function(){
+      var infolaagverwijderen = function() {
+        //this.symboollayer.destroy();
+        for(var p = 1; p < this.app.mapPanel.layers.map.layers.length; p++) {
+          if (this.app.mapPanel.layers.map.layers[p].name == "Info"){
+            this.app.mapPanel.layers.map.layers[p].removeAllFeatures();
+          }
+        } 
+      };
+
+      var popupverwijderen = function() {
+        var popup = Ext.getCmp('WMSGetFeatureInfoZaanAtlas');
+        if (popup) {
+          popup.hide();
+        }
+      };
+
+      this.target.on('ready',function() {
+            this.infolaagToevoegen();
+        }, this);
+        
+        this.target.mapPanel.layers.on("update", updateInfo, this);
+        this.target.mapPanel.layers.on("add", updateInfo, this);
+        this.target.mapPanel.layers.on("remove", updateInfo, this);
+        
+        return actions;
+    },
+
+    infolaagToevoegen: function() {
 
         var style = new OpenLayers.StyleMap({
             "pointer": new OpenLayers.Style({
@@ -238,39 +283,20 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
             })
         });
 
-        var symboollayer = new OpenLayers.Layer.Vector("Info", {styleMap: style, displayInLayerSwitcher: false});   
-        this.app.mapPanel.layers.map.addLayers([symboollayer]);
-        gxp.plugins.WMSGetFeatureInfoZaanAtlas.prototype.symboollayer = symboollayer;    
-      };
-
-      var infolaagverwijderen = function() {
-        //this.symboollayer.destroy();
-        for(var p = 1; p < this.app.mapPanel.layers.map.layers.length; p++) {
-          if (this.app.mapPanel.layers.map.layers[p].name == "Info"){
-            this.app.mapPanel.layers.map.layers[p].destroy();
-          }
-        } 
-      };
-
-      var popupverwijderen = function() {
-        var popup = Ext.getCmp('WMSGetFeatureInfoZaanAtlas');
-        if (popup) {
-          popup.hide();
-        }
-      };
-        
-        this.target.mapPanel.layers.on("update", updateInfo, this);
-        this.target.mapPanel.layers.on("add", updateInfo, this);
-        this.target.mapPanel.layers.on("remove", updateInfo, this);
-        
-        return actions;
-    },
+        this.symboollayer = new OpenLayers.Layer.Vector("Info", {styleMap: style, displayInLayerSwitcher: false});   
+        this.target.mapPanel.layers.map.addLayers([this.symboollayer]);  
+      },
 
     beforeGetFeatureInfo: function(evt) {
       if (!(evt.xy === this.xy)) {
         this.xy = evt.xy;
-        this.symboollayer.removeAllFeatures();
+
+        if (this.symboollayer) {
+          this.symboollayer.removeAllFeatures();
+        } 
+
         this.tekenPrikker(evt.xy);
+
         if (this.popup) {
             this.popup.removeAll();
           }
@@ -305,7 +331,6 @@ gxp.plugins.WMSGetFeatureInfoZaanAtlas = Ext.extend(gxp.plugins.Tool, {
     },
 
     tekenPrikker: function(xy) {
-
         var location = this.target.mapPanel.map.getLonLatFromViewPortPx(xy);
         var punt = new OpenLayers.Geometry.Point();
         punt.x = location.lon;

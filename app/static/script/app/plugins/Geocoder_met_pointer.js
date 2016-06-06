@@ -90,8 +90,8 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
     menuText: "Zoek adres",
     
     outputConfig: {
-		url: "/geoserver/wfs",
-		//url: "http://geo.zaanstad.nl/geoserver/wfs",
+		//url: "/geoserver/wfs",
+		url: "http://geo.zaanstad.nl/geoserver/wfs",
 		featureType: "zoeklokaties",
 		featurePrefix: "geo",
 		srsName: "EPSG:28992",

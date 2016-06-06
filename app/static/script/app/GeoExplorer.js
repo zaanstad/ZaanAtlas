@@ -189,6 +189,13 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                     // Don't use persisted tool configurations from old maps
                     delete addConfig.tools;
                     addConfig.map.controls = config.map.controls;
+
+                    // Use global configuration from viewer.html
+                    delete addConfig.intraEnabled;
+                    delete addConfig.sources;
+                    delete addConfig.proxy;
+                    delete addConfig.printService;
+
                     this.applyConfig(Ext.applyIf(addConfig, config));
                 },
                 failure: function (request) {

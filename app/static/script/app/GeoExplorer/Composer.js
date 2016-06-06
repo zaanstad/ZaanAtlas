@@ -103,6 +103,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 ptype: "gxp_wmsgetfeatureinfozaanatlas", toggleGroup: this.toggleGroup,
                 layerParams: ["CQL_FILTER"],
                 vendorParams: {buffer: 10},
+                defaultAction: 0,
                 actionTarget: {target: "paneltbar", index: 3}
             }, {
                 ptype: "gxp_measure", toggleGroup: this.toggleGroup,
@@ -121,7 +122,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 actionTarget: {target: "paneltbar", index: 9}
             }, {
                 ptype: "app_cyclorama", toggleGroup: this.toggleGroup,
-                api_url: "https://globespotter.cyclomedia.com/v285/api/viewer_api.swf",
+                api_url: "https://globespotter.cyclomedia.com/v31/api/viewer_api.swf",
                 actionTarget: {target: "paneltbar", index: 10}
             }, {
                 ptype: "gxp_geocodermetpointer" ,

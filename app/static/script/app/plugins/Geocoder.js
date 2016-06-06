@@ -29,7 +29,8 @@ gxp.plugins.Geocoder = Ext.extend(gxp.plugins.Tool, {
     ptype: "app_geocoder",
     
 	outputConfig: {
-		url: "/geoserver/wfs",
+		//url: "/geoserver/wfs",
+    url: "http://geo.zaanstad.nl/geoserver/wfs",
 		featureType: "zoeklokaties",
 		featurePrefix: "geo",
     srsName: "EPSG:28992",
