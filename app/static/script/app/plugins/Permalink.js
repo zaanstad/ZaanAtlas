@@ -145,6 +145,7 @@ Ext.namespace("gxp.plugins");
      */ 
     getBitlyURL: function(callback, scope, longURL) {
         var api_key = "R_b3889752450cd7113ec5a5c06eca8b07";
+        var access_token = "79e7cef1508d3f3689a1a99e0f6ab843164eb8e0";
         var api_login = "teamgeo";
         var request = "longUrl="+encodeURIComponent(longURL)+"&login="+api_login+"&apiKey="+api_key+"&callback=?";
 
@@ -362,10 +363,10 @@ Ext.namespace("gxp.plugins");
                 hidden: hideLinkButton(configString),
                 handler: function(f,e) {
                     if(e.shiftKey){
-                        this.getTinyURL(this.showUrl, null, getWindowLocation(configString));
+                        this.getShortURL(this.showUrl, null, getWindowLocation(configString));
                     }
                     else {
-                        this.getShortURL(this.showUrl, null, getWindowLocation(configString));
+                        this.getTinyURL(this.showUrl, null, getWindowLocation(configString));
                     }
                 },
                 scope: this
