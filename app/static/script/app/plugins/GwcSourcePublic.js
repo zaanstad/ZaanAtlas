@@ -335,7 +335,19 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                     attribution: this.attributionZaanstad,
                     type: "Lufo2016-kleur",
                     tiled: true,
-                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=c7a92d7d-4c00-4e3f-9ad2-57f1df28dd4d",
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=7aa67352-e422-4704-9522-c93b42af9b83",
+                    group: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
+                "Luchtfoto 2017",
+                this.url_mapproxy,
+                {layers: "Lufo2017-kleur", format: 'image/png', tiled: true},
+                OpenLayers.Util.applyDefaults({
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo2017-kleur",
+                    tiled: true,
+                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=718090fe-8d44-4969-9f8b-652d13644041",
                     group: "background"
                 }, options)
             ),
