@@ -119,7 +119,7 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 	    },
 	    scope: this
 	});
-	var clickcontrol = new Clicker()
+	var clickcontrol = new Clicker();
 	this.target.mapPanel.map.addControl(clickcontrol);
 	cyclo.controls.push(clickcontrol);
 	},
@@ -134,6 +134,7 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 	        "<param name='wmode' value='opaque' />"+
 	        "<param name='allowScriptAccess' value='always' />"+
 	        "<param name='allowFullScreen' value='true' />"+
+            "<param name='APIKey' value='ezEdm3chO78t-LY9OnARGro9y7gRu3oF-nMxO3olunElqzwVCvgxODUhKrYt23EV' />"+
 	        "<!-- Flash message from CycloMedia. --><b>Flash installation</b><br/>In order to use GlobeSpotter, Adobe Flash Player version 10 or higher is required. The player can be installed from the Adobe website. On the website you can find the installation instructions, but for your convenience they have also been listed below:<p/><br><b>Flash player installation instructions</b><ul><li>- You can only install Flash Player if you have administrative access.</li><li>- If you do not have administrative access please contact the IT department or the systemsadministrator for the installation of Flash Player.</li><li>- Before you start downloading Adobe Flash Player, it is recommended that you close all otheropen browser windows.</li><li>- Go to the download site of Adobe Flash Player: <a href='http://get.adobe.com/flashplayer/'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash Player' /></a></li><li>- Deselect additional downloads, as they will not be necessary for the functioning of GlobeSpotter.</li><li>- Click 'Agree and install now'</li><li>- After this you will get a popup with the question: Do you want to install this software?? Click on 'Install'</li><li>- Wait until Adobe Flash Player has finished installing</li><li>- Once done it is highly recommended you restart your browser program</li><li>- Now you can return to the GlobeSpotter startup page and begin using the application</li></ul>- For support please contact:<br/><a href='mailto:support@cyclomedia.nl'>support@cyclomedia.nl</a>"+
 	    	"</object>"
 	    } else {
@@ -143,6 +144,7 @@ gxp.plugins.Cyclorama = Ext.extend(gxp.plugins.Tool, {
 	        "<param name='wmode' value='opaque' />"+
 	        "<param name='allowScriptAccess' value='always' />"+
 	        "<param name='allowFullScreen' value='true' />"+
+            "<param name='APIKey' value='ezEdm3chO78t-LY9OnARGro9y7gRu3oF-nMxO3olunElqzwVCvgxODUhKrYt23EV' />"+
 	        "<!-- Flash message from CycloMedia. --><b>Flash installation</b><br/>In order to use GlobeSpotter, Adobe Flash Player version 10 or higher is required. The player can be installed from the Adobe website. On the website you can find the installation instructions, but for your convenience they have also been listed below:<p/><br><b>Flash player installation instructions</b><ul><li>- You can only install Flash Player if you have administrative access.</li><li>- If you do not have administrative access please contact the IT department or the systemsadministrator for the installation of Flash Player.</li><li>- Before you start downloading Adobe Flash Player, it is recommended that you close all otheropen browser windows.</li><li>- Go to the download site of Adobe Flash Player: <a href='http://get.adobe.com/flashplayer/'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash Player' /></a></li><li>- Deselect additional downloads, as they will not be necessary for the functioning of GlobeSpotter.</li><li>- Click 'Agree and install now'</li><li>- After this you will get a popup with the question: Do you want to install this software?? Click on 'Install'</li><li>- Wait until Adobe Flash Player has finished installing</li><li>- Once done it is highly recommended you restart your browser program</li><li>- Now you can return to the GlobeSpotter startup page and begin using the application</li></ul>- For support please contact:<br/><a href='mailto:support@cyclomedia.nl'>support@cyclomedia.nl</a>"+
 	    	"</object>"
 	    }
