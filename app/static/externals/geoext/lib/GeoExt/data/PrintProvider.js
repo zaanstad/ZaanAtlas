@@ -496,12 +496,14 @@ GeoExt.data.PrintProvider = Ext.extend(Ext.util.Observable, {
         }
 
         if(this.method === "GET") {
+            //var httpsPrintURL = this.capabilities.printURL.replace('http://', 'https://');            
             var url = Ext.urlAppend(this.capabilities.printURL,
                 "spec=" + encodeURIComponent(Ext.encode(jsonData)));
             this.download(url);
         } else {
+            var httpsCreateUrl = this.capabilities.createURL.replace('http://', 'https://');
             Ext.Ajax.request({
-                url: this.capabilities.createURL,
+                url: httpsCreateUrl,
                 timeout: this.timeout,
                 jsonData: jsonData,
                 headers: {"Content-Type": "application/json; charset=" + this.encoding},

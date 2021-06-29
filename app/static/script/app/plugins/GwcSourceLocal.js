@@ -70,20 +70,20 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  Attribution string for NAIP generated layer (i18n).
      */
-    attributionZaanstad: "<a href='http://www.zaanstad.nl/' target='_blank'><img src='../theme/app/img/logo_zaanstad.png' border='0'></a>",
+    attributionZaanstad: "<a href='https://www.zaanstad.nl/' target='_blank'><img src='../theme/app/img/logo_zaanstad.png' border='0'></a>",
 
     /** api: config[attributionCitoplan]
      *  ``String``
      *  Attribution string for NAIP generated layer (i18n).
      */
-    attributionCitoplan: "<a href='http://www.citoplan.nl/' target='_blank'><img src='../theme/app/img/logo_citoplan.png' border='0'></a>",
+    attributionCitoplan: "<a href='https://www.citoplan.nl/' target='_blank'><img src='../theme/app/img/logo_citoplan.png' border='0'></a>",
 
     /** api: config[url]
      *  ``String``
      *  Attribution string for tile server.
      */
-    url_geowebcache: "http://map16z/geowebcache/service/wms",
-    url_mapproxy: "http://map16z/mapproxy/service",
+    url_geowebcache: "https://geointer.zaanstad.nl/geowebcache/service/wms",
+    url_mapproxy: "https://geointer.zaanstad.nl/mapproxy/service",
 
     /** private: property[ready]
      *  ``Boolean``
@@ -123,7 +123,7 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionCitoplan,
                     type: "CITOPLAN",
-                    metadata: "http://geo.zaanstad.nl/geonetwork?uuid=993da2d0-8541-4f57-9ec3-b106529ff9a1",
+                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=993da2d0-8541-4f57-9ec3-b106529ff9a1",
                     group: "background"
                 }, options)
             )

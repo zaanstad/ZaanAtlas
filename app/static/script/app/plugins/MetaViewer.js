@@ -46,7 +46,7 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for layer properties action tooltip (i18n).
      */
-    catalog: "http://geo.zaanstad.nl/geonetwork",
+    catalog: "https://geo.zaanstad.nl/geonetwork",
 
     //embedUrl: "/srv/nl/metadata.show.embedded?uuid=",
     embedUrl: "/srv/dut/view?uuid=", 
