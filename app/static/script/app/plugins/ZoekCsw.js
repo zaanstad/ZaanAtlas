@@ -60,7 +60,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
      *  ``Boolean``
      *  If provided, the catalog dialog will be shown after loading of the app.
      */
-    autoLoad: false,
+    autoLoad: true,
 
     /** api: config[search]
      *  ``Object | Boolean``
@@ -122,10 +122,10 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             this.defaults_xml = loadDocument("../div/xml/defaults.xml");
             this.getrecordbyid_xsl = loadDocument("../div/xsl/getrecordbyid.xsl");
             this.init = true;
-            getRecords(1);
+            embedTiles();
         };
 
-        function search(searchstring, message) {
+        function search(searchstring, message, propertyname) {
             this.query = searchstring.trim();
             var outputDiv = document.getElementById("csw-output");
             outputDiv.innerHTML = "";
@@ -134,7 +134,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 document.getElementById("csw-details").style.display = "none";
                 outputDiv.innerHTML = message;
                 this.init = false;
-                getRecords(1);
+                getRecords(1, propertyname);
             }
         };
 
@@ -249,7 +249,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
 
             var ajaxRequest = Ext.Ajax.request({
                 method: "GET",
-                url: "http://geo.zaanstad.nl/geonetwork/srv/dut/view?uuid=" + id + "&currTab=simple",
+                url: "https://geo.zaanstad.nl/geonetwork/srv/dut/view?uuid=" + id + "&currTab=simple",
                 async: true,
                 headers: {
                     "Content-Type": "application/html"
@@ -268,6 +268,35 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             Ext.getCmp('btn_previousrecords').hide();
             Ext.getCmp('btn_nextrecords').hide();
             Ext.getCmp('btnTerug').show();
+        }
+
+        function embedTiles() {
+            Ext.Ajax.request({
+                method: "GET",
+                url: "../metadata.html",
+                async: true,
+                success: function (response) {
+                    var html = response.responseText;
+                    var outputDiv = document.getElementById("csw-output");
+                    outputDiv.innerHTML = html;
+                    outputDiv.style.display = "block";
+                    Ext.get(Ext.DomQuery.select('#gn-tiles')).on('click', function(event, el) {
+                        event.preventDefault();
+                        if (el['alt'] === 'recent') {
+                            getRecords(1);
+                        } else {
+                            search(el['alt'], "Thema <i>" + el['alt'] + "</i> opvragen in de metadata catalogus...", 'subject');
+                        }
+                    });
+                    Ext.getCmp('btnTerug').hide();
+                },
+                failure: function (response) {
+                    var outputDiv = document.getElementById("csw-output");
+                    outputDiv.innerHTML = "Problemen met het laden van de thema tegels. <br>Probeer het s.v.p. op een later moment opnieuw.";
+                    outputDiv.style.display = "block";
+                    Ext.getCmp('btnTerug').hide();
+                }
+            });
         }
 
         function handleCSWResponse(request, xml) {
@@ -301,7 +330,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
             Ext.getCmp('btnTerug').hide();
         };
 
-        function getRecords(start) {
+        function getRecords(start, propertyname) {
             if (typeof start == "undefined") {
                 start = 1;
             }
@@ -337,7 +366,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 }
 
                 setXpathValue(this.defaults_xml, "/defaults/outputschema", this.schema + '');
-                setXpathValue(this.defaults_xml, "/defaults/propertyname", queryable + '');
+                setXpathValue(this.defaults_xml, "/defaults/propertyname", propertyname? propertyname : queryable + '');
                 setXpathValue(this.defaults_xml, "/defaults/literal", this.query + '');
                 setXpathValue(this.defaults_xml, "/defaults/startposition", start + '');
 
@@ -613,7 +642,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                     xtype: 'button',
                     iconCls: 'icon-book-open',
                     scale: 'medium',
-                    text: 'Alfabetische lijst',
+                    text: 'Alfabetisch',
                     tooltip: 'Geeft een lijst weer van de kaartlagen,<br>op alfabetische volgorde',
                     handler: function (f, e) {
                         if (e.shiftKey) {
@@ -621,6 +650,17 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                         } else {
                             search("*", "Alfabetische lijst opvragen...");
                         }
+                    },
+                    scope: this
+                }, {
+                    id: 'btnTiles',
+                    xtype: 'button',
+                    iconCls: 'gxp-icon-metadata',
+                    scale: 'medium',
+                    text: 'Thematisch',
+                    tooltip: "Geeft een lijst weer van de thema's",
+                    handler: function (f, e) {
+                        embedTiles();
                     },
                     scope: this
                 }, {
