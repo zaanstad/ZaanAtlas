@@ -69,8 +69,8 @@ Ext.namespace("gxp.plugins");
     emailBodyText: null,
 
     APIS: {
-        tinyurl: "http://tinyurl.com/api-create.php?url=",
-        bitly: "http://api.bitly.com/v3/shorten?"
+        tinyurl: "https://tinyurl.com/api-create.php?url=",
+        bitly: "https://api.bitly.com/v3/shorten?"
         },
 
     /** private: method[constructor]
@@ -338,39 +338,40 @@ Ext.namespace("gxp.plugins");
                 xtype:  "container",
                 region: "center",
                 hidden: hideLinkButton(configString),
-                html:   "<br><br><b>Email</b><br>" +
-                        "<p>Het is mogelijk om een verkorte link te versturen voor dit kaartbeeld naar een emailadres.<br><br></p>"
+                html:   "<br><br><b>E-mail</b><br>" +
+                        "<p>De e-mail link is helaas niet meer beschikbaar, deze verouderde functie werkt niet in combinatie met de huidige HTTPS build.<br><br>" +
+                        "Als alternatief kan u kiezen voor Open de blandwijzerlink knop.<br><br></p>"
             }, {
-                xtype:  "button",
-                iconCls:"icon-email-link",
-                text:   "Email de link voor deze kaart",
-                hidden: hideLinkButton(configString),
-                handler: function() {
-                    this.getShortURL(this.showMail, null, getWindowLocation(configString));
-                },
-                scope: this
-            }, {
+//                xtype:  "button",
+//                iconCls:"icon-email-link",
+//                text:   "Email de link voor deze kaart",
+//                hidden: hideLinkButton(configString),
+//                handler: function() {
+//                    this.getShortURL(this.showMail, null, getWindowLocation(configString));
+//                },
+//                scope: this
+//            }, {
                 xtype:  "container",
                 region: "center",
                 hidden: hideLinkButton(configString),
                 html:   "<br><br><b>Verkorte link</b><br>" +
-                        "<p>Lange links zijn onhandig om door te sturen of te plaatsen op sociale netwerken. Maak daarom een " +
-                        "verkorte link aan via onderstaande knop, de korte link verwijst naar dit kaarbeeld.<br><br></p>"
+                        "<p>De verkorte link is helaas niet meer beschikbaar, deze verouderde functie werkt niet in combinatie met de huidige HTTPS build.<br><br>" +
+                        "Als alternatief kan u kiezen voor Open de blandwijzerlink knop.<br><br></p>"
             }, {
-                xtype:  "button",
-                iconCls:"icon-hourglass-link",
-                text:   "Verkorte link aanmaken",
-                hidden: hideLinkButton(configString),
-                handler: function(f,e) {
-                    if(e.shiftKey){
-                        this.getShortURL(this.showUrl, null, getWindowLocation(configString));
-                    }
-                    else {
-                        this.getTinyURL(this.showUrl, null, getWindowLocation(configString));
-                    }
-                },
-                scope: this
-            }, {
+//                xtype:  "button",
+//                iconCls:"icon-hourglass-link",
+//                text:   "Verkorte link aanmaken",
+//                hidden: hideLinkButton(configString),
+//                handler: function(f,e) {
+//                    if(e.shiftKey){
+//                        this.getShortURL(this.showUrl, null, getWindowLocation(configString));
+//                    }
+//                    else {
+//                        this.getTinyURL(this.showUrl, null, getWindowLocation(configString));
+//                    }
+//                },
+//                scope: this
+//            }, {
                 xtype:  "container",
                 region: "center",
                 hidden: !hideLinkButton(configString),
