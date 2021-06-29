@@ -70,7 +70,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
      *  changing the image format to jpeg (and automagically changing
      *  the checkbox to disabled and unchecked).
      */
-    transparent: null,
+    transparent: false,
     
     /** private: property[editableStyles]
      *  ``Boolean``
