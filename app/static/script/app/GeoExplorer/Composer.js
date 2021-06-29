@@ -75,7 +75,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             }, {
                 ptype: "app_zoekcsw",
                 actionTarget: "layers.tbar",
-                search: {selectedSource: "http://geo.zaanstad.nl/geonetwork/srv/dut/csw"}
+                search: {selectedSource: "https://geo.zaanstad.nl/geonetwork/srv/dut/csw"}
             }, {
                 ptype: "gxp_addlayers",
                 //showButtonText: true,
@@ -86,7 +86,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             }, {
                 ptype: "gxp_removelayer",
                 actionTarget: ["layers.tbar", "layers.contextMenu"]
-            }, {
+            },  {
                 ptype: "gxp_layerproperties",
                 outputConfig: {autoHeight: true, width: 400},
                 actionTarget: ["layers.tbar", "layers.contextMenu"]
@@ -131,12 +131,20 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 ptype: "app_permalink",
                 actionTarget: {target: "paneltbar", index: 0}
             }, {
-                ptype: "gxp_print",
-                customParams: {outputFilename: "ZaanAtlas-print"},
-                printService: config.printService,
-                includeLegend: true,
+                ptype: "app_messagebox",
+                headerText: "Printen wordt niet meer ondersteund",
+                bodyText: "Helaas wordt de print functie niet meer ondersteund. De huidige software kan niet goed communiceren met de verouderde HTTP API. <br><br>Een alternatief is printen vanuit de browser.<br><br>" + "<p>I.E.: Bestand --> Afdrukken</p><P>Safari: Archief --> Druk af<p>FireFox: Menu Openen --> Afdrukken",
+//                menuText: "Bladwijzer",
+                iconCls:"gxp-icon-print",
                 actionTarget: {target: "paneltbar", index: 1}
-            }
+             }
+//            }, {
+//                ptype: "gxp_print",
+//                customParams: {outputFilename: "ZaanAtlas-print"},
+//                printService: config.printService,
+//                includeLegend: true,
+//                actionTarget: {target: "paneltbar", index: 1}
+//            }
         ];
         
         GeoExplorer.Composer.superclass.constructor.apply(this, arguments);
