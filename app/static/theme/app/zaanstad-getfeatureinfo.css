@@ -143,8 +143,11 @@ div.simple .linkButton:active {
 	top:1px;
 }
 /* Override catalog style */
-#tabs { 
-    display: none !important;
+/*#tabs { */
+    /*display: none !important;*/
+/*}*/
+.gn table {
+	border: none;
 }
 div.metadata.simple span.title {
 	line-height: 1.2; margin: 0.3em 0 10px;
