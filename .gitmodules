@@ -3,13 +3,13 @@
 	url = https://github.com/ringo/ringojs.git
 [submodule "externals/buildkit"]
 	path = externals/buildkit
-	url = https://github.com/tschaub/buildkit.git
+	url = https://github.com/planetfederal/buildkit.git
 [submodule "app/static/externals/PrintPreview"]
 	path = app/static/externals/PrintPreview
-	url = https://github.com/opengeo/PrintPreview.git
+	url = https://github.com/planetfederal/PrintPreview.git
 [submodule "externals/stick"]
 	path = externals/stick
 	url = https://github.com/hns/stick.git
 [submodule "externals/ringojs-fork"]
 	path = externals/ringojs-fork
-	url = https://github.com/tschaub/ringojs.git
+	url = https://github.com/ringo/ringojs.git
