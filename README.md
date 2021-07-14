@@ -10,9 +10,21 @@ To get a copy of the application source code, use git:
 
     git clone git@github.com:zaanstad/ZaanAtlas.git
 
-### Download dependencies
+### Install Java
 
 The ZaanAtlas repository contains what you need to run the application as a servlet with an integrated persistence layer. Due to its age, the application only runs under Java 1.5. Download the product for your operating system from https://www.oracle.com/java/technologies/java-archive-javase5-downloads.html.
+
+#### Windows
+
+Download the [Windows installer](https://download.oracle.com/otn/java/jdk/1.5.0_22/jdk-1_5_0_22-windows-i586-p.exe) for JDK 1.5 and start the wizard. Accept the *Terms and Conditions* and proceed with the installation.
+
+*For Zaanstad employees, make sure to copy the installation folder `(C:\Program Files (x86)\Java\jdk1.5.0_22`) to the personal U:\-drive as not to lose it*.
+
+Expose the location of the Java executable to the runtime environment:
+
+    setx JAVACMD "U:\Programs\jdk-15.0.22\bin\java.exe"
+
+#### *nix
 
 On *nix operating systems (assuming the download is available in the `/tmp` folder):
 
@@ -32,11 +44,25 @@ On *nix operating systems (assuming the download is available in the `/tmp` fold
 
 Then select Java 1.5 as the version to use.
 
-To assemble the servlet or run in development mode, you need [Ant](http://ant.apache.org/). Due to the ZaanAtlas being tied to Java 1.5, remove any current Ant installations and downgrade to Ant version 1.9.x.
+### Install Ant
+
+To assemble the servlet or run in development mode, you need [Ant](http://ant.apache.org/). Due to the ZaanAtlas being tied to Java 1.5, install Ant version 1.9.x.
+
+#### Windows
+
+Download the [Windows installer](https://mirror.lyrahosting.com/apache//ant/binaries/apache-ant-1.9.15-bin.zip) for Ant 1.9. Unzip the folder and put it with the other programs.
+
+*For Zaanstad employees, make sure to copy the installation folder to the personal U:\-drive as not to lose it*.
+
+Expose the location of the `ant` executable to the runtime environment:
+
+    setx ANT_HOME "U:\Programs\apache-ant-1.9.15"
+    setx PATH "%PATH%;%ANT_HOME%\bin"
+
+#### *nix
 
 On *nux operating systems:
 
-    sudo apt remove ant
     cd /tmp
     wget https://apache.newfountain.nl//ant/binaries/apache-ant-1.9.15-bin.tar.gz
     sudo tar -xf apache-ant-1.9.15-bin.tar.gz -C /opt/
