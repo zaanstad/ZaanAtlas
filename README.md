@@ -12,9 +12,9 @@ To get a copy of the application source code, use git:
 
 ### Download dependencies
 
-The ZaanAtlas repository contains what you need to run the application as a servlet with an integrated persistence layer. Due to its age, the application only runs under Java 1.5.
+The ZaanAtlas repository contains what you need to run the application as a servlet with an integrated persistence layer. Due to its age, the application only runs under Java 1.5. Download the product for your operating system from https://www.oracle.com/java/technologies/java-archive-javase5-downloads.html.
 
-On *nix operating systems:
+On *nix operating systems (assuming the download is available in the `/tmp` folder):
 
     cd /tmp
     chmod +x jdk-1_5_0_22-linux-amd64.bin
