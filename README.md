@@ -1,17 +1,16 @@
-# GeoExplorer
+# ZaanAtlas
 
-These instructions describe how to deploy GeoExplorer assuming you have a copy of the application source code from GitHub.
+These instructions describe how to deploy the [ZaanAtlas](https://geo.zaanstad.nl/zaanatlas) assuming you have a copy of the application source code from GitHub.
 
 ## Getting a copy of the application
 
-To get a copy of the application source code, use subversion:
+To get a copy of the application source code, use git:
 
-    git clone git://github.com/opengeo/GeoExplorer.git
-
+    git clone git@github.com:zaanstad/ZaanAtlas.git
 
 ## Dependencies
 
-The GeoExplorer repository contains what you need to run the application as a servlet with an integrated persistence layer. Due to its age, the application only runs under Java 5.
+The ZaanAtlas repository contains what you need to run the application as a servlet with an integrated persistence layer. Due to its age, the application only runs under Java 5.
 
 To assemble the servlet or run in development mode, you need [Ant](http://ant.apache.org/). 
 
@@ -34,7 +33,7 @@ In addition, to pull in external dependencies, you'll neeed [Git](http://git-scm
     chmod +x $HOME/.git-askpass
     export GIT_ASKPASS=$HOME/.git-askpass
 
-Before running in development mode or preparing the application for deployment, you need to pull in external dependencies. Do this by running `ant init` in the geoexplorer directory:
+Before running in development mode or preparing the application for deployment, you need to pull in external dependencies. Do this by running `ant init` in the ZaanAtlas directory:
 
     ant init
 
@@ -54,52 +53,21 @@ By default, the application runs on port 8080.  To change this, you can set the 
 
 In addition, if you want to make a remote GeoServer available at the `/geoserver/` path, you can set the `app.proxy.geoserver` system property as follows:
 
-    ant -Dapp.proxy.geoserver=http://example.com/geoserver/ debug
-
-## Updating submodule repositories
-
-Sometimes you are going to want to track a more recent revision of a submodule. How do you do that? Well, just the same as we do with another git repository (because this is a fully fledged git repository!):
-
-    you@prompt:books$ cd vendor/plugins/rspec/
-    you@prompt:rspec$ git remote update
-    Updating origin
-    you@prompt:rspec$ git merge origin/master
-    Already up-to-date.
-
- That will pull the latest version of the module from github and update your local repository. Once you’ve done that, change back into the root of your project and do a git stat:
-
-    you@prompt:rspec$ cd ../../..
-    you@prompt:books$ git stat
-    # On branch master
-    # Changed but not updated:
-    #   (use "git add <file>..." to update what will be committed)
-    #
-    #   modified:   vendor/plugins/rspec
-    #
-    no changes added to commit (use "git add" and/or "git commit -a")
-
-You’ll see that the main git module knows that the submodule is now pointing to a different commit. We can stage that, commit it and push it upstream to share the fact that we’re following a new version:
-
-    you@prompt:books$ git commit -a -m "Follow the newest revision of RSpec."
-    Created commit 9374e2d: Follow the newest revision of RSpec.
-     1 files changed, 1 insertions(+), 1 deletions(-)
-    you@prompt:books$ git push
-    [ ... ]
+    ant -Dapp.proxy.geoserver=https://geo.zaanstad.nl/geoserver/ debug
 
 ## Preparing the application for deployment
 
-Running GeoExplorer as described above is not suitable for production because JavaScript files will be loaded dynamically.  Before moving your application to a production environment, run ant with the "dist" target.  The "dist" target will result in a directory that can be dropped in a servlet container.
+Running the ZaanAtlas as described above is not suitable for production because JavaScript files will be loaded dynamically.  Before moving your application to a production environment, run ant with the "dist" target.  The "dist" target will result in a directory that can be dropped in a servlet container.
 
-    cd geoexplorer
     ant dist
 
-Move the build/geoexplorer directory to your production environment (e.g. a  servlet container).
+Move the build directory to your production environment (i.e. the Jetty servlet container).
 
-GeoExplorer writes to a geoexplorer.db when saving maps.  The location of this file is determined by the `GEOEXPLORER_DATA` value at runtime.  This value can be set as a servlet initialization parameter or a Java system property.
+ZaanAtlas writes to a `geoexplorer.db` when saving maps.  The location of this file is determined by the `GEOEXPLORER_DATA` value at runtime.  This value can be set as a servlet initialization parameter or a Java system property.
 
 The `GEOEXPLORER_DATA` value must be a path to a directory that is writable by  the process that runs the application.  The servlet initialization parameter is given precedence over a system property if both exist.
 
-As an example, if you want the geoexplorer.db file to be written to your `/tmp` directory, modify GeoExplorer's `web.xml` file to include the following:
+As an example, if you want the `geoexplorer.db` file to be written to your `/tmp` directory, modify GeoExplorer's `web.xml` file to include the following:
 
     <init-param>
         <param-name>GEOEXPLORER_DATA</param-name>
