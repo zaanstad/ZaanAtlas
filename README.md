@@ -2,17 +2,39 @@
 
 These instructions describe how to deploy the [ZaanAtlas](https://geo.zaanstad.nl/zaanatlas) assuming you have a copy of the application source code from GitHub.
 
-## Getting a copy of the application
+## Preparation
+
+### Get a copy of the application
 
 To get a copy of the application source code, use git:
 
     git clone git@github.com:zaanstad/ZaanAtlas.git
 
-## Dependencies
+### Download dependencies
 
-The ZaanAtlas repository contains what you need to run the application as a servlet with an integrated persistence layer. Due to its age, the application only runs under Java 5.
+The ZaanAtlas repository contains what you need to run the application as a servlet with an integrated persistence layer. Due to its age, the application only runs under Java 1.5.
 
-To assemble the servlet or run in development mode, you need [Ant](http://ant.apache.org/). 
+On *nix operating systems:
+
+    cd /tmp
+    chmod +x jdk-1_5_0_22-linux-amd64.bin
+    ./jdk-1_5_0_22-linux-amd64.bin
+    sudo mv jdk1.5.0_22 /opt/
+
+    export JDK_INSTALL=/opt/jdk1.5.0_22
+    sudo update-alternatives --install /usr/bin/jar jar $JDK_INSTALL/bin/jar 1
+    sudo update-alternatives --install /usr/bin/java java $JDK_INSTALL/bin/java 1
+    sudo update-alternatives --install /usr/bin/javac javac $JDK_INSTALL/bin/javac 1
+    sudo update-alternatives --set jar $JDK_INSTALL/bin/jar
+    sudo update-alternatives --set java $JDK_INSTALL/bin/java
+    sudo update-alternatives --set javac $JDK_INSTALL/bin/javac
+    sudo update-alternatives --config java
+
+Then select Java 1.5 as the version to use.
+
+To assemble the servlet or run in development mode, you need [Ant](http://ant.apache.org/). Due to the ZaanAtlas being tied to Java 1.5, remove any current Ant installations and downgrade to Ant version 1.9.x.
+
+On *nux operating systems:
 
     sudo apt remove ant
     cd /tmp
@@ -27,6 +49,8 @@ On *nux operating systems:
     export PATH=${ANT_HOME}/bin:${PATH}
 
 In addition, to pull in external dependencies, you'll neeed [Git](http://git-scm.com/) installed. Furthermore, generate a [Personal Access Token](https://github.com/settings/tokens) (PAT) at GitHub to authenticate.
+
+On *nux operating systems:
 
     export MY_GIT_TOKEN=***********************************
     echo 'echo $MY_GIT_TOKEN' > $HOME/.git-askpass
