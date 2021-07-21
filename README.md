@@ -109,11 +109,11 @@ In addition, if you want to make a remote GeoServer available at the `/geoserver
 
 ## Preparing the application for deployment
 
-Running the ZaanAtlas as described above is not suitable for production because JavaScript files will be loaded dynamically.  Before moving your application to a production environment, run ant with the "dist" target.  The "dist" target will result in a directory that can be dropped in a servlet container.
+Running the ZaanAtlas as described above is not suitable for production because JavaScript files will be loaded dynamically. Before moving your application to a production environment, run ant with the "war" target.  The "war" target will result in a `/build/` directory and a `zaanatlas.war` file that contains all the parts of the web application: Java class files, HTML pages, images, and other resources:
 
-    ant dist
+    ant war
 
-Move the build directory to your production environment (i.e. the Jetty servlet container).
+Move the `zaanatlas.war` file to your production environment (i.e. the Jetty servlet container).
 
 ZaanAtlas writes to a `geoexplorer.db` when saving maps.  The location of this file is determined by the `GEOEXPLORER_DATA` value at runtime.  This value can be set as a servlet initialization parameter or a Java system property.
 
