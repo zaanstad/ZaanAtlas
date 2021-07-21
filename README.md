@@ -22,7 +22,7 @@ Download the [Windows installer](https://download.oracle.com/otn/java/jdk/1.5.0_
 
 Expose the location of the Java executable to the runtime environment:
 
-    setx JAVACMD "U:\Programs\jdk-15.0.22\bin\java.exe"
+    setx JAVACMD "U:\Programs\jdk1.5.0_22\bin\java.exe"
 
 #### *nix
 
@@ -67,14 +67,16 @@ On *nux operating systems:
     wget https://apache.newfountain.nl//ant/binaries/apache-ant-1.9.15-bin.tar.gz
     sudo tar -xf apache-ant-1.9.15-bin.tar.gz -C /opt/
 
-Expose the location of the `ant` executable to the runtime environment.
-
-On *nux operating systems:
+Expose the location of the `ant` executable to the runtime environment:
 
     export ANT_HOME=/opt/apache-ant-1.9.15/
-    export PATH=${ANT_HOME}/bin:${PATH}
+    export PATH=${ANT_HOME}/bin;${PATH}
 
-In addition, to pull in external dependencies, you'll neeed [Git](http://git-scm.com/) installed. Furthermore, generate a [Personal Access Token](https://github.com/settings/tokens) (PAT) at GitHub to authenticate.
+External dependencies are pulled in from GitHub. To access these dependencies, generate a [Personal Access Token](https://github.com/settings/tokens) (PAT) at GitHub to authenticate.
+
+#### Windows
+
+#### *nix
 
 On *nux operating systems:
 
