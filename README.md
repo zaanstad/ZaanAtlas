@@ -69,8 +69,8 @@ On *nux operating systems:
 
 Expose the location of the `ant` executable to the runtime environment:
 
-    export ANT_HOME=/opt/apache-ant-1.9.15/
-    export PATH=${ANT_HOME}/bin;${PATH}
+    export ANT_HOME=/opt/apache-ant-1.9.15
+    export PATH=$PATH:$HOME/bin:$ANT_HOME/bin
 
 External dependencies are pulled in from GitHub. To access these dependencies, generate a [Personal Access Token](https://github.com/settings/tokens) (PAT) at GitHub to authenticate.
 
