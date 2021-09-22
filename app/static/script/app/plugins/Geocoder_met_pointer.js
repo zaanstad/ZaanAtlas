@@ -91,7 +91,7 @@ gxp.plugins.GeocoderMetPointer = Ext.extend(gxp.plugins.Tool, {
     
     outputConfig: {
 		//url: "/geoserver/wfs",
-		url: "https://geo.zaanstad.nl/geoserver/wfs",
+		url: "https://maps.zaanstad.nl/geoserver/wfs",
 		featureType: "zoeklokaties",
 		featurePrefix: "geo",
 		srsName: "EPSG:28992",

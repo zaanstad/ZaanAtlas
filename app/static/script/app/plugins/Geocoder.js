@@ -30,12 +30,12 @@ gxp.plugins.Geocoder = Ext.extend(gxp.plugins.Tool, {
     
 	outputConfig: {
 		//url: "/geoserver/wfs",
-    url: "https://geo.zaanstad.nl/geoserver/wfs",
+        url: "https://maps.zaanstad.nl/geoserver/wfs",
 		featureType: "zoeklokaties",
 		featurePrefix: "geo",
-    srsName: "EPSG:28992",
-    maxFeatures: 70,
-    outputFormat: "JSON",
+        srsName: "EPSG:28992",
+        maxFeatures: 70,
+        outputFormat: "JSON",
 		fieldName: "lokatie",
 		geometryName: "geom",
 		emptyText: "Zoek een adres ...",
