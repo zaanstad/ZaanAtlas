@@ -118,33 +118,12 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 ptype: "gxp_zoomtoextent",
                 actionTarget: {target: "paneltbar", index: 5}
             }, {
-                ptype: "app_streetview", toggleGroup: this.toggleGroup,
-                actionTarget: {target: "paneltbar", index: 9}
-            }, {
-                ptype: "app_cyclorama", toggleGroup: this.toggleGroup,
-                api_url: "https://globespotter.cyclomedia.com/v31/api/viewer_api.swf",
-                actionTarget: {target: "paneltbar", index: 10}
-            }, {
                 ptype: "gxp_geocodermetpointer" ,
                 actionTarget: {target: "paneltbar", index: 20}
             }, {
                 ptype: "app_permalink",
                 actionTarget: {target: "paneltbar", index: 0}
-            }, {
-                ptype: "app_messagebox",
-                headerText: "Printen wordt niet meer ondersteund",
-                bodyText: "Helaas wordt de print functie niet meer ondersteund. De huidige software kan niet goed communiceren met de verouderde HTTP API. <br><br>Een alternatief is printen vanuit de browser.<br><br>" + "<p>I.E.: Bestand --> Afdrukken</p><P>Safari: Archief --> Druk af<p>FireFox: Menu Openen --> Afdrukken",
-//                menuText: "Bladwijzer",
-                iconCls:"gxp-icon-print",
-                actionTarget: {target: "paneltbar", index: 1}
-             }
-//            }, {
-//                ptype: "gxp_print",
-//                customParams: {outputFilename: "ZaanAtlas-print"},
-//                printService: config.printService,
-//                includeLegend: true,
-//                actionTarget: {target: "paneltbar", index: 1}
-//            }
+            }
         ];
         
         GeoExplorer.Composer.superclass.constructor.apply(this, arguments);

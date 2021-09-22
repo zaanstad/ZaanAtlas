@@ -337,43 +337,6 @@ Ext.namespace("gxp.plugins");
             }, {
                 xtype:  "container",
                 region: "center",
-                hidden: hideLinkButton(configString),
-                html:   "<br><br><b>E-mail</b><br>" +
-                        "<p>De e-mail link is helaas niet meer beschikbaar, deze verouderde functie werkt niet in combinatie met de huidige HTTPS build.<br><br>" +
-                        "Als alternatief kan u kiezen voor Open de blandwijzerlink knop.<br><br></p>"
-            }, {
-//                xtype:  "button",
-//                iconCls:"icon-email-link",
-//                text:   "Email de link voor deze kaart",
-//                hidden: hideLinkButton(configString),
-//                handler: function() {
-//                    this.getShortURL(this.showMail, null, getWindowLocation(configString));
-//                },
-//                scope: this
-//            }, {
-                xtype:  "container",
-                region: "center",
-                hidden: hideLinkButton(configString),
-                html:   "<br><br><b>Verkorte link</b><br>" +
-                        "<p>De verkorte link is helaas niet meer beschikbaar, deze verouderde functie werkt niet in combinatie met de huidige HTTPS build.<br><br>" +
-                        "Als alternatief kan u kiezen voor Open de blandwijzerlink knop.<br><br></p>"
-            }, {
-//                xtype:  "button",
-//                iconCls:"icon-hourglass-link",
-//                text:   "Verkorte link aanmaken",
-//                hidden: hideLinkButton(configString),
-//                handler: function(f,e) {
-//                    if(e.shiftKey){
-//                        this.getShortURL(this.showUrl, null, getWindowLocation(configString));
-//                    }
-//                    else {
-//                        this.getTinyURL(this.showUrl, null, getWindowLocation(configString));
-//                    }
-//                },
-//                scope: this
-//            }, {
-                xtype:  "container",
-                region: "center",
                 hidden: !hideLinkButton(configString),
                 html:   "<br><br><font color='blue'>De bladwijzer die je probeert aan te maken bevat erg veel informatie, de verkorte link en " +
                         "de verkorte link emailen zijn daarom niet beschikbaar.<br><br></font>"
