@@ -82,7 +82,6 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  Attribution string for tile server.
      */
-    url_geowebcache: "https://geointer.zaanstad.nl/geowebcache/service/wms",
     url_mapproxy: "https://geointer.zaanstad.nl/mapproxy/service",
 
     /** private: property[ready]

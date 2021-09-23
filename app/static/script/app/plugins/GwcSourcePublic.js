@@ -88,8 +88,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  Attribution string for tile server.
      */
-    url_geowebcache: "https://geo.zaanstad.nl/geowebcache/service/wms",
-    url_mapproxy: "https://geo.zaanstad.nl/mapproxy/service",
+    url_mapproxy: "https://tiles.zaanstad.nl/mapproxy/service",
     url_geoserver: "https://geointer.zaanstad.nl/geoserver/geo/wms",
     url_ngr: "https://geodata.nationaalgeoregister.nl/bag/wms",
     url_ngr2: "https://geodata.nationaalgeoregister.nl/wmts?",
@@ -130,52 +129,6 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
         
         var layers = [
             new OpenLayers.Layer.WMS(
-                "Bestemmingsplannen",
-                this.url_mapproxy,
-                {layers: "Bestemmingsplannen", format: "image/png", tiled: true},
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionZaanstad,
-                    type: "bestemmingsplannen",
-                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=c8c39731-d9be-4977-8df0-4da7b425d0eb",
-                    queryable: true,
-                    transparent: true,
-                    transitionEffect: null
-                }, options)
-            ),
-            new OpenLayers.Layer.WMS(
-                "Basisregistratie Topografie (BRT)",
-                this.url_mapproxy,
-                {layers: "BRT", format: "image/png", tiled: true},
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionKadaster,
-                    type: "brt",
-                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=88d48c15-c3dd-44a3-9b5e-224acb28e87d",
-                    group: "background"
-                }, options)
-            ),
-            new OpenLayers.Layer.WMS(
-                "Open Street Map",
-                this.url_mapproxy,
-                {layers: "OSM", format: "image/png", tiled: true},
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionZaanstad,
-                    type: "osm",
-                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=88d48c15-c3dd-44a3-9b5e-224acb28e87d",
-                    group: "background"
-                }, options)
-            ),
-            new OpenLayers.Layer.WMS(
-                "Zaanstad",
-                this.url_mapproxy,
-                {layers: "Zaanstad", format: "image/png", tiled: true},
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionZaanstad,
-                    type: "Zaanstad",
-                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=a0371e2d-5716-44a5-85f2-6da623646e0e",
-                    group: "background"
-                }, options)
-            ),
-            new OpenLayers.Layer.WMS(
                 "Top10atlas",
                 this.url_mapproxy,
                 {layers: "Top10atlas", format: "image/png", tiled: true},
@@ -198,20 +151,9 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
-                "Luchtfoto grijstinten",
-                this.url_mapproxy,
-                {layers: "Luchtfoto", format: "image/png", tiled: true},
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionKadaster,
-                    type: "lufo",
-                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=b2b91354-49cf-41c5-8a8e-721f1876f92d",
-                    group: "background"
-                }, options)
-            ),
-            new OpenLayers.Layer.WMS(
                 "Luchtfoto 1958",
                 this.url_mapproxy,
-                {layers: "Lufo1958-zw", format: "image/png", tiled: true},
+                {layers: "Lufo1958-zw", format: "image/jpeg", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo1958-zw",
@@ -222,7 +164,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 1978",
                 this.url_mapproxy,
-                {layers: "Lufo1978-zw", format: "image/png", tiled: true},
+                {layers: "Lufo1978-zw", format: "image/jpeg", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo1978-zw",
@@ -233,7 +175,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 1983",
                 this.url_mapproxy,
-                {layers: "Lufo1983-zw", format: "image/png", tiled: true},
+                {layers: "Lufo1983-zw", format: "image/jpeg", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo1983-zw",
@@ -244,10 +186,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2002",
                 this.url_mapproxy,
-                {layers: "Lufo2002-kleur", format: 'image/png', tiled: true},
+                {layers: "Lufo2002", format: 'image/jpeg', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2002-kleur",
+                    type: "Lufo2002",
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=9c7b592e-6f4f-47c5-ba20-d9a471d88305",
                     group: "background"
                 }, options)
@@ -255,10 +197,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2007",
                 this.url_mapproxy,
-                {layers: "Lufo2007-kleur", format: 'image/png', tiled: true},
+                {layers: "Lufo2007", format: 'image/jpeg', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2007-kleur",
+                    type: "Lufo2007",
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=d26d25c8-7b70-4a9f-9863-c8075d9c47e5",
                     group: "background"
                 }, options)
@@ -266,10 +208,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2008",
                 this.url_mapproxy,
-                {layers: "Lufo2008-kleur", format: 'image/png', tiled: true},
+                {layers: "Lufo2008", format: 'image/jpeg', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2008-kleur",
+                    type: "Lufo2008",
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=d77368e4-691a-40aa-9f2d-f9956799ae95",
                     group: "background"
                 }, options)
@@ -277,10 +219,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2010",
                 this.url_mapproxy,
-                {layers: "Lufo2010-kleur", format: 'image/png', tiled: true},
+                {layers: "Lufo2010", format: 'image/jpeg', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2010-kleur",
+                    type: "Lufo2010",
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=e25f6118-1bef-4626-8d38-661fc58c1097",
                     group: "background"
                 }, options)
@@ -288,10 +230,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2011",
                 this.url_mapproxy,
-                {layers: "Lufo2011-kleur", format: 'image/png', tiled: true},
+                {layers: "Lufo2011", format: 'image/jpeg', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2011-kleur",
+                    type: "Lufo2011",
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=820e3b5b-faf6-4c80-8301-7236a242982c",
                     group: "background"
                 }, options)
@@ -299,11 +241,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2013",
                 this.url_mapproxy,
-                {layers: "Lufo2013-kleur", format: 'image/png', tiled: true},
+                {layers: "Lufo2013", format: 'image/jpeg', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2013-kleur",
-                    //singleTile: this.isIEBeforeIE9,
+                    type: "Lufo2013",
                     tiled: true,
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=e249cf32-c7dc-4f56-b334-c653ab070349",
                     group: "background"
@@ -312,10 +253,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2014",
                 this.url_mapproxy,
-                {layers: "Lufo2014-kleur", format: 'image/png', tiled: true},
+                {layers: "Lufo2014", format: 'image/jpeg', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2014-kleur",
+                    type: "Lufo2014",
                     tiled: true,
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=61be4ff1-5934-489f-bc6d-80fe6da61d6a",
                     group: "background"
@@ -324,10 +265,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2015",
                 this.url_mapproxy,
-                {layers: "Lufo2015-kleur", format: 'image/png', tiled: true},
+                {layers: "Lufo2015", format: 'image/jpeg', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2015-kleur",
+                    type: "Lufo2015",
                     tiled: true,
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=c7a92d7d-4c00-4e3f-9ad2-57f1df28dd4d",
                     group: "background"
@@ -336,10 +277,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2016",
                 this.url_mapproxy,
-                {layers: "Lufo2016-kleur", format: 'image/png', tiled: true},
+                {layers: "Lufo2016", format: 'image/jpeg', tiled: true},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2016-kleur",
+                    type: "Lufo2016",
                     tiled: true,
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=7aa67352-e422-4704-9522-c93b42af9b83",
                     group: "background"
@@ -348,22 +289,10 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2017",
                 this.url_mapproxy,
-                {layers: "Lufo2017-kleur", format: 'image/png', tiled: true},
+                {layers: "Lufo2017", format: 'image/jpeg', tiled: true},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2017-kleur",
-                    tiled: true,
-                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=718090fe-8d44-4969-9f8b-652d13644041",
-                    group: "background"
-                }, options)
-            ),
-            new OpenLayers.Layer.WMS(
-                "Luchtfoto 2017 zwart wit",
-                this.url_mapproxy,
-                {layers: "Lufo_2017_zwart_wit", format: 'image/png', tiled: true},
-                OpenLayers.Util.applyDefaults({
-                    attribution: this.attributionZaanstad,
-                    type: "Lufo_2017_zwart_wit",
+                    type: "Lufo2017",
                     tiled: true,
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=718090fe-8d44-4969-9f8b-652d13644041",
                     group: "background"
@@ -372,10 +301,22 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2018",
                 this.url_mapproxy,
-                {layers: "Lufo2018-kleur", format: 'image/png', tiled: true},
+                {layers: "Lufo2018", format: 'image/jpeg', tiled: true},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionZaanstad,
-                    type: "Lufo2018-kleur",
+                    type: "Lufo2018",
+                    tiled: true,
+                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=826735d1-1467-4888-9829-61019c033431",
+                    group: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
+                "Luchtfoto 2019",
+                this.url_mapproxy,
+                {layers: "Lufo2019", format: 'image/jpeg', tiled: true},
+                OpenLayers.Util.applyDefaults({
+                    attribution: this.attributionZaanstad,
+                    type: "Lufo2019",
                     tiled: true,
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=826735d1-1467-4888-9829-61019c033431",
                     group: "background"
@@ -384,7 +325,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2020",
                 this.url_mapproxy,
-                {layers: "Lufo2020", format: 'image/png', tiled: false},
+                {layers: "Lufo2020", format: 'image/jpeg', tiled: false},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionZaanstad,
                     type: "Lufo2020",
@@ -396,47 +337,24 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             new OpenLayers.Layer.WMS(
                 "Kaart kleur",
                 this.url_mapproxy,
-                {layers: "brt_2018", format: 'image/png', tiled: true},
+                {layers: "referentiekaart", format: 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionZaanstad,
-                    type: "brt_2018",
+                    type: "referentiekaart",
                     tiled: true,
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=9c70ca67-c928-4b23-8c2d-8c0be6017c92",
                     group: "background"
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
-                "Kaart grijs",
-                this.url_mapproxy,
-                {layers: "brt_2018_zw", format: 'image/png', tiled: true},
-                OpenLayers.Util.applyDefaults({
-                    attribution: this.attributionZaanstad,
-                    type: "brt_2018_zw",
-                    tiled: true,
-                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=548dbed0-6df5-489b-bf66-de3850038eb6",
-                    group: "background"
-                }, options)
-            ),        
-            new OpenLayers.Layer.WMS(
                 "Kaart lijngericht",
                 this.url_mapproxy,
-                {layers: "BGT_lijngericht", format: 'image/png', tiled: true},
+                {layers: "bgt_lijngericht", format: 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({
                     attribution: this.attributionZaanstad,
-                    type: "BGT_lijngericht",
+                    type: "bgt_lijngericht",
                     tiled: true,
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=4c58ce2c-ea1a-4fa3-a391-529499fa4077",
-                    group: "background"
-                }, options)
-            ),
-            new OpenLayers.Layer.WMS(
-                "Topkaart raster 2010",
-                this.url_mapproxy,
-                {layers: "Top25raster-2010", format: "image/png", tiled: true},
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionZaanstad,
-                    type: "Top25raster-2010",
-                    metadata: "",
                     group: "background"
                 }, options)
             ),

@@ -490,6 +490,10 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 obj.key = "tiles";
                 obj.background = true;
             };
+            if (url.toLowerCase().match("tiles.zaanstad.nl/mapproxy") != null) {
+                obj.key = "tiles";
+                obj.background = true;
+            };
             if (url.toLowerCase().match("map16z/mapproxy") != null) {
                 obj.key = "intratiles";
                 obj.background = true;
