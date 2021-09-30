@@ -129,17 +129,6 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
         
         var layers = [
             new OpenLayers.Layer.WMS(
-                "Top10atlas",
-                this.url_mapproxy,
-                {layers: "Top10atlas", format: "image/png", tiled: true},
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.attributionZaanstad,
-                    type: "Top10atlas",
-                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=a2643d1d-c507-4250-9d46-482d3bbab58d",
-                    group: "background"
-                }, options)
-            ),
-            new OpenLayers.Layer.WMS(
                 "Kaart 1812",
                 this.url_mapproxy,
                 {layers: "Zaanstad1812", format: "image/png", tiled: true},
@@ -318,7 +307,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                     attribution: this.attributionZaanstad,
                     type: "Lufo2019",
                     tiled: true,
-                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=826735d1-1467-4888-9829-61019c033431",
+                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=424f1841-e376-438f-9ca8-4eef6c0cf81e",
                     group: "background"
                 }, options)
             ),
@@ -330,7 +319,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                     attribution: this.attributionZaanstad,
                     type: "Lufo2020",
                     tiled: true,
-                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=826735d1-1467-4888-9829-61019c033431",
+                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=ff5b053e-6f9b-4694-b976-295e5a670ed7",
                     group: "background"
                 }, options)
             ),            
@@ -355,17 +344,6 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                     type: "bgt_lijngericht",
                     tiled: true,
                     metadata: "https://geo.zaanstad.nl/geonetwork?uuid=4c58ce2c-ea1a-4fa3-a391-529499fa4077",
-                    group: "background"
-                }, options)
-            ),
-            new OpenLayers.Layer.WMS(
-                "pand",
-                this.url_ngr,
-                {layers: "pand", format: "image/png"},
-                OpenLayers.Util.applyDefaults({
-                    attribution: this.attributionZaanstad,
-                    type: "pand",
-                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=0490d7d2-27ae-4842-ae93-ba9a53bc1bd4",
                     group: "background"
                 }, options)
             )
