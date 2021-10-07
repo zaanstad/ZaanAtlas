@@ -89,6 +89,7 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Attribution string for tile server.
      */
     url_mapproxy: "https://tiles.zaanstad.nl/mapproxy/service",
+    url_mapproxy_old: "https://geo.zaanstad.nl/mapproxy/service",
     url_geoserver: "https://geointer.zaanstad.nl/geoserver/geo/wms",
     url_ngr: "https://geodata.nationaalgeoregister.nl/bag/wms",
     url_ngr2: "https://geodata.nationaalgeoregister.nl/wmts?",
@@ -141,8 +142,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 1958",
-                this.url_mapproxy,
-                {layers: "Lufo1958-zw", format: "image/jpeg", tiled: true},
+                this.url_mapproxy_old,
+                {layers: "Lufo1958-zw", format: "image/png", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo1958-zw",
@@ -152,8 +153,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 1978",
-                this.url_mapproxy,
-                {layers: "Lufo1978-zw", format: "image/jpeg", tiled: true},
+                this.url_mapproxy_old,
+                {layers: "Lufo1978-zw", format: "image/png", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo1978-zw",
@@ -163,8 +164,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 1983",
-                this.url_mapproxy,
-                {layers: "Lufo1983-zw", format: "image/jpeg", tiled: true},
+                this.url_mapproxy_old,
+                {layers: "Lufo1983-zw", format: "image/png", tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo1983-zw",
@@ -174,8 +175,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2002",
-                this.url_mapproxy,
-                {layers: "Lufo2002", format: 'image/jpeg', tiled: true},
+                this.url_mapproxy_old,
+                {layers: "Lufo2002", format: 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2002",
@@ -185,8 +186,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2007",
-                this.url_mapproxy,
-                {layers: "Lufo2007", format: 'image/jpeg', tiled: true},
+                this.url_mapproxy_old,
+                {layers: "Lufo2007", format: 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2007",
@@ -196,8 +197,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2008",
-                this.url_mapproxy,
-                {layers: "Lufo2008", format: 'image/jpeg', tiled: true},
+                this.url_mapproxy_old,
+                {layers: "Lufo2008", format: 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2008",
@@ -207,8 +208,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2010",
-                this.url_mapproxy,
-                {layers: "Lufo2010", format: 'image/jpeg', tiled: true},
+                this.url_mapproxy_old,
+                {layers: "Lufo2010", format: 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2010",
@@ -218,8 +219,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2011",
-                this.url_mapproxy,
-                {layers: "Lufo2011", format: 'image/jpeg', tiled: true},
+                this.url_mapproxy_old,
+                {layers: "Lufo2011", format: 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2011",
@@ -229,8 +230,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2013",
-                this.url_mapproxy,
-                {layers: "Lufo2013", format: 'image/jpeg', tiled: true},
+                this.url_mapproxy_old,
+                {layers: "Lufo2013", format: 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2013",
@@ -241,8 +242,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2014",
-                this.url_mapproxy,
-                {layers: "Lufo2014", format: 'image/jpeg', tiled: true},
+                this.url_mapproxy_old,
+                {layers: "Lufo2014", format: 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2014",
@@ -253,8 +254,8 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
             ),
             new OpenLayers.Layer.WMS(
                 "Luchtfoto 2015",
-                this.url_mapproxy,
-                {layers: "Lufo2015", format: 'image/jpeg', tiled: true},
+                this.url_mapproxy_old,
+                {layers: "Lufo2015", format: 'image/png', tiled: true},
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.attributionZaanstad,
                     type: "Lufo2015",
