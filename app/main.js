@@ -18,10 +18,10 @@ app.mount("/", function(request) {
 app.mount("/composer", require("./root/composer").app);
 app.mount("/login", require("./root/login").app);
 app.mount("/maps/", require("./root/maps").app);
-app.mount("/proxy", require("./root/proxy").app);
+//app.mount("/proxy", require("./root/proxy").app);
 // TODO: remove workaround for added slashes
-app.mount("/viewer/proxy", require("./root/proxy").app);
-app.mount("/composer/proxy", require("./root/proxy").app);
+//app.mount("/viewer/proxy", require("./root/proxy").app);
+//app.mount("/composer/proxy", require("./root/proxy").app);
 app.mount("/viewer", require("./root/viewer").app);
 
 
@@ -34,14 +34,14 @@ if (java.lang.System.getProperty("app.debug")) {
 
     // proxy a remote geoserver on /geoserver by setting app.proxy.geoserver to remote URL
     // only recommended for debug mode
-    var geoserver = java.lang.System.getProperty("app.proxy.geoserver");
-    if (geoserver) {
-        if (geoserver.charAt(geoserver.length-1) !== "/") {
-            geoserver = geoserver + "/";
-        }
-        // debug specific proxy
-        app.mount("/geoserver/", require("./root/proxy").pass({url: geoserver, preserveHost: true, allowAuth: true}));
-    }
+    // var geoserver = java.lang.System.getProperty("app.proxy.geoserver");
+    // if (geoserver) {
+    //     if (geoserver.charAt(geoserver.length-1) !== "/") {
+    //         geoserver = geoserver + "/";
+    //     }
+    //     // debug specific proxy
+    //     app.mount("/geoserver/", require("./root/proxy").pass({url: geoserver, preserveHost: true, allowAuth: true}));
+    // }
 }
 
 // Redirect requests for servlet name without a trailing slash.
