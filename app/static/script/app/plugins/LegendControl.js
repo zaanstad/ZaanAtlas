@@ -55,6 +55,7 @@ gxp.plugins.LegendControl = Ext.extend(gxp.plugins.Tool, {
                     //showTitle: false,
                     //useScaleParameter: false,
                     baseParams: Ext.apply({
+                        service: "WMS",
                         format: "image/png",
                         legend_options: "fontAntiAliasing:true;fontSize:11;fontName:Arial"
                     }, baseParams)
