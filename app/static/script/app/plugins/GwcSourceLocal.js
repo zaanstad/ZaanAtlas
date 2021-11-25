@@ -82,7 +82,7 @@ gxp.plugins.TileSourceLocal = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  Attribution string for tile server.
      */
-    url_mapproxy: "https://geointer.zaanstad.nl/mapproxy/service",
+    url_mapproxy: "https://geointern.zaanstad.nl/mapproxy/service",
 
     /** private: property[ready]
      *  ``Boolean``
