@@ -478,14 +478,6 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 singletile: false
             };
 
-            if (url.toLowerCase().match("geo.zaanstad.nl/geowebcache") != null) {
-                obj.key = "tiles";
-                obj.background = true;
-            };
-            if (url.toLowerCase().match("map16z/geowebcache") != null) {
-                obj.key = "intratiles";
-                obj.background = true;
-            };
             if (url.toLowerCase().match("geo.zaanstad.nl/mapproxy") != null) {
                 obj.key = "tiles";
                 obj.background = true;
