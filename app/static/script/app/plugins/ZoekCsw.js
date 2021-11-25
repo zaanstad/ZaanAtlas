@@ -478,31 +478,30 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 singletile: false
             };
 
-            if (url.toLowerCase().match("geo.zaanstad.nl/mapproxy") != null) {
-                obj.key = "tiles";
-                obj.background = true;
-            };
             if (url.toLowerCase().match("tiles.zaanstad.nl/mapproxy") != null) {
                 obj.key = "tiles";
                 obj.background = true;
-            };
-            if (url.toLowerCase().match("map16z/mapproxy") != null) {
-                obj.key = "intratiles";
-                obj.background = true;
+            };          
+            if (url.toLowerCase().match("maps.zaanstad.nl/geoserver") != null) {
+                obj.key = "publiek";
+                obj.background = false;
             };
             if (url.toLowerCase().match("geo.zaanstad.nl/geoserver") != null) {
                 obj.key = "publiek";
                 obj.background = false;
             };
-            if (url.toLowerCase().match("maps.zaanstad.nl/geoserver") != null) {
-                obj.key = "publiek";
+            if (url.toLowerCase().match("maps-intern.zaanstad.gem.local/geoserver") != null) {
+                obj.key = "intranet";
+                obj.background = false;
+            };
+            if (url.toLowerCase().match("geointern.zaanstad.nl/geoserver") != null) {
+                obj.key = "intranet";
                 obj.background = false;
             };
             if (url.toLowerCase().match("map16z/geoserver") != null) {
                 obj.key = "intranet";
                 obj.background = false;
             };
-
             if (url.toLowerCase().match("singletile=true") != null) {
                 obj.singletile = true;
             };
