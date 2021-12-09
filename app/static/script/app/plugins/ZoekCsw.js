@@ -486,19 +486,7 @@ gxp.plugins.ZoekCsw = Ext.extend(gxp.plugins.Tool, {
                 obj.key = "publiek";
                 obj.background = false;
             };
-            if (url.toLowerCase().match("geo.zaanstad.nl/geoserver") != null) {
-                obj.key = "publiek";
-                obj.background = false;
-            };
             if (url.toLowerCase().match("maps-intern.zaanstad.gem.local/geoserver") != null) {
-                obj.key = "intranet";
-                obj.background = false;
-            };
-            if (url.toLowerCase().match("geointern.zaanstad.nl/geoserver") != null) {
-                obj.key = "intranet";
-                obj.background = false;
-            };
-            if (url.toLowerCase().match("map16z/geoserver") != null) {
                 obj.key = "intranet";
                 obj.background = false;
             };
