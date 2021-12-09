@@ -118,7 +118,7 @@ or you can set the location as an environment variable.
 
 On Windows:
 
-    setx "GEOEXPLORER_DATA "C:\temp"
+    setx GEOEXPLORER_DATA "C:\temp"
 
 On *nix:
 
