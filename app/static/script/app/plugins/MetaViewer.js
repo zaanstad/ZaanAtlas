@@ -1,8 +1,8 @@
 /**
- * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ * Copyright (c) 2008-2013 Zaanstad Municipality
+ *
  * Published under the GPL license.
- * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * See https://github.com/teamgeo/zaanatlas/raw/master/license.txt for the full text
  * of the license.
  */
 
@@ -46,7 +46,10 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for layer properties action tooltip (i18n).
      */
-    catalog: "http://geo.zaanstad.nl/geonetwork",    
+    catalog: "https://geo.zaanstad.nl/geonetwork",
+
+    //embedUrl: "/srv/nl/metadata.show.embedded?uuid=",
+    embedUrl: "/srv/dut/view?uuid=", 
     
     /** api: config[metaurl]
      *  ``String``
@@ -193,16 +196,16 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
 	 *  "styleselected", "modified" and "saved" events that take care of saving
 	 *  styles and keeping the layer view updated.
 	 */
-	createMetaConfig: function(oid, title) {
+	createMetaConfig: function(oid, title, source) {
 		
 		var OLrequest = OpenLayers.Request.GET({
-			url : this.catalog + "/srv/nl/metadata.show.embedded?uuid=" + oid + "&currTab=simple",
+			url : this.catalog + this.embedUrl + oid + "&currTab=simple",
 			async: true,
 			headers: {
 			 "Content-Type": "application/html"
 			},
 			success : function(response) {
-				Ext.getCmp(oid + gxp.plugins.MetaViewer.prototype.ptype).update("<div id=" + oid + "-print><div class='simple'><h1>" + title + "</h1></div>" + response.responseText + "</div>");
+				Ext.getCmp(oid + gxp.plugins.MetaViewer.prototype.ptype).update("<div id=" + oid + "-print><div ALIGN='right' style='color: #00A5C7;'>" + source + "</div>" + response.responseText + "</div>");
 			},
 			failure : function(response) {
 				Ext.getCmp(oid + gxp.plugins.MetaViewer.prototype.ptype).update(" Fout:\n"+ response.status + "<br>" +response.statusText);
@@ -222,7 +225,7 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
                 scope: this
                 }],
             id: oid + this.ptype,
-            bodyStyle: "padding: 10px",
+            bodyStyle: "padding: 10px;background-color: #f0f0f0;",
             html: "Metadata opvragen..."
 		};
 	},
@@ -230,11 +233,12 @@ gxp.plugins.MetaViewer = Ext.extend(gxp.plugins.Tool, {
     addOutput: function(config) {
         config = config || {};
         var record = this.target.selectedLayer;
+        var source = this.target.getSource(record);
 
         var origCfg = this.initialConfig.outputConfig || {};
         this.outputConfig.title = origCfg.title || this.menuText;
 
-        Ext.apply(config, this.createMetaConfig(this.metaid, record.get("title")));
+        Ext.apply(config, this.createMetaConfig(this.metaid, record.get("title"), source.text));
         //Ext.applyIf(config, {style: "padding: 10px"});
         
         var output = gxp.plugins.MetaViewer.superclass.addOutput.call(this, config);

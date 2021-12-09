@@ -1,22 +1,19 @@
 /*
 This file is part of Ext JS 3.4
 
-Copyright (c) 2011-2013 Sencha Inc
+Copyright (c) 2011-2014 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as
-published by the Free Software Foundation and appearing in the file LICENSE included in the
-packaging of this file.
-
-Please review the following information to ensure the GNU General Public License version 3.0
-requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial
+Software License Agreement provided with the Software or, alternatively, in accordance with the
+terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department
 at http://www.sencha.com/contact.
 
-Build date: 2013-04-03 15:07:25
+Build date: 2014-10-27 12:52:39
 */
 (function(){
 
@@ -5033,9 +5030,6 @@ Ext.EventManager = function(){
         if(el.addEventListener && ename == "mousewheel"){
             var args = ["DOMMouseScroll", wrap, false];
             el.addEventListener.apply(el, args);
-            Ext.EventManager.addListener(WINDOW, 'unload', function(){
-                el.removeEventListener.apply(el, args);
-            });
         }
 
         
@@ -5469,14 +5463,17 @@ Ext.onReady = Ext.EventManager.onDocumentReady;
             } else if (Ext.isIE9) {
                 cls.push('ext-ie9', 'ext-ie9m');
             } else if (Ext.isIE10) {
-                cls.push('ext-ie10');
+                cls.push('ext-ie10', 'ext-ie10m');
+            } else if (Ext.isIE11) {
+                cls.push('ext-ie11', 'ext-ie11m');
             }
         }
         
         if (Ext.isGecko) {
+            cls.push('ext-gecko');
             if (Ext.isGecko2) {
                 cls.push('ext-gecko2');
-            } else {
+            } else if (Ext.isGecko3) {
                 cls.push('ext-gecko3');
             }
         }
@@ -5508,9 +5505,6 @@ Ext.onReady = Ext.EventManager.onDocumentReady;
             if (p) {
                 if (!Ext.isStrict) {
                     Ext.fly(p, '_internal').addClass('x-quirks');
-                    if (Ext.isIE9m && !Ext.isStrict) {
-                        Ext.isIEQuirks = true;
-                    }
                 }
                 Ext.fly(p, '_internal').addClass(((Ext.isStrict && Ext.isIE ) || (!Ext.enableForcedBoxModel && !Ext.isIE)) ? ' ext-strict' : ' ext-border-box');
             }
@@ -5593,7 +5587,7 @@ Ext.EventObject = function(){
             63275 : 35  
         },
         
-        btnMap = Ext.isIE ? {1:0,4:1,2:2} : {0:0,1:1,2:2};
+        btnMap = Ext.isIE9m ? {1:0,4:1,2:2} : {0:0,1:1,2:2};
 
     Ext.EventObjectImpl = function(e){
         if(e){
@@ -10475,7 +10469,7 @@ Ext.util.CSS = function(){
        if(id){
            rules.setAttribute("id", id);
        }
-       if(Ext.isIE){
+       if(Ext.isIE9m){
            head.appendChild(rules);
            ss = rules.styleSheet;
            ss.cssText = cssText;
@@ -12805,9 +12799,10 @@ Ext.BoxComponent = Ext.extend(Ext.Component, {
             h = this.boxMaxHeight;
         }
         
+        
         if(!this.boxReady){
             this.width  = w;
-            this.height = h;
+            this.height = h;    
             return this;
         }
 
@@ -14321,7 +14316,7 @@ Ext.layout.ColumnLayout = Ext.extend(Ext.layout.ContainerLayout, {
             
             
             
-            if (Ext.isIE9m && Ext.isStrict && ret.width == 0){
+            if (Ext.isIE10m && Ext.isStrict && ret.width == 0){
                 ret =  target.getStyleSize();
             }
 
@@ -14354,7 +14349,7 @@ Ext.layout.ColumnLayout = Ext.extend(Ext.layout.ContainerLayout, {
 
         var size = this.getLayoutTargetSize();
 
-        if (Ext.isIE9m && (size.width < 1 && size.height < 1)) { 
+        if (Ext.isIE10m && (size.width < 1 && size.height < 1)) { 
             return;
         }
 
@@ -14388,7 +14383,7 @@ Ext.layout.ColumnLayout = Ext.extend(Ext.layout.ContainerLayout, {
 
         
         
-        if (Ext.isIE9m) {
+        if (Ext.isIE10m) {
             if (i = target.getStyle('overflow') && i != 'hidden' && !this.adjustmentPass) {
                 var ts = this.getLayoutTargetSize();
                 if (ts.width != size.width){
@@ -38099,6 +38094,8 @@ Ext.FlashComponent = Ext.extend(Ext.BoxComponent, {
     expressInstall: false,
 
     initComponent : function(){
+        this.flashId = ++Ext.FlashComponent.ID_COUNTER;
+        Ext.FlashComponent._instances[this.flashId] = this;
         Ext.FlashComponent.superclass.initComponent.call(this);
 
         this.addEvents(
@@ -38116,8 +38113,9 @@ Ext.FlashComponent = Ext.extend(Ext.BoxComponent, {
             wmode: this.wmode
         }, this.flashParams), vars = Ext.apply({
             allowedDomain: document.location.hostname,
-            YUISwfId: this.getId(),
-            YUIBridgeCallback: 'Ext.FlashEventProxy.onEvent'
+            
+            YUISwfId: 'yuiswf' + this.flashId,
+            YUIBridgeCallback: 'YAHOO.widget.SWF.eventHandler'
         }, this.flashVars);
 
         new swfobject.embedSWF(this.url, this.id, this.swfWidth, this.swfHeight, this.flashVersion,
@@ -38157,6 +38155,7 @@ Ext.FlashComponent = Ext.extend(Ext.BoxComponent, {
         if(this.rendered){
             swfobject.removeSWF(this.swf.id);
         }
+        delete Ext.FlashComponent._instances[this.flashId];
         Ext.FlashComponent.superclass.beforeDestroy.call(this);
     },
 
@@ -38165,18 +38164,40 @@ Ext.FlashComponent = Ext.extend(Ext.BoxComponent, {
 
 
 Ext.FlashComponent.EXPRESS_INSTALL_URL = 'http:/' + '/swfobject.googlecode.com/svn/trunk/swfobject/expressInstall.swf';
+Ext.FlashComponent._instances = {};
+Ext.FlashComponent.ID_COUNTER = 0;
 
 Ext.reg('flash', Ext.FlashComponent);
 Ext.FlashEventProxy = {
     onEvent : function(id, e){
-        var fp = Ext.getCmp(id);
-        if(fp){
+        var flashId = id.replace('yuiswf', ''),
+            fp = Ext.FlashComponent._instances[flashId]
+            
+        if (fp) {
             fp.onFlashEvent(e);
         }else{
-            arguments.callee.defer(10, this, [id, e]);
+            arguments.callee.defer(100, this, [id, e]);
         }
     }
 };
+
+
+(function() {
+    var ns = Ext.ns('YAHOO.widget.SWF'),
+        old = ns.eventHandler,
+        proxy = Ext.FlashEventProxy;
+        
+    if (old) {
+        
+        ns.eventHandler = function(id, e) {
+            old.apply(ns, arguments);
+            proxy.onEvent(id, e);
+        };
+    } else {
+        ns.eventHandler = proxy.onEvent
+    }
+})();
+
 
  Ext.chart.Chart = Ext.extend(Ext.FlashComponent, {
     refreshBuffer: 100,
@@ -41800,7 +41821,7 @@ Ext.form.ComboBox = Ext.extend(Ext.form.TriggerField, {
     
     maxHeight : 300,
     
-    minHeight : 90,
+    minListHeight : 90,
     
     triggerAction : 'query',
     
@@ -41849,6 +41870,11 @@ Ext.form.ComboBox = Ext.extend(Ext.form.TriggerField, {
     
     initComponent : function(){
         Ext.form.ComboBox.superclass.initComponent.call(this);
+        var minHeight = this.minHeight;
+        if (minHeight) {
+            delete this.minHeight;
+            this.minListHeight = minHeight;
+        }
         this.addEvents(
             
             'expand',
@@ -42432,7 +42458,7 @@ Ext.form.ComboBox = Ext.extend(Ext.form.TriggerField, {
             h = Math.max(inner.clientHeight, inner.offsetHeight, inner.scrollHeight),
             ha = this.getPosition()[1]-Ext.getBody().getScroll().top,
             hb = Ext.lib.Dom.getViewHeight()-ha-this.getSize().height,
-            space = Math.max(ha, hb, this.minHeight || 0)-this.list.shadowOffset-pad-5;
+            space = Math.max(ha, hb, this.minListHeight || 0)-this.list.shadowOffset-pad-5;
 
         h = Math.min(h, space, this.maxHeight);
 
@@ -45021,6 +45047,7 @@ Ext.form.HtmlEditor = Ext.extend(Ext.form.Field, {
             if(Ext.isIE || Ext.isWebKit || Ext.isOpera){
                 Ext.EventManager.on(doc, 'keydown', this.fixKeys, this);
             }
+            Ext.EventManager.on(window, 'unload', this.beforeDestroy, this);
             doc.editorInitialized = true;
             this.initialized = true;
             this.pushValue();
@@ -45059,21 +45086,44 @@ Ext.form.HtmlEditor = Ext.extend(Ext.form.Field, {
 
     
     onFirstFocus : function(){
+        var selection, range;
+
         this.activated = true;
         this.disableItems(this.readOnly);
-        if(Ext.isGecko){ 
+        if (Ext.isGecko) { 
             this.win.focus();
-            var s = this.win.getSelection();
-            if(!s.focusNode || s.focusNode.nodeType != 3){
-                var r = s.getRangeAt(0);
-                r.selectNodeContents(this.getEditorBody());
-                r.collapse(true);
+            selection = this.win.getSelection();
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            if (selection.focusNode && !this.getValue().length) {
+                range = selection.getRangeAt(0);
+                range.selectNodeContents(this.getEditorBody());
+                range.collapse(true);
                 this.deferFocus();
             }
-            try{
+            try {
                 this.execCmd('useCSS', true);
                 this.execCmd('styleWithCSS', false);
-            }catch(e){}
+            } catch(e) {
+                
+            }
         }
         this.fireEvent('activate', this);
     },
@@ -45206,22 +45256,48 @@ Ext.form.HtmlEditor = Ext.extend(Ext.form.Field, {
 
     
     insertAtCursor : function(text){
-        if(!this.activated){
-            return;
-        }
-        if(Ext.isIE){
-            this.win.focus();
-            var doc = this.getDoc(),
-                r = doc.selection.createRange();
-            if(r){
-                r.pasteHTML(text);
-                this.syncValue();
-                this.deferFocus();
+        
+        var win = this.getWin(),
+            doc = this.getDoc(),
+            sel, range, el, frag, node, lastNode, firstNode;
+
+        if (this.activated) {
+            win.focus();
+            if (win.getSelection) {
+                sel = win.getSelection();
+                if (sel.getRangeAt && sel.rangeCount) {
+                    range = sel.getRangeAt(0);
+                    range.deleteContents();
+
+                    
+                    
+                    
+                    el = doc.createElement("div");
+                    el.innerHTML = text;
+                    frag = doc.createDocumentFragment();
+                    while ((node = el.firstChild)) {
+                        lastNode = frag.appendChild(node);
+                    }
+                    firstNode = frag.firstChild;
+                    range.insertNode(frag);
+
+                    
+                    if (lastNode) {
+                        range = range.cloneRange();
+                        range.setStartAfter(lastNode);
+                        range.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+                }
+            } else {
+                sel = doc.selection;
+                if (sel && sel.type !== 'Control') {
+                    range = sel.createRange();
+                    range.collapse(true);
+                    sel.createRange().pasteHTML(text);
+                }
             }
-        }else{
-            this.win.focus();
-            this.execCmd('InsertHTML', text);
-            this.deferFocus();
         }
     },
 
@@ -48754,7 +48830,7 @@ Ext.grid.GridView = Ext.extend(Ext.util.Observable, {
                 store.sort(dataIndex, 'DESC');
                 break;
             default:
-                this.handleHdMenuClickDefault(item);
+                return this.handleHdMenuClickDefault(item);
         }
         return true;
     },
@@ -48768,7 +48844,7 @@ Ext.grid.GridView = Ext.extend(Ext.util.Observable, {
         if (index != -1) {
             if (item.checked && colModel.getColumnsBy(this.isHideableColumn, this).length <= 1) {
                 this.onDenyColumnHide();
-                return;
+                return false;
             }
             colModel.setHidden(index, item.checked);
         }
@@ -48899,7 +48975,7 @@ Ext.grid.GridView = Ext.extend(Ext.util.Observable, {
     
     
     isHideableColumn : function(c) {
-        return !c.hidden;
+        return c.hideable !== false && !c.hidden;
     },
 
     

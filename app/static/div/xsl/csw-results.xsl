@@ -30,28 +30,39 @@
     	  <xsl:text> ...</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
+      <xsl:apply-templates select="./dc:URI"/>
       <xsl:apply-templates select="./dc:identifier"/>
       </div>
       <xsl:variable name="value" select="./dc:URI[@name='thumbnail']" />
-      <xsl:if test="contains($value,'resources.get?')">
-	  <img class="align-left thumbnail" caption="thumbnail">
-	  <xsl:attribute name="src">
-	  	<xsl:text>http://geo.zaanstad.nl/geonetwork/srv/nl/</xsl:text>
-	  	<xsl:value-of select="./dc:URI[@name='thumbnail']"/>
-	  </xsl:attribute>
-	  </img>
-	  </xsl:if>
+        <xsl:choose>
+          <xsl:when test="starts-with($value,'http')">
+            <img class="align-left thumbnail" caption="thumbnail">
+            <xsl:attribute name="src">
+              <xsl:value-of select="./dc:URI[@name='thumbnail']"/>
+            </xsl:attribute>
+            </img>
+          </xsl:when>
+          <xsl:when test="starts-with($value,'resources.get?')">
+            <img class="align-left thumbnail" caption="thumbnail">
+            <xsl:attribute name="src">
+              <xsl:text>https://geo.zaanstad.nl/geonetwork/srv/nl/</xsl:text>
+              <xsl:value-of select="./dc:URI[@name='thumbnail']"/>
+            </xsl:attribute>
+            </img>
+          </xsl:when>
+        </xsl:choose>
 	  <p>
       <xsl:apply-templates select="./dct:abstract"/>
+      <br/>
       <xsl:apply-templates select="./dc:source"/>
       <strong><xsl:text>Sleutelwoorden: </xsl:text></strong>
-      <xsl:for-each select="./dc:subject">
+      <small><xsl:for-each select="./dc:subject">
         <xsl:if test=".!=''">
             <xsl:if test="position() &gt; 1">, </xsl:if>
             <i><xsl:value-of select="."/></i>
         </xsl:if>
       </xsl:for-each>
-      <xsl:apply-templates select="./dc:URI"/>
+      </small>
 	  </p>
 	  </div>
   </xsl:for-each> 
@@ -104,7 +115,7 @@
   <strong><xsl:text>Bron: </xsl:text></strong>
   <xsl:choose>
     <xsl:when test=".!=''">
-		<xsl:value-of select="substring(.,1,120)"/>
+		<xsl:value-of select="substring(.,1,77)"/>
 		<xsl:text>...</xsl:text>
 		<br/>
     </xsl:when>
@@ -125,7 +136,7 @@
 </xsl:template>  
 
 <xsl:template match="dc:URI">
-    <xsl:if test="contains(@protocol, 'http-get-map')">
+    <xsl:if test="contains(@protocol, 'http-get-map') or contains(@protocol, 'ogc.wms_xml') or contains(@protocol, 'OGC:WMS')">
 	  <div class="btn_add">
 	  <xsl:attribute name="id">
 		<xsl:text>btn-add-</xsl:text>

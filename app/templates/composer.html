@@ -1,164 +1,159 @@
-    <!-- GeoExplorer resources -->
-    <link rel="stylesheet" type="text/css" href="../theme/app/geoexplorer.css" />
-    <!--[if IE]><link rel="stylesheet" type="text/css" href="../theme/app/ie.css"/><![endif]-->        
-    <link rel="stylesheet" type="text/css" href="../theme/ux/colorpicker/color-picker.ux.css" />
-    <script type="text/javascript" src="../script/GeoExplorer.js"></script>
+<!-- GeoExplorer resources -->
+<!--[if IE]><link rel="stylesheet" type="text/css" href="../theme/app/ie.css"/><![endif]-->
+<script type="text/javascript" src="../script/GeoExplorer.js"></script>
 
-    <!-- PrintPreview resources -->
-    <link rel="stylesheet" type="text/css" href="../externals/PrintPreview/resources/css/printpreview.css">
-    
-    <!-- Zaanstad resources -->
-    <link rel="stylesheet" type="text/css" href="../theme/app/zaanstad-composer.css" />
-    <link rel="stylesheet" type="text/css" href="../theme/app/zaanstad-getfeatureinfo.css" />
+<!-- PrintPreview resources -->
+<link rel="stylesheet" type="text/css" href="../externals/PrintPreview/resources/css/printpreview.css">
 
-    <script>
-    	var app;
-		var detectionCounter = 0;
-		var detectionTimeOut = 3;
-		var detectionImage = "http://map16z/static/pixel.png" + "?rand=" + Math.random();
-		var detectionElement = document.createElement('img');
-		detectionElement.src = detectionImage;
-		var reachablePrintService= "";
-		var intranet = false;
-		var reachableSources= {
-                tiles: {
-                	ptype: "gxp_gwcsource"
-                },
-                publiek: {
-                    url: "/geoserver/ows",
-                    //url: "http://geo.zaanstad.nl/geoserver/ows",
-                    title: "Internet",                     
-                    ptype: "gxp_wmscsource"
-                },
-	            ol: {
-	                ptype: "gxp_olsource"
-	            },
-                google: {
-                    ptype: "gxp_googlesource"
-                }
-            };
-        Ext.BLANK_IMAGE_URL = "../theme/app/img/blank.gif";
-        OpenLayers.ImgPath = "../theme/app/img/";
-        // avoid pink tiles
-        OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
-        OpenLayers.Util.onImageLoadErrorColor = "transparent";
-        GeoExt.Lang.set("nl");
-        // optionally set locale based on query string parameter
-        var params = Ext.urlDecode(window.location.search.substring(1));
-		if (params.lang) {
-			GeoExt.Lang.set(params.lang);
-		}
-		
-		function intraReachable() {			
-			detectionCounter = detectionCounter + 1;
-			if (detectionElement.complete) {
-				if (detectionElement.width > 0 && detectionElement.height > 0) {
-					intranet= true;
-					reachablePrintService= "http://map11z/print-servlet/pdf/"; //"http://map16z/geoserver/pdf/";
-					reachableSources= {
-							tiles: {
-								ptype: "gxp_gwcsource"
-							},
-							publiek: {
-								url: "/geoserver/ows",
-								//url: "http://map11z/geoserver/ows",
-								title: "Internet",   
-								ptype: "gxp_wmscsource"
-							},
-				            ol: {
-				                ptype: "gxp_olsource"
-				            },
-							intranet: {
-								url: "http://map16z/geoserver/ows",
-								title: "Intranet",
-								ptype: "gxp_wmscsource"
-							},
-							intratiles: {
-								ptype: "gxp_gwcsource_local"
-							},
-							google: {
-								ptype: "gxp_googlesource"
-							}
-						};
-					loadMap();
-				} else {
-					detectionElement = null;
-					loadMap();
-				}
-			} else {
-				if (detectionCounter < detectionTimeOut) {
-					setTimeout("intraReachable()", 300);
-				} else {
-					detectionElement = null;
-					loadMap();
-				}
-			}
-		}
-		
-		function loadMap() {		
-			app = new GeoExplorer.Composer({
-				authStatus: {{status}},
-				intraEnabled: intranet,
-				proxy: "../proxy/?url=",
-				printService: reachablePrintService,
-				about: {
-					title: "ZaanAtlas, de Zaanse kaartenbak",
-					"abstract": "Een applicatie voor het samenstellen en publiceren van " +
-								"web gebaseerde kaarten.",
-					contact: "Voor meer informatie, neem contact op met <a href='mailto:geo-informatie@zaanstad.nl'>geo-informatie@zaanstad.nl</a>."
-				},
-				defaultSourceType: "gxp_wmssource",
-				sources: reachableSources,
-				map: {
-					resolutions: [
-							 // res            level        scale
-							 53.7600000000, //  0      192000.00000000
-							 26.8800000000, //  1       96000.00000000
-							 13.4400000000, //  2       48000.00000000
-							  6.7200000000, //  3       24000.00000000
-							  3.3600000000, //  4       12000.00000000
-							  1.6800000000, //  5        6000.00000000
-							  0.8400000000, //  6        3000.00000000
-							  0.4200000000, //  7        1500.00000000
-							  0.2100000000, //  8         750.00000000
-							  0.1050000000, //  9         375.00000000
-							  0.0525000000  // 10         187.50000000
-					],
-					projection: "EPSG:28992",
-					units: "m",
-					center: [112958, 498065],
-					zoom: 2,
-					wrapDateLine: false,
-					restrictedExtent: [106000, 491250, 120000, 505000],
-					maxExtent: [106000, 491250, 120000, 505000],
-					layers: [{
-	                    source: "ol",
-	                    group: "background",
-	                    fixed: true,
-	                    type: "OpenLayers.Layer",
-	                    args: [
-	                        "Blank", {visibility: false}
-	                    ]
-					}, {
-						source: "tiles",
-						name: "gbkz",
-						visibility: false
-					}, {
-						source: "tiles",
-						name: "lufo",
-						visibility: false
-					}, {
-						source: "tiles",
-						name: "Top10atlas",
-						visibility: false
-					}, {
-						source: "tiles",
-						name: "Zaanstad",
-						visibility: true
-					}]
-			   }
-			});
+<!-- Zaanstad resources -->
+<link rel="stylesheet" type="text/css" href="../theme/app/zaanstad-composer.css" />
+<link rel="stylesheet" type="text/css" href="../theme/app/zaanstad-getfeatureinfo.css" />
+
+<script>
+    var app;
+    var detectionCounter = 0;
+    var detectionTimeOut = 5;
+    var detectionImage = "https://maps-intern.zaanstad.gem.local/geoserver/www/plaatjes/pixel.png" + "?rand=" + Math.random();
+    var detectionElement = document.createElement('img');
+    detectionElement.src = detectionImage;
+    var intranet = false;
+    var reachableSources= {
+        tiles: {
+            ptype: "gxp_gwcsource"
+        },
+        publiek: {
+            //url: "/geoserver/ows",
+            url: "https://maps.zaanstad.nl/geoserver/ows",
+            title: "Geoserver publiek",
+            text: "Deze kaart is publiekelijk beschikbaar",
+            ptype: "gxp_wmscsource"
+        },
+        ol: {
+            ptype: "gxp_olsource"
+        },
+        google: {
+            ptype: "gxp_googlesource"
         }
-		
-		intraReachable();
-    </script>
+    };
+    Ext.BLANK_IMAGE_URL = "../theme/app/img/blank.gif";
+    OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
+    OpenLayers.Util.onImageLoadErrorColor = 'transparent';
+    OpenLayers.ImgPath = "../theme/app/img/";
+    GeoExt.Lang.set("nl");
+    // optionally set locale based on query string parameter
+    var params = Ext.urlDecode(window.location.search.substring(1));
+    if (params.lang) {
+        GeoExt.Lang.set(params.lang);
+    }
+
+    function intraReachable() {
+        detectionCounter = detectionCounter + 1;
+        if (detectionElement.complete) {
+            if (detectionElement.width > 0 && detectionElement.height > 0) {
+                intranet = true;
+                reachableSources = {
+                    tiles: {
+                        ptype: "gxp_gwcsource"
+                    },
+                    publiek: {
+                        //url: "/geoserver/ows",
+                        url: "https://maps.zaanstad.nl/geoserver/ows",
+                        title: "Geoserver publiek",
+                        text: "Deze kaart is publiekelijk beschikbaar",
+                        ptype: "gxp_wmscsource"
+                    },
+                    ol: {
+                        ptype: "gxp_olsource"
+                    },
+                    intranet: {
+                        url: "https://maps-intern.zaanstad.gem.local/geoserver/ows",
+                        title: "Geoserver intern",
+                        text: "Deze kaart is alleen intern beschikbaar",
+                        ptype: "gxp_wmscsource"
+                    },
+                    google: {
+                        ptype: "gxp_googlesource"
+                    }
+                };
+                loadMap();
+            } else {
+                detectionElement = null;
+                loadMap();
+            }
+        } else {
+            if (detectionCounter < detectionTimeOut) {
+                setTimeout("intraReachable()", 300);
+            } else {
+                detectionElement = null;
+                loadMap();
+            }
+        }
+    }
+
+    function loadMap() {
+        app = new GeoExplorer.Composer({
+            authStatus: {{status}},
+        intraEnabled: intranet,
+            // proxy: "../proxy/?url=",
+            // printService: "/print-servlet/pdf/",
+            about: {
+            title: "ZaanAtlas, de Zaanse kaartenbak",
+                "abstract": "Een applicatie voor het samenstellen en publiceren van " +
+            "web gebaseerde kaarten.",
+                contact: "Voor meer informatie, neem contact op met <a href='mailto:geo-informatie@zaanstad.nl'>geo-informatie@zaanstad.nl</a>."
+        },
+        defaultSourceType: "gxp_wmssource",
+            sources: reachableSources,
+            map: {
+            resolutions: [
+                // res            level        scale
+                53.7600000000, //  0      192000.00000000
+                26.8800000000, //  1       96000.00000000
+                13.4400000000, //  2       48000.00000000
+                6.7200000000, //  3       24000.00000000
+                3.3600000000, //  4       12000.00000000
+                1.6800000000, //  5        6000.00000000
+                0.8400000000, //  6        3000.00000000
+                0.4200000000, //  7        1500.00000000
+                0.2100000000, //  8         750.00000000
+                0.1050000000, //  9         375.00000000
+                0.0525000000  // 10         187.50000000
+            ],
+                projection: "EPSG:28992",
+                units: "m",
+                center: [112958, 498065],
+                zoom: 2,
+                wrapDateLine: false,
+                restrictedExtent: [99047, 478551, 131457, 507918],
+                maxExtent: [99047, 478551, 131457, 507918],
+                layers: [{
+                source: "ol",
+                group: "background",
+                fixed: true,
+                type: "OpenLayers.Layer",
+                args: [
+                    "Blank", {visibility: false}
+                ]
+            },
+            {
+                source: "tiles",
+                name: "lufo2020",
+                visibility: false
+            },
+            {
+                source: "tiles",
+                name: "BGT_lijngericht",
+                visibility: false
+            }, 
+            {
+                source: "tiles",
+                name: "referentiekaart",
+                visibility: true
+            }
+          ]
+        }
+    })
+    }
+
+    intraReachable();
+</script>

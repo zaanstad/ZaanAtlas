@@ -52,10 +52,11 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             }
         ];
 
+        this.authorizedRoles = [];
         if (config.authStatus === 401 || this.getCookieValue(this.cookieParamName) === null) {
             // user has not authenticated or is not authorized
             this.authorizedRoles = [];
-        } else {
+        } else if (config.authStatus !== 404) {
             // user has authenticated or auth back-end is not available
             this.authorizedRoles = ["ROLE_ADMINISTRATOR"];
         }
@@ -74,7 +75,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             }, {
                 ptype: "app_zoekcsw",
                 actionTarget: "layers.tbar",
-                search: {selectedSource: "http://geo.zaanstad.nl/geonetwork/srv/nl/csw"}
+                search: {selectedSource: "https://geo.zaanstad.nl/geonetwork/srv/dut/csw"}
             }, {
                 ptype: "gxp_addlayers",
                 //showButtonText: true,
@@ -85,7 +86,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             }, {
                 ptype: "gxp_removelayer",
                 actionTarget: ["layers.tbar", "layers.contextMenu"]
-            }, {
+            },  {
                 ptype: "gxp_layerproperties",
                 outputConfig: {autoHeight: true, width: 400},
                 actionTarget: ["layers.tbar", "layers.contextMenu"]
@@ -101,6 +102,8 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             }, {
                 ptype: "gxp_wmsgetfeatureinfozaanatlas", toggleGroup: this.toggleGroup,
                 layerParams: ["CQL_FILTER"],
+                vendorParams: {buffer: 10},
+                defaultAction: 0,
                 actionTarget: {target: "paneltbar", index: 3}
             }, {
                 ptype: "gxp_measure", toggleGroup: this.toggleGroup,
@@ -115,23 +118,11 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 ptype: "gxp_zoomtoextent",
                 actionTarget: {target: "paneltbar", index: 5}
             }, {
-                ptype: "app_streetview", toggleGroup: this.toggleGroup,
-                actionTarget: {target: "paneltbar", index: 9}
-            }, {
-                ptype: "app_cyclorama", toggleGroup: this.toggleGroup,
-                actionTarget: {target: "paneltbar", index: 10}
-            }, {
                 ptype: "gxp_geocodermetpointer" ,
                 actionTarget: {target: "paneltbar", index: 20}
             }, {
                 ptype: "app_permalink",
                 actionTarget: {target: "paneltbar", index: 0}
-            }, {
-                ptype: "gxp_print",
-                customParams: {outputFilename: "ZaanAtlas-print"},
-                printService: config.printService,
-                //includeLegend: true,
-                actionTarget: {target: "paneltbar", index: 1}
             }
         ];
         
@@ -170,22 +161,22 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
     },
 
     /** private: method[setCookieValue]
-     *  Set the value for a cookie parameter
-     */
+    * Set the value for a cookie parameter
+    */
     setCookieValue: function(param, value) {
         document.cookie = param + '=' + escape(value);
     },
 
     /** private: method[clearCookieValue]
-     *  Clear a certain cookie parameter.
-     */
+    * Clear a certain cookie parameter.
+    */
     clearCookieValue: function(param) {
         document.cookie = param + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
     },
 
     /** private: method[getCookieValue]
-     *  Get the value of a certain cookie parameter. Returns null if not found.
-     */
+    * Get the value of a certain cookie parameter. Returns null if not found.
+    */
     getCookieValue: function(param) {
         var i, x, y, cookies = document.cookie.split(";");
         for (i=0; i < cookies.length; i++) {
@@ -200,25 +191,35 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
     },
 
     /** private: method[logout]
-     *  Log out the current user from the application.
-     */
+    * Log out the current user from the application.
+    */
     logout: function() {
-        this.clearCookieValue("JSESSIONID");
-        this.clearCookieValue(this.cookieParamName);
-        this.setAuthorizedRoles([]);
-        Ext.getCmp('paneltbar').items.each(function(tool) {
-            if (tool.needsAuthorization === true) {
-                tool.disable();
-            }
+        var callback = function() {
+            this.clearCookieValue("JSESSIONID");
+            this.clearCookieValue(this.cookieParamName);
+            this.setAuthorizedRoles([]);
+            window.location.reload();
+        };
+        Ext.Msg.show({
+            title: this.logoutConfirmTitle,
+            msg: this.logoutConfirmMessage,
+            buttons: Ext.Msg.YESNOCANCEL,
+            icon: Ext.MessageBox.WARNING,
+            fn: function(btn) {
+                if (btn === 'yes') {
+                    this.save(callback, this);
+                } else if (btn === 'no') {
+                    callback.call(this);
+                }
+            },
+            scope: this
         });
-        Ext.getCmp('adminbar').hide();
-        this.showLogin();
     },
 
-    /** private: method[showLoginDialog]
-     * Show the login dialog for the user to login.
-     */
-    showLoginDialog: function() {
+    /** private: method[authenticate]
+    * Show the login dialog for the user to login.
+    */
+    authenticate: function() {
         var panel = new Ext.FormPanel({
             url: "../login/",
             frame: true,
@@ -245,10 +246,17 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             items: [{
                 fieldLabel: this.userFieldText,
                 name: "username",
-                allowBlank: false
+                width: 137,
+                allowBlank: false,
+                listeners: {
+                    render: function() {
+                        this.focus(true, 100);
+                    }
+                }
             }, {
                 fieldLabel: this.passwordFieldText,
                 name: "password",
+                width: 137,
                 inputType: "password",
                 allowBlank: false
             }],
@@ -258,8 +266,8 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                 handler: submitLogin,
                 scope: this
             }],
-            keys: [{ 
-                key: [Ext.EventObject.ENTER], 
+            keys: [{
+                key: [Ext.EventObject.ENTER],
                 handler: submitLogin,
                 scope: this
             }]
@@ -269,16 +277,16 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
             panel.buttons[0].disable();
             panel.getForm().submit({
                 success: function(form, action) {
-                    this.setAuthorizedRoles(["ROLE_ADMINISTRATOR"]);
                     Ext.getCmp('paneltbar').items.each(function(tool) {
                         if (tool.needsAuthorization === true) {
                             tool.enable();
                         }
                     });
-                    Ext.getCmp('adminbar').show();
                     var user = form.findField('username').getValue();
                     this.setCookieValue(this.cookieParamName, user);
+                    this.setAuthorizedRoles(["ROLE_ADMINISTRATOR"]);
                     this.showLogout(user);
+                    win.un("beforedestroy", this.cancelAuthentication, this);
                     win.close();
                 },
                 failure: function(form, action) {
@@ -296,12 +304,16 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
         var win = new Ext.Window({
             title: this.loginText,
             layout: "fit",
-            width: 235,
+            width: 250,
             height: 130,
             plain: true,
             border: false,
             modal: true,
-            items: [panel]
+            items: [panel],
+            listeners: {
+                beforedestroy: this.cancelAuthentication,
+                scope: this
+            }
         });
         win.show();
     },
@@ -314,24 +326,27 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
         //this.loginButton.setIconClass(iconCls);
         //this.loginButton.setText(text);
         //this.loginButton.setHandler(handler, scope);
+        console.log(this.authorizedRoles);
     },
 
     /** private: method[showLogin]
      *  Show the login button.
      */
     showLogin: function() {
-        var text = this.loginText;
-        var handler = this.showLoginDialog;
-        this.applyLoginState('login', text, handler, this);
+        Ext.getCmp('adminbar').hide();
+        //var text = this.loginText;
+        //var handler = this.showLoginDialog;
+        //this.applyLoginState('login', text, handler, this);
     },
 
     /** private: method[showLogout]
      *  Show the logout button.
      */
     showLogout: function(user) {
-        var text = new Ext.Template(this.logoutText).applyTemplate({user: user});
-        var handler = this.logout;
-        this.applyLoginState('logout', text, handler, this);
+        Ext.getCmp('adminbar').show();
+        //var text = new Ext.Template(this.logoutText).applyTemplate({user: user});
+        //var handler = this.logout;
+        //this.applyLoginState('logout', text, handler, this);
     },
 
     /**
@@ -442,6 +457,7 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
            l.setActiveItem(next);
            Ext.getCmp('wizard-prev').setDisabled(next==0);
            Ext.getCmp('wizard-next').setDisabled(next==2);
+           Ext.getCmp('resettools').setDisabled(next!=1);
            if (incr == 1) {
            		this.about.title = Ext.getDom('titleText').value;
 				this.about['abstract'] = Ext.getDom('descriptionText').value;
@@ -498,6 +514,18 @@ GeoExplorer.Composer = Ext.extend(GeoExplorer, {
                    	this.save(this.openPreview.createDelegate(this, [embedMap]));
                },
                scope: this
+           },{
+               id: 'resettools',
+               text: "Reset tools",
+               handler: function() {
+                    this.viewerTools.length = 0;
+                    Ext.apply(this.viewerTools, this.getViewerTools());
+                    var area = Ext.getCmp('geobuilder-1');
+                    area.root.reload();
+                    //this.save(this.openPreview.createDelegate(this, [embedMap]));
+               },
+               scope: this,
+               disabled: true
            }, '->', {
                id: 'wizard-prev',
                text: this.backText,

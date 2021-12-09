@@ -5,7 +5,7 @@
  * Sarissa is an ECMAScript library acting as a cross-browser wrapper for native XML APIs.
  * The library supports Gecko based browsers like Mozilla and Firefox,
  * Internet Explorer (5.5+ with MSXML3.0+), Konqueror, Safari and Opera
- * @version 0.9.9.6
+ * @version ${project.version}
  * @author: Copyright 2004-2008 Emmanouil Batsis, mailto: mbatsis at users full stop sourceforge full stop net
  * ====================================================================
  * Licence
@@ -34,7 +34,7 @@
  * @static
  */
 function Sarissa(){}
-Sarissa.VERSION = "0.9.9.6";
+Sarissa.VERSION = "${project.version}";
 Sarissa.PARSED_OK = "Document contains no parsing errors";
 Sarissa.PARSED_EMPTY = "Document is empty";
 Sarissa.PARSED_UNKNOWN_ERROR = "Not well-formed or other error";
@@ -61,9 +61,9 @@ Sarissa._SARISSA_IS_SAFARI = navigator.userAgent.toLowerCase().indexOf("safari")
 /** @private */
 Sarissa._SARISSA_IS_SAFARI_OLD = Sarissa._SARISSA_IS_SAFARI && (parseInt((navigator.userAgent.match(/AppleWebKit\/(\d+)/)||{})[1], 10) < 420);
 /** @private */
-Sarissa._SARISSA_IS_IE = document.all && window.ActiveXObject && navigator.userAgent.toLowerCase().indexOf("msie") > -1  && navigator.userAgent.toLowerCase().indexOf("opera") == -1;
+Sarissa._SARISSA_IS_IE = document.documentMode!=null;
 /** @private */
-Sarissa._SARISSA_IS_IE9 = Sarissa._SARISSA_IS_IE && navigator.userAgent.toLowerCase().indexOf("msie 9") > -1;
+Sarissa._SARISSA_IS_IE9 = Sarissa._SARISSA_IS_IE && document.documentMode >= 9;
 /** @private */
 Sarissa._SARISSA_IS_OPERA = navigator.userAgent.toLowerCase().indexOf("opera") != -1;
 if(!window.Node || !Node.ELEMENT_NODE){
@@ -310,7 +310,11 @@ if(Sarissa._SARISSA_IS_IE){
             f.appendChild(ownerDoc.createTextNode(s));
         } else if (ownerDoc.body && ownerDoc.body.innerHTML) {
             container = ownerDoc.createElement('div');
-            container.innerHTML = s;
+            if (s.substring(0, 5) == '<?xml') {
+                s = s.substring(s.indexOf('?>') + 2);
+            }
+
+            container.innerHTML = s.replace(/\s+$/g, '');
             while (container.hasChildNodes()) {
                 f.appendChild(container.firstChild);
             }
@@ -437,6 +441,22 @@ if(Sarissa._SARISSA_IS_IE){
                 * <li>4 == COMPLETED</li></ul>
                 */
                 oDoc.readyState = 0;
+            }
+            if(!oDoc.load){
+		oDoc.load = function(url) {
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange=oDoc.onreadystatechange;
+			xmlhttp.readyState=oDoc.readyState;
+			xmlhttp.addEventListener("load", function(e) {
+				oDoc.innerHtml=e.target.responseXML;
+				var evt = document.createEvent('Event');  
+				evt.initEvent('load', false, false);
+				oDoc.dispatchEvent(evt);
+			} , false);
+			xmlhttp.open("GET", url, oDoc.async);
+			xmlhttp.send();
+			return oDoc.async?true:xmlhttp.response;
+		}
             }
             oDoc.addEventListener("load", _sarissa_XMLDocument_onload, false);
             return oDoc;
@@ -651,7 +671,7 @@ Sarissa.clearChildNodes = function(oNode) {
  * @param {boolean} bPreserveExisting whether to preserve the original content of nodeTo, default is false
  */
 Sarissa.copyChildNodes = function(nodeFrom, nodeTo, bPreserveExisting) {
-    if(Sarissa._SARISSA_IS_SAFARI && nodeTo.nodeType == Node.DOCUMENT_NODE){ // SAFARI_OLD ??
+    if(Sarissa._SARISSA_IS_SAFARI_OLD && nodeTo.nodeType == Node.DOCUMENT_NODE){
     	nodeTo = nodeTo.documentElement; //Apparently there's a bug in safari where you can't appendChild to a document node
     }
     

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #gn-tiles {
+            max-width: 900px;
+            margin: 0 auto; /*center aligned*/
+            padding: 0;
+            font-size: 0; /* Remember to change it back to normal font size if have captions */
+            list-style: none;
+            background-color: #fff;
+        }
+
+        #gn-tiles li {
+            display: inline-block;
+            *display: inline; /*for IE6 - IE7*/
+            width: 25%;
+            vertical-align: middle;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 1px;
+        }
+
+        /* The wrapper for each item */
+        .rig-cell {
+            display: block;
+            position: relative;
+            overflow: hidden;
+
+            animation: scale-in-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            -webkit-animation: scale-in-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        }
+
+        /* If have the image layer */
+        .rig-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border: none;
+            transform: scale(1);
+            transition: all 1s;
+        }
+
+        #gn-tiles li:hover .rig-img {
+            transform: scale(1.05);
+        }
+
+        #gn-tiles li:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 9000px) {
+            #gn-tiles li {
+                width: 25%;
+            }
+        }
+
+        @media (max-width: 700px) {
+            #gn-tiles li {
+                width: 33.33%;
+            }
+        }
+
+        @media (max-width: 550px) {
+            #gn-tiles li {
+                width: 50%;
+            }
+        }
+
+        @-webkit-keyframes scale-in-center {
+            0% {
+                -webkit-transform: scale(0);
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes scale-in-center {
+            0% {
+                -webkit-transform: scale(0);
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+
+<ul id="gn-tiles">
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/recent.jpg" alt="nieuw">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/verkeer.jpg" alt="verkeer">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/vaarwegen.jpg" alt="vaarwegen">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/bevolking.jpg" alt="bevolking">
+        </a>
+    </li>
+
+
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/basisregistratie.jpg" alt="basisregistratie">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/monumenten.jpg" alt="monumenten">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/natuur.jpg" alt="natuur">
+
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/fundering.jpg" alt="fundering">
+        </a>
+    </li>
+
+
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/wonen.jpg" alt="wonen">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/veiligheid.jpg" alt="veiligheid">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/maatschappelijk.jpg" alt="maatschappelijk">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/bedrijven.jpg" alt="bedrijven">
+        </a>
+    </li>
+
+
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/energie.jpg" alt="energie">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/kadaster.jpg" alt="kadaster">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/basiskaarten.jpg" alt="basiskaarten">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/klimaat.jpg" alt="klimaat">
+        </a>
+    </li>
+
+
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/beheer.jpg" alt="beheer">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/beheer-water.jpg" alt="water">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/beheer-wegen.jpg" alt="wegen">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/beheer-groen.jpg" alt="groen">
+        </a>
+    </li>
+
+
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/milieu.jpg" alt="milieu">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/milieu-geur.jpg" alt="geur">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/milieu-bodem.jpg" alt="bodem">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/milieu-geluid.jpg" alt="geluid">
+        </a>
+    </li>
+
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/meten.jpg" alt="meten">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/gebiedsindeling.jpg" alt="gebiedsindeling">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/sport.jpg" alt="sport">
+        </a>
+    </li>
+    <li>
+        <a class="rig-cell" href="#">
+            <img class="rig-img" src="../theme/app/img/catalog/luchtfoto.jpg" alt="luchtfoto">
+        </a>
+    </li>
+</ul>
+
+</body>
+</html>

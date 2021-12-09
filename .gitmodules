@@ -3,22 +3,13 @@
 	url = https://github.com/ringo/ringojs.git
 [submodule "externals/buildkit"]
 	path = externals/buildkit
-	url = https://github.com/tschaub/buildkit.git
-[submodule "app/static/externals/GeoExt"]
-	path = app/static/externals/GeoExt
-	url = https://github.com/geoext/geoext.git
-[submodule "app/static/externals/openlayers"]
-	path = app/static/externals/openlayers
-	url = https://github.com/openlayers/openlayers.git
+	url = https://github.com/planetfederal/buildkit.git
 [submodule "app/static/externals/PrintPreview"]
 	path = app/static/externals/PrintPreview
-	url = https://github.com/opengeo/PrintPreview.git
+	url = https://github.com/planetfederal/PrintPreview.git
 [submodule "externals/stick"]
 	path = externals/stick
 	url = https://github.com/hns/stick.git
 [submodule "externals/ringojs-fork"]
 	path = externals/ringojs-fork
-	url = https://github.com/tschaub/ringojs.git
-[submodule "app/static/externals/gxp"]
-	path = app/static/externals/gxp
-	url = https://github.com/teamgeo/gxp.git
+	url = https://github.com/ringo/ringojs.git

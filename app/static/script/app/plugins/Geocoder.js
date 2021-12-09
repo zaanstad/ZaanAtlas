@@ -1,8 +1,8 @@
 /**
- * Copyright (c) 2008-2011 The Open Planning Project
- * 
- * Published under the BSD license.
- * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * Copyright (c) 2008-2013 Zaanstad Municipality
+ *
+ * Published under the GPL license.
+ * See https://github.com/teamgeo/zaanatlas/raw/master/license.txt for the full text
  * of the license.
  */
 
@@ -29,13 +29,14 @@ gxp.plugins.Geocoder = Ext.extend(gxp.plugins.Tool, {
     ptype: "app_geocoder",
     
 	outputConfig: {
-		url: "/geoserver/wfs",
-		featureType: "vw_adres",
+		//url: "/geoserver/wfs",
+        url: "https://maps.zaanstad.nl/geoserver/wfs",
+		featureType: "zoeklokaties",
 		featurePrefix: "geo",
-    srsName: "EPSG:28992",
-    maxFeatures: 70,
-    outputFormat: "JSON",
-		fieldName: "adres",
+        srsName: "EPSG:28992",
+        maxFeatures: 70,
+        outputFormat: "JSON",
+		fieldName: "lokatie",
 		geometryName: "geom",
 		emptyText: "Zoek een adres ...",
 		listEmptyText: "- niets gevonden -"

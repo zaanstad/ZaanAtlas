@@ -1,8 +1,8 @@
 /**
- * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ * Copyright (c) 2008-2013 Zaanstad Municipality
+ *
  * Published under the GPL license.
- * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * See https://github.com/teamgeo/zaanatlas/raw/master/license.txt for the full text
  * of the license.
  */
 
@@ -149,7 +149,8 @@ gxp.AdminOverlay = Ext.extend(Ext.Panel, {
 				// open een nieuw browser-window met daarin de composer
 				var url = window.location.href.split('#')[0];
 				var nieuwe_url = url + "#maps/" + mapid;	
-				window.open(nieuwe_url);
+				window.open(nieuwe_url, '_self');
+                location.reload(true)
 			}
         };
 

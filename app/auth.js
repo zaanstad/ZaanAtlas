@@ -55,7 +55,7 @@ exports.authenticate = function(request) {
         var url = getLoginUrl(request);
         var exchange = clientRequest({
             url: url,
-            method: "post",
+            method: "POST",
             async: false,
             data: {
                 username: params.username,
@@ -76,4 +76,3 @@ exports.authenticate = function(request) {
         status: status
     }
 };
-
