@@ -318,6 +318,18 @@ gxp.plugins.TileSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, options)
             ),
             new OpenLayers.Layer.WMS(
+                "Luchtfoto 2021",
+                this.url_mapproxy,
+                {layers: "lufo2021", format: 'image/jpeg', tiled: false},
+                OpenLayers.Util.applyDefaults({
+                    attribution: this.attributionZaanstad,
+                    type: "lufo2021",
+                    tiled: true,
+                    metadata: "https://geo.zaanstad.nl/geonetwork?uuid=9b7d7164-06e5-44cd-b1ed-344bb972911b",
+                    group: "background"
+                }, options)
+            ),
+            new OpenLayers.Layer.WMS(
                 "Luchtfoto actueel",
                 this.url_mapproxy,
                 {layers: "lufo-actueel", format: 'image/jpeg', tiled: false},
